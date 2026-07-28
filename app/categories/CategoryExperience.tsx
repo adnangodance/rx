@@ -73,6 +73,20 @@ const categories: Category[] = [
     ],
   },
   {
+    slug: "acne",
+    name: "Acne & clear skin",
+    shortName: "Acne",
+    description: "Personalized, provider-guided care designed to support clearer, healthier-looking skin.",
+    cover: "/acne-cover.png",
+    thumb: "/product-beta-glucan.png",
+    products: [
+      { name: "Daily Acne Tablet", price: "$29/mo", detail: "Personalized oral care", type: "disc", image: "/product-tablet.png" },
+      { name: "Clear Skin Formula", price: "$35/mo", detail: "Daily skin support", type: "vial", image: "/product-nandrolone.png" },
+      { name: "Acne Support Spray", price: "$32/mo", detail: "Targeted topical care", type: "spray", image: "/product-oxytocin.png" },
+      { name: "Skin Wellness B12", price: "$29/mo", detail: "Vitamin support", type: "amber", image: "/product-b12.png" },
+    ],
+  },
+  {
     slug: "sexual-health",
     name: "Sexual health & intimacy",
     shortName: "Sexual health",
@@ -89,15 +103,19 @@ const categories: Category[] = [
 ];
 
 export default function CategoryExperience() {
+  const [theme, setTheme] = useState<"v1" | "v2" | "v3" | "v4">("v3");
   const [activeSlug, setActiveSlug] = useState("weight-management");
   const [search, setSearch] = useState("");
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
+  const [pendingProduct, setPendingProduct] = useState<Product | null>(null);
   const [notice, setNotice] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
     const slug = new URLSearchParams(window.location.search).get("category");
     if (categories.some((category) => category.slug === slug)) setActiveSlug(slug!);
+    const savedTheme = localStorage.getItem("scriptrx-theme");
+    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4") setTheme(savedTheme);
     setAuthenticated(localStorage.getItem("scriptrx-authenticated") === "true");
     try {
       const saved = JSON.parse(localStorage.getItem("scriptrx-cart-product") || "null");
@@ -118,13 +136,22 @@ export default function CategoryExperience() {
 
   function addProduct(product: Product) {
     if (cartProduct && cartProduct.name !== product.name) {
-      setNotice(`Only one product can be purchased at a time. Remove ${cartProduct.name} before adding ${product.name}.`);
+      setPendingProduct(product);
       return;
     }
     setCartProduct(product);
     localStorage.setItem("scriptrx-cart-product", JSON.stringify(product));
     localStorage.setItem("scriptrx-cart-products", JSON.stringify([product.name]));
     setNotice(`${product.name} was added to your cart.`);
+  }
+
+  function replaceProduct() {
+    if (!pendingProduct) return;
+    setCartProduct(pendingProduct);
+    localStorage.setItem("scriptrx-cart-product", JSON.stringify(pendingProduct));
+    localStorage.setItem("scriptrx-cart-products", JSON.stringify([pendingProduct.name]));
+    setNotice(`${pendingProduct.name} replaced the previous product in your cart.`);
+    setPendingProduct(null);
   }
 
   function removeProduct() {
@@ -135,18 +162,35 @@ export default function CategoryExperience() {
   }
 
   return (
-    <main className="category-page">
+    <main className={`category-page category-theme-${theme}`}>
       <div className="category-announcement">New: personalized weight care</div>
       <header className="category-header">
         <a className="category-logo" href={sitePath("/")}>Scriptrx</a>
         <nav><a href={sitePath("/categories?category=womens-health")}>Women&apos;s Health</a><a href={sitePath("/categories?category=weight-management")}>Weight Management</a><a href={sitePath("/categories?category=longevity")}>Longevity</a></nav>
         <div>
           {cartProduct && <a className="category-cart" href={sitePath("/cart")}><img src={sitePath("/cart-icon.svg")} alt="" /><b>1</b></a>}
-          {authenticated ? <a className="category-account" href={sitePath("/")}>My Account</a> : <a className="category-account" href={sitePath("/login")}>Log in</a>}
+          {authenticated ? <a className="category-account" href={sitePath("/")}>My Account</a> : <a className="category-account" href={sitePath(`/login?theme=${theme}`)}>Log in</a>}
         </div>
       </header>
 
       {notice && <div className="cart-notice" role="status"><span>{notice}</span><button type="button" onClick={() => setNotice("")}>×</button></div>}
+
+      {pendingProduct && (
+        <div className="product-replace-overlay" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget) setPendingProduct(null);
+        }}>
+          <section className="product-replace-dialog" role="dialog" aria-modal="true" aria-labelledby="replace-product-title">
+            <button className="product-replace-close" type="button" onClick={() => setPendingProduct(null)} aria-label="Close">×</button>
+            <span>ONE TREATMENT AT A TIME</span>
+            <h2 id="replace-product-title">You already have a product in your cart.</h2>
+            <p>Replace <strong>{cartProduct?.name}</strong> with <strong>{pendingProduct.name}</strong>?</p>
+            <div>
+              <button className="product-replace-confirm" type="button" onClick={replaceProduct}>Replace product</button>
+              <button className="product-replace-back" type="button" onClick={() => setPendingProduct(null)}>Go back</button>
+            </div>
+          </section>
+        </div>
+      )}
 
       <div className="category-shell">
         <aside className="category-sidebar">

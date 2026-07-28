@@ -67,7 +67,7 @@ const faqs = [
 ];
 
 export default function Home() {
-  const [version, setVersion] = useState<"v1" | "v2" | "v3">("v3");
+  const [version, setVersion] = useState<"v1" | "v2" | "v3" | "v4">("v3");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [addedProducts, setAddedProducts] = useState<string[]>([]);
   const [cartNotice, setCartNotice] = useState("");
@@ -83,10 +83,14 @@ export default function Home() {
       setAddedProducts([]);
     }
     const savedTheme = localStorage.getItem("scriptrx-theme");
-    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3") {
+    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4") {
       setVersion(savedTheme);
     }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("scriptrx-theme", version);
+  }, [version]);
 
   function handleAddToCart(product: Product) {
     setAddedProducts((current) => {
@@ -138,6 +142,13 @@ export default function Home() {
           onClick={() => setVersion("v3")}
         >
           Version 3 (Warm Chocolate &amp; Sand)
+        </button>
+        <button
+          type="button"
+          className={`v-btn ${version === "v4" ? "active" : ""}`}
+          onClick={() => setVersion("v4")}
+        >
+          Version 4 (Soft Pink)
         </button>
       </div>
 
@@ -197,12 +208,26 @@ export default function Home() {
               {version === "v2" && <span className="card-pill-btn">Explore weight care</span>}
               {version === "v3" && <span className="card-pill-btn">Explore weight care</span>}
             </div>
-            <img className="weight-tablet" src={sitePath("/product-tablet.png")} alt="White treatment tablet" />
-            <img className="weight-vial" src={sitePath("/product-b12.png")} alt="Vitamin B12 vial" />
-            <img className="weight-pen" src={sitePath("/weight-pen.png")} alt="Blue injectable treatment pen" />
+            <img
+              className="weight-tablet"
+              src={sitePath(version === "v4" ? "/product-red-pill.png" : "/product-tablet.png")}
+              alt={version === "v4" ? "Red treatment pill" : "White treatment tablet"}
+            />
+            {version !== "v2" && (
+              <img
+                className="weight-vial"
+                src={sitePath(version === "v4" ? "/product-amino-quad-small.png" : version === "v3" ? "/product-lipo-c.png" : "/product-b12.png")}
+                alt={version === "v4" ? "Amino-Quad treatment bottle" : version === "v3" ? "LIPO-C treatment vial" : "Vitamin B12 vial"}
+              />
+            )}
+            <img
+              className="weight-pen"
+              src={sitePath(version === "v4" ? "/weight-pen-purple.png" : version === "v2" ? "/weight-pen-green.png" : "/weight-pen.png")}
+              alt={version === "v4" ? "Purple injectable treatment pen" : version === "v2" ? "Green injectable treatment pen" : "Blue injectable treatment pen"}
+            />
           </a>
 
-          <a className="story-card story-life" href="#care">
+          <a className="story-card story-life" href={version === "v4" ? sitePath("/categories?category=acne") : "#care"}>
             {version === "v1" && (
               <>
                 <img src={sitePath("/better-sex.jpg")} alt="Couple embracing in lavender activewear" />
@@ -229,10 +254,18 @@ export default function Home() {
                 </div>
               </>
             )}
+            {version === "v4" && (
+              <>
+                <img src={sitePath("/hero-womens-care-coral.png")} alt="Woman relaxing against a coral background" />
+                <div className="story-copy">
+                  <h2>Clearer skin.<br />More confidence.</h2>
+                </div>
+              </>
+            )}
           </a>
         </div>
 
-        {version === "v3" ? (
+        {version === "v3" || version === "v4" ? (
           <div className="hero-treatment-row v3-treatment-row">
             <a href={sitePath("/categories?category=weight-management")}>
               <img className="v3-cat-img" src={sitePath("/vial-lose-weight.png")} alt="Lose weight vial" />
@@ -297,6 +330,7 @@ export default function Home() {
                 <button type="button" className="version-pill active" onClick={() => setVersion("v1")}>Version 1</button>
                 <button type="button" className="version-pill inactive" onClick={() => setVersion("v2")}>Version 2</button>
                 <button type="button" className="version-pill inactive" onClick={() => setVersion("v3")}>Version 3</button>
+                <button type="button" className="version-pill inactive" onClick={() => setVersion("v4")}>Version 4</button>
               </div>
             </div>
             <div className="footer-links">
@@ -316,6 +350,7 @@ export default function Home() {
                 <button type="button" className="version-pill inactive" onClick={() => setVersion("v1")}>Version 1</button>
                 <button type="button" className={`version-pill ${version === "v2" ? "active" : "inactive"}`} onClick={() => setVersion("v2")}>Version 2</button>
                 <button type="button" className={`version-pill ${version === "v3" ? "active" : "inactive"}`} onClick={() => setVersion("v3")}>Version 3</button>
+                <button type="button" className={`version-pill ${version === "v4" ? "active" : "inactive"}`} onClick={() => setVersion("v4")}>Version 4</button>
               </div>
             </div>
             <div className="footer-links-v2">

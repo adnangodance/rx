@@ -3,12 +3,13 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { sitePath } from "@/lib/site-path";
 
-type LoginVersion = "v1" | "v2" | "v3";
+type LoginVersion = "v1" | "v2" | "v3" | "v4";
 
 const versionNames: Record<LoginVersion, string> = {
   v1: "Classic",
   v2: "Light green",
   v3: "Warm",
+  v4: "Soft pink",
 };
 
 export default function LoginExperience() {
@@ -17,7 +18,7 @@ export default function LoginExperience() {
 
   useEffect(() => {
     const theme = new URLSearchParams(window.location.search).get("theme");
-    if (theme === "v1" || theme === "v2" || theme === "v3") {
+    if (theme === "v1" || theme === "v2" || theme === "v3" || theme === "v4") {
       setVersion(theme);
     }
   }, []);

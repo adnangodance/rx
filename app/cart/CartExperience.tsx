@@ -28,7 +28,7 @@ function OrderHeader({ cartCount }: { cartCount: number }) {
   );
 }
 
-function EligibilityAssessment({ product, theme, onCancel, onComplete }: { product: Product; theme: "v1" | "v2" | "v3"; onCancel: () => void; onComplete: () => void }) {
+function EligibilityAssessment({ product, theme, onCancel, onComplete }: { product: Product; theme: "v1" | "v2" | "v3" | "v4"; onCancel: () => void; onComplete: () => void }) {
   const questions = [
     `Have you ever had an allergic or adverse reaction to ${product.name} or any of its ingredients?`,
     "Have you ever had an allergic or adverse reaction to a similar medication or treatment?",
@@ -101,7 +101,7 @@ function EligibilityAssessment({ product, theme, onCancel, onComplete }: { produ
 
 export default function CartExperience() {
   const [product, setProduct] = useState<Product>(fallbackProduct);
-  const [theme, setTheme] = useState<"v1" | "v2" | "v3">("v3");
+  const [theme, setTheme] = useState<"v1" | "v2" | "v3" | "v4">("v3");
   const [eligible, setEligible] = useState(false);
   const [consented, setConsented] = useState(false);
   const [hasProduct, setHasProduct] = useState(false);
@@ -118,7 +118,7 @@ export default function CartExperience() {
       setHasProduct(false);
     }
     const savedTheme = localStorage.getItem("scriptrx-theme");
-    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3") setTheme(savedTheme);
+    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4") setTheme(savedTheme);
   }, []);
 
   const pricing = useMemo(() => {
