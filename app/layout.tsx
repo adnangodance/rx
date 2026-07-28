@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://scriptrx.com"),
-  title: "ScriptRx — Better care, without the waiting room",
+  title: "ScriptRx — Care for the life you want",
   description:
     "Private, personalized online care with licensed providers and discreet delivery.",
   icons: {
@@ -11,16 +11,16 @@ export const metadata: Metadata = {
     shortcut: "/favicon.svg",
   },
   openGraph: {
-    title: "ScriptRx — Feel good. Live better.",
-    description: "Personalized online care, built around real life.",
+    title: "ScriptRx — The care you’ve always deserved",
+    description: "Personalized online care for the goals that matter most.",
     type: "website",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "ScriptRx — Feel good. Live better." }],
+    images: [{ url: "/hero-campaign.png", alt: "ScriptRx personalized online care" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ScriptRx — Feel good. Live better.",
-    description: "Personalized online care, built around real life.",
-    images: ["/og.png"],
+    title: "ScriptRx — The care you’ve always deserved",
+    description: "Personalized online care for the goals that matter most.",
+    images: ["/hero-campaign.png"],
   },
 };
 

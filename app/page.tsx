@@ -1,190 +1,350 @@
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "ScriptRx — Better care, without the waiting room",
-  description:
-    "Private, personalized online care for weight, hair, sexual health, skin, and everyday wellness.",
-};
+import { useEffect, useState } from "react";
+import CatalogSection, { type Product } from "@/components/CatalogSection";
+import HeaderPillNav from "@/components/HeaderPillNav";
 
-const treatments = [
-  { name: "Weight care", note: "Plans built around you", className: "weight", icon: "↘" },
-  { name: "Hair growth", note: "Keep more of it", className: "hair", icon: "✦" },
-  { name: "Sexual health", note: "Feel like yourself", className: "sexual", icon: "♡" },
-  { name: "Skin care", note: "Clearer days ahead", className: "skin", icon: "◌" },
+const productRows = [
+  {
+    title: "Longevity & everyday health",
+    products: [
+      { name: "Daily tablet", price: "$39/mo", detail: "Semaglutide", type: "disc", image: "/product-tablet.png" },
+      { name: "Nandrolone decanoate", price: "$79/mo", detail: "Nandrolone", type: "vial", image: "/product-nandrolone.png" },
+      { name: "Oxytocin spray", price: "$49/mo", detail: "Oxytocin", type: "spray", image: "/product-oxytocin.png" },
+      { name: "Vitamin B12", price: "$29/mo", detail: "Cyanocobalamin", type: "amber", image: "/product-b12.png" },
+      { name: "NAD+ Complex", price: "$69/mo", detail: "NAD+ Booster", type: "vial", image: "/product-nandrolone.png" },
+      { name: "Metformin Longevity", price: "$35/mo", detail: "Metformin HCl", type: "disc", image: "/product-tablet.png" },
+      { name: "CoQ10 Vitality", price: "$25/mo", detail: "CoQ10 200mg", type: "amber", image: "/product-b12.png" },
+      { name: "Glutathione Support", price: "$55/mo", detail: "Reduced Glutathione", type: "spray", image: "/product-oxytocin.png" },
+    ],
+  },
+  {
+    title: "Sexual health & intimacy",
+    products: [
+      { name: "Daily Tadalafil", price: "$24/mo", detail: "Tadalafil 5mg", type: "disc", image: "/product-tablet.png" },
+      { name: "Sildenafil On-Demand", price: "$29/mo", detail: "Sildenafil 50mg", type: "disc", image: "/product-tablet.png" },
+      { name: "Intimate Oxytocin Spray", price: "$35/mo", detail: "Oxytocin 100IU", type: "spray", image: "/product-oxytocin.png" },
+      { name: "Hormone Care", price: "$39/mo", detail: "Nandrolone Blend", type: "vial", image: "/product-nandrolone.png" },
+      { name: "PT-141 Peptide", price: "$49/mo", detail: "Bremelanotide", type: "vial", image: "/product-nandrolone.png" },
+      { name: "Vitality B12 Amber", price: "$29/mo", detail: "Cyanocobalamin", type: "amber", image: "/product-b12.png" },
+      { name: "Apex Performance", price: "$59/mo", detail: "Custom Formula", type: "disc", image: "/product-tablet.png" },
+      { name: "Enclomiphene Support", price: "$69/mo", detail: "Enclomiphene Citrate", type: "vial", image: "/product-nandrolone.png" },
+    ],
+  },
+  {
+    title: "Weight & metabolic care",
+    products: [
+      { name: "Semaglutide Weekly", price: "$49/mo", detail: "Semaglutide Injection", type: "vial", image: "/product-nandrolone.png" },
+      { name: "Tirzepatide Compound", price: "$89/mo", detail: "Tirzepatide Dual Action", type: "vial", image: "/product-nandrolone.png" },
+      { name: "Metabolic Sublingual", price: "$39/mo", detail: "Sublingual Drops", type: "spray", image: "/product-oxytocin.png" },
+      { name: "Lipo-B12 Booster", price: "$35/mo", detail: "Methionine & B12", type: "amber", image: "/product-b12.png" },
+      { name: "Daily Metabolic Tablet", price: "$42/mo", detail: "Oral GLP-1 Support", type: "disc", image: "/product-tablet.png" },
+      { name: "Berberine Synergy", price: "$28/mo", detail: "Berberine Complex", type: "amber", image: "/product-b12.png" },
+      { name: "Retatrutide Triple Action", price: "$119/mo", detail: "GIP/GLP-1/Glucagon", type: "vial", image: "/product-nandrolone.png" },
+      { name: "Amino Vitality Spray", price: "$45/mo", detail: "Essential Aminos", type: "spray", image: "/product-oxytocin.png" },
+    ],
+  },
 ];
 
-const steps = [
+const faqs = [
   {
-    number: "01",
-    title: "Tell us what’s going on",
-    copy: "Answer a few thoughtful questions about your health, goals, and medical history. It takes about 5 minutes.",
+    question: "How does ScriptRx work?",
+    answer: "Start with a private online health intake. A licensed provider reviews your information and recommends a personalized plan. If treatment is prescribed, it can be delivered discreetly with ongoing online support.",
   },
   {
-    number: "02",
-    title: "Meet your provider",
-    copy: "A licensed provider reviews your answers and connects with you online to create a plan that fits.",
+    question: "Who are the providers of ScriptRx?",
+    answer: "Care is provided by licensed healthcare professionals who are authorized to practice in your state. Provider availability and credentials may vary by treatment and location.",
   },
   {
-    number: "03",
-    title: "Care comes to you",
-    copy: "If prescribed, treatment ships discreetly to your door. Message your care team whenever you need.",
+    question: "Does ScriptRx require insurance?",
+    answer: "No. ScriptRx is designed to support self-pay care. Any applicable consultation, treatment, and delivery costs are shown before you complete your order.",
+  },
+  {
+    question: "What states is ScriptRx available in?",
+    answer: "Availability depends on the treatment requested and provider licensing requirements. Enter your location during the online intake to see the options currently available to you.",
   },
 ];
 
 export default function Home() {
+  const [version, setVersion] = useState<"v1" | "v2" | "v3">("v3");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [addedProducts, setAddedProducts] = useState<string[]>([]);
+  const [cartNotice, setCartNotice] = useState("");
+  const cartCount = addedProducts.length;
+
+  useEffect(() => {
+    setIsLoggedIn(localStorage.getItem("scriptrx-authenticated") === "true");
+    try {
+      const savedCart = JSON.parse(localStorage.getItem("scriptrx-cart-products") || "[]");
+      const validItems = Array.isArray(savedCart) ? savedCart.filter((item): item is string => typeof item === "string") : [];
+      setAddedProducts(validItems.slice(0, 1));
+    } catch {
+      setAddedProducts([]);
+    }
+    const savedTheme = localStorage.getItem("scriptrx-theme");
+    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3") {
+      setVersion(savedTheme);
+    }
+  }, []);
+
+  function handleAddToCart(product: Product) {
+    setAddedProducts((current) => {
+      if (current.includes(product.name)) return current;
+      if (current.length > 0) {
+        setCartNotice(`Only one product can be purchased at a time. Remove ${current[0]} from your cart before adding ${product.name}.`);
+        return current;
+      }
+      const next = [product.name];
+      localStorage.setItem("scriptrx-cart-products", JSON.stringify(next));
+      localStorage.setItem("scriptrx-cart-product", JSON.stringify(product));
+      setCartNotice(`${product.name} was added to your cart.`);
+      return next;
+    });
+  }
+
+  function handleRemoveFromCart(product: Product) {
+    setAddedProducts((current) => {
+      const next = current.filter((name) => name !== product.name);
+      localStorage.setItem("scriptrx-cart-products", JSON.stringify(next));
+      localStorage.removeItem("scriptrx-cart-product");
+      setCartNotice(`${product.name} was removed. You can now choose another product.`);
+      return next;
+    });
+  }
+
   return (
-    <main>
-      <div className="announcement">
-        <span>NEW</span> Personalized care, prescribed online
-        <a href="#treatments">Explore treatments <b>→</b></a>
+    <main className={`theme-${version}`}>
+      {/* Top Floating Version Toggle Banner */}
+      <div className="version-bar-top">
+        <span>Switch Design Version:</span>
+        <button
+          type="button"
+          className={`v-btn ${version === "v1" ? "active" : ""}`}
+          onClick={() => setVersion("v1")}
+        >
+          Version 1 (Classic)
+        </button>
+        <button
+          type="button"
+          className={`v-btn ${version === "v2" ? "active" : ""}`}
+          onClick={() => setVersion("v2")}
+        >
+          Version 2 (Light Green)
+        </button>
+        <button
+          type="button"
+          className={`v-btn ${version === "v3" ? "active" : ""}`}
+          onClick={() => setVersion("v3")}
+        >
+          Version 3 (Warm Chocolate &amp; Sand)
+        </button>
       </div>
 
-      <header className="nav shell">
-        <a className="brand" href="#" aria-label="ScriptRx home">
-          script<span>rx</span><i>.</i>
-        </a>
-        <nav aria-label="Main navigation">
-          <a href="#treatments">Treatments</a>
-          <a href="#how">How it works</a>
-          <a href="#why">Why ScriptRx</a>
-        </nav>
-        <div className="nav-actions">
-          <a className="login" href="#login">Log in</a>
-          <a className="button button-small" href="#treatments">Get started <span>↗</span></a>
+      {cartNotice && (
+        <div className="cart-notice" role="status" aria-live="polite">
+          <span>{cartNotice}</span>
+          <button type="button" onClick={() => setCartNotice("")} aria-label="Close notification">×</button>
         </div>
-      </header>
+      )}
 
-      <section className="hero">
-        <div className="hero-inner shell">
-          <div className="hero-copy">
-            <div className="eyebrow"><i /> REAL CARE. REAL CONVENIENT.</div>
-            <h1>Feel good.<br /><em>Live better.</em></h1>
-            <p>Personalized treatments, licensed providers, and ongoing support—without the waiting room.</p>
-            <div className="hero-actions">
-              <a className="button" href="#treatments">Find my treatment <span>→</span></a>
-              <a className="text-link" href="#how"><i>▶</i> See how it works</a>
-            </div>
-            <div className="trust-row">
-              <div className="avatars" aria-hidden="true"><i>MA</i><i>JL</i><i>SK</i></div>
-              <div><b>Trusted care, nationwide</b><span>Licensed providers in all 50 states</span></div>
-            </div>
+      <section className="reference-hero">
+        <div className="hero-announcement">New: personalized weight care</div>
+
+        <header className="reference-nav">
+          <a className="reference-logo" href="#">Scriptrx</a>
+
+          <nav><a href="/categories?category=womens-health">Women's Health</a><a href="/categories?category=weight-management">Weight Management</a><a href="/categories?category=longevity">Longevity</a></nav>
+
+          <div>
+            {isLoggedIn ? (
+              <>
+                {cartCount > 0 && (
+                  <a className="header-cart-link" href="/cart" aria-label={`Cart with ${cartCount} items`}>
+                    <img className="cart-icon-image" src="/cart-icon.svg" alt="" />
+                    <b>{cartCount}</b>
+                  </a>
+                )}
+                <a className="account-link" href="#">
+                  <span>My Account</span>
+                </a>
+              </>
+            ) : (
+              <>
+                <a href={`/login?theme=${version}`}>Log in</a>
+                <a className="register" href="#care">Get started</a>
+              </>
+            )}
           </div>
+        </header>
 
-          <div className="hero-visual" aria-label="Personalized ScriptRx care plan preview">
-            <div className="sun" />
-            <div className="spark spark-one">✦</div>
-            <div className="spark spark-two">✦</div>
-            <div className="care-card">
-              <div className="care-top">
-                <span>Your care plan</span><i>ACTIVE</i>
-              </div>
-              <div className="care-title">
-                <div className="rx-mark">Rx</div>
-                <div><small>PERSONALIZED FOR YOU</small><h3>Metabolic reset</h3></div>
-              </div>
-              <div className="progress-label"><span>Month 2 of 6</span><b>On track</b></div>
-              <div className="progress"><i /></div>
-              <div className="care-footer">
-                <div><small>NEXT CHECK-IN</small><b>Aug 12</b></div>
-                <button aria-label="Open messages">Message provider <span>→</span></button>
-              </div>
-            </div>
-            <div className="provider-chip">
-              <div className="provider-avatar">DR</div>
-              <div><b>Dr. Riley Chen</b><span><i /> Online now</span></div>
-              <strong>•••</strong>
-            </div>
-            <div className="delivery-chip">
-              <span>✓</span>
-              <div><b>Discreet delivery</b><small>Ships free to your door</small></div>
-            </div>
+        <div className="hero-intro">
+          <div>
+            <span className="hero-kicker">CARE THAT MOVES WITH YOU</span>
+            <h1>Your health.<br />More in your hands.</h1>
           </div>
+          <ul>
+            <li><i>✓</i> Licensed providers, nationwide</li>
+            <li><i>✓</i> Personalized treatment options</li>
+            <li><i>✓</i> Ongoing support, 100% online</li>
+          </ul>
         </div>
-        <div className="marquee" aria-hidden="true">
-          <span>PERSONALIZED CARE</span><b>✦</b><span>LICENSED PROVIDERS</span><b>✦</b><span>FREE DELIVERY</span><b>✦</b><span>ONGOING SUPPORT</span>
-        </div>
-      </section>
 
-      <section className="treatments section shell" id="treatments">
-        <div className="section-heading">
-          <div><span className="kicker">CARE FOR THE REAL YOU</span><h2>What can we help<br />you feel better about?</h2></div>
-          <p>From everyday concerns to bigger health goals, get expert care that fits your life.</p>
-        </div>
-        <div className="treatment-grid">
-          {treatments.map((item) => (
-            <a className={`treatment-card ${item.className}`} href="#how" key={item.name}>
-              <span className="treatment-icon">{item.icon}</span>
-              <div><small>{item.note}</small><h3>{item.name}</h3></div>
-              <i className="round-arrow">↗</i>
-            </a>
-          ))}
-        </div>
-        <div className="browse-row"><a href="#treatments">Browse all treatments <span>→</span></a></div>
-      </section>
+        <div className="story-grid">
+          <a className="story-card story-weight" href="#care">
+            <div className="story-copy">
+              <h2>A plan made<br />for your progress.</h2>
+              {version === "v2" && <span className="card-pill-btn">Explore weight care</span>}
+              {version === "v3" && <span className="card-pill-btn">Explore weight care</span>}
+            </div>
+            <img className="weight-tablet" src="/product-tablet.png" alt="White treatment tablet" />
+            <img className="weight-vial" src="/product-b12.png" alt="Vitamin B12 vial" />
+            <img className="weight-pen" src="/weight-pen.png" alt="Blue injectable treatment pen" />
+          </a>
 
-      <section className="how section" id="how">
-        <div className="shell">
-          <div className="how-intro">
-            <span className="kicker light">SIMPLE BY DESIGN</span>
-            <h2>Healthcare that works<br /><em>around your life.</em></h2>
-            <p>No crowded waiting rooms. No awkward pharmacy lines. Just thoughtful, private care—wherever you are.</p>
-          </div>
-          <div className="steps">
-            {steps.map((step, index) => (
-              <article className="step" key={step.number}>
-                <div className="step-num">{step.number}</div>
-                <div className={`step-art step-art-${index + 1}`}>
-                  {index === 0 && <><div className="mini-form"><i /><i /><i /></div><span>5 min</span></>}
-                  {index === 1 && <><div className="video-person">RC</div><span>● live</span></>}
-                  {index === 2 && <><div className="package">script<span>rx</span>.</div><span>✓</span></>}
+          <a className="story-card story-life" href="#care">
+            {version === "v1" && (
+              <>
+                <img src="/better-sex.jpg" alt="Couple embracing in lavender activewear" />
+                <div className="story-copy">
+                  <h2>Better sex,<br />deeper intimacy.</h2>
                 </div>
-                <h3>{step.title}</h3>
-                <p>{step.copy}</p>
-              </article>
+              </>
+            )}
+            {version === "v2" && (
+              <>
+                <img src="/light-green-couple.jpg" alt="Couple embracing in light green activewear" />
+                <div className="story-copy">
+                  <h2>Feel more like<br />yourself again.</h2>
+                  <span className="card-pill-btn">Explore care</span>
+                </div>
+              </>
+            )}
+            {version === "v3" && (
+              <>
+                <img src="/brown-couple.jpg" alt="Couple embracing in warm brown activewear" />
+                <div className="story-copy">
+                  <h2>Feel more like<br />yourself again.</h2>
+                  <span className="card-pill-btn">Explore products</span>
+                </div>
+              </>
+            )}
+          </a>
+        </div>
+
+        {version === "v3" ? (
+          <div className="hero-treatment-row v3-treatment-row">
+            <a href="/categories?category=weight-management">
+              <img className="v3-cat-img" src="/vial-lose-weight.png" alt="Lose weight vial" />
+              <span>Lose weight</span>
+              <span className="cat-arrow-btn">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </span>
+            </a>
+            <a href="/categories?category=hair-care">
+              <img className="v3-cat-img" src="/bottle-hair-care.png" alt="Grow fuller hair bottle" />
+              <span>Grow fuller hair</span>
+              <span className="cat-arrow-btn">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </span>
+            </a>
+            <a href="/categories?category=longevity">
+              <img className="v3-cat-img" src="/pill-energy-flame.png" alt="Find your baseline pill" />
+              <span>Find your baseline</span>
+              <span className="cat-arrow-btn">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </span>
+            </a>
+          </div>
+        ) : (
+          <div className="hero-treatment-row">
+            <a href="/categories?category=weight-management"><span>Lose weight</span><img className="treatment-thumb-img" src="/vial-lose-weight.png" alt="Lose weight treatment vial" /></a>
+            <a href="/categories?category=hair-care"><span>Grow fuller hair</span><img className="treatment-thumb-bottle" src="/bottle-hair-care.png" alt="Grow fuller hair treatment bottle" /></a>
+            <a href="/categories?category=longevity"><span>Find your baseline</span><img className="treatment-thumb-pill" src="/pill-energy-flame.png" alt="Find your baseline red flame pill" /></a>
+            <a href="/categories?category=longevity"><span>Know your numbers</span><img className="treatment-thumb-pill-silver" src="/pill-silver-novo.png" alt="Know your numbers silver Novo pill" /></a>
+          </div>
+        )}
+      </section>
+
+      <CatalogSection productRows={productRows} addedProducts={addedProducts} onAddToCart={handleAddToCart} onRemoveFromCart={handleRemoveFromCart} />
+
+      <section className="faq-section" id="faq">
+        <div className="faq-shell">
+          <div className="faq-heading"><h2>Have questions?<br />Get clear answers.</h2></div>
+          <div className="faq-list">
+            {faqs.map((faq) => (
+              <details key={faq.question}>
+                <summary><span>{faq.question}</span><i>+</i></summary>
+                <p>{faq.answer}</p>
+              </details>
             ))}
           </div>
-          <a className="button button-light" href="#treatments">Start your visit <span>→</span></a>
         </div>
-      </section>
-
-      <section className="difference section shell" id="why">
-        <div className="difference-panel">
-          <div className="difference-copy">
-            <span className="kicker">WHY SCRIPTRX</span>
-            <h2>Care should feel<br /><em>this good.</em></h2>
-            <p>We bring the expertise of a great clinic together with the ease of doing everything from home.</p>
-            <ul>
-              <li><span>✓</span><div><b>Clinician-led, always</b><small>Your plan is reviewed by a licensed healthcare provider.</small></div></li>
-              <li><span>✓</span><div><b>Personal, not one-size-fits-all</b><small>Treatment built around your goals, history, and preferences.</small></div></li>
-              <li><span>✓</span><div><b>Support that sticks around</b><small>Easy check-ins and ongoing access to your care team.</small></div></li>
-            </ul>
-          </div>
-          <div className="quote-card">
-            <div className="quote-top"><span>“</span><div>★★★★★</div></div>
-            <blockquote>“For the first time, healthcare feels like it was designed for actual humans.”</blockquote>
-            <div className="quote-author"><i>AM</i><div><b>Alex M.</b><span>Verified ScriptRx patient</span></div></div>
-            <div className="quote-stat"><strong>4.9</strong><span>average patient rating</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section className="cta shell">
-        <span className="cta-spark">✦</span>
-        <div><span className="kicker light">YOUR HEALTH. YOUR MOVE.</span><h2>Ready when you are.</h2><p>Start with a quick online visit. No commitment, no waiting room.</p></div>
-        <a className="button button-light" href="#treatments">Get started today <span>↗</span></a>
       </section>
 
       <footer>
-        <div className="shell footer-grid">
-          <div className="footer-brand"><a className="brand footer-logo" href="#">script<span>rx</span><i>.</i></a><p>Better care, built around real life.</p></div>
-          <div><b>Treatments</b><a href="#treatments">Weight care</a><a href="#treatments">Hair growth</a><a href="#treatments">Sexual health</a><a href="#treatments">Skin care</a></div>
-          <div><b>ScriptRx</b><a href="#how">How it works</a><a href="#why">Why ScriptRx</a><a href="#why">Medical team</a><a href="#why">Safety</a></div>
-          <div><b>Support</b><a href="#login">Help center</a><a href="#login">Contact us</a><a href="#login">Log in</a></div>
-        </div>
-        <div className="shell footer-bottom">
-          <span>© 2026 ScriptRx. All rights reserved.</span>
-          <div><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Telehealth consent</a></div>
-        </div>
+        {version === "v1" ? (
+          <div className="footer-panel">
+            <div className="footer-v2-header" style={{ marginBottom: 20 }}>
+              <div className="footer-v2-switcher">
+                <span className="switcher-label">Version:</span>
+                <button type="button" className="version-pill active" onClick={() => setVersion("v1")}>Version 1</button>
+                <button type="button" className="version-pill inactive" onClick={() => setVersion("v2")}>Version 2</button>
+                <button type="button" className="version-pill inactive" onClick={() => setVersion("v3")}>Version 3</button>
+              </div>
+            </div>
+            <div className="footer-links">
+              <p>Personalized online care, thoughtfully designed around your health, goals, and everyday life.</p>
+              <div><b>Categories</b><a href="#care">Weight management</a><a href="#care">Sexual health</a><a href="#care">Hormone support</a><a href="#care">Hair &amp; skin</a><a href="#care">General wellness</a></div>
+              <div><b>Company</b><a href="#">About ScriptRx</a><a href="#care">View catalogue</a><a href="#">Clinical standards</a></div>
+              <div><b>Main</b><a href="#">Homepage</a><a href="#care">Get started</a><a href="#faq">Help center</a></div>
+              <div><b>Legal</b><a href="#">Privacy policy</a><a href="#">Terms</a><a href="#">Telehealth consent</a></div>
+            </div>
+            <a className="footer-wordmark" href="#">Scriptrx</a>
+          </div>
+        ) : (
+          <div className="footer-panel-v2">
+            <div className="footer-v2-header">
+              <div className="footer-v2-switcher">
+                <span className="switcher-label">Version:</span>
+                <button type="button" className={`version-pill ${version === "v1" ? "active" : "inactive"}`} onClick={() => setVersion("v1")}>Version 1</button>
+                <button type="button" className={`version-pill ${version === "v2" ? "active" : "inactive"}`} onClick={() => setVersion("v2")}>Version 2</button>
+                <button type="button" className={`version-pill ${version === "v3" ? "active" : "inactive"}`} onClick={() => setVersion("v3")}>Version 3</button>
+              </div>
+            </div>
+            <div className="footer-links-v2">
+              <p className="footer-intro-text">Simple, honest care for your offerings, and accurate clinical care — 100% online from licensed providers.</p>
+              <div>
+                <b>Categories</b>
+                <a href="#care">Weight Management</a>
+                <a href="#care">Sexual Health</a>
+                <a href="#care">Hormone Therapy</a>
+                <a href="#care">Hair &amp; Skin</a>
+                <a href="#care">General Health &amp; Wellness</a>
+              </div>
+              <div>
+                <b>About the Company</b>
+                <a href="#">About ScriptRx</a>
+                <a href="#care">View Catalog</a>
+                <a href="#">Clinical Standards</a>
+              </div>
+              <div>
+                <b>More</b>
+                <a href="#">Homepage</a>
+                <a href="#care">Request a demo</a>
+                <a href="#care">Store Catalog</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms</a>
+              </div>
+            </div>
+            <a className="footer-wordmark-v2" href="#">Scriptrx</a>
+          </div>
+        )}
       </footer>
     </main>
   );

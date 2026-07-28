@@ -1,0 +1,4 @@
+interface:
+  display_name: "ScriptRx Product Design"
+  short_description: "Build consistent ScriptRx landing pages and dashboards"
+  default_prompt: "Use $scriptrx-product-design to design or refine this ScriptRx interface."
