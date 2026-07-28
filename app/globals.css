@@ -670,3 +670,19 @@ footer{padding:24px 16px;background:#fff;color:#fff}
 .category-product-card.is-added>.catalog-art{box-shadow:0 12px 30px rgba(17,17,17,.09)}
 .catalog-card .product-actions button.added,
 .category-page .category-product-card .product-actions button.added{border:2px solid #111!important;background:#fff;color:#111;box-shadow:none}
+
+/* Full-width homepage product rail; section titles stay aligned and fixed */
+.programs .catalog-grid{
+  width:auto;
+  gap:18px;
+  margin-right:calc(50% - 50vw);
+  margin-left:calc(50% - 50vw);
+  padding-right:max(24px,calc((100vw - 1260px)/2));
+  padding-left:max(24px,calc((100vw - 1260px)/2));
+  scroll-snap-type:none;
+  overscroll-behavior-inline:contain;
+}
+.programs .catalog-card{scroll-snap-align:none}
+@media(max-width:600px){
+  .programs .catalog-grid{gap:12px;padding-right:15px;padding-left:15px}
+}
