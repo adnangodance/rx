@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Product } from "@/components/CatalogSection";
+import { sitePath } from "@/lib/site-path";
 
 const fallbackProduct: Product = {
   name: "Your treatment",
@@ -16,11 +17,11 @@ function OrderHeader({ cartCount }: { cartCount: number }) {
     <>
       <div className="order-announcement">New: personalized weight care</div>
       <header className="order-site-nav">
-        <a className="order-site-logo" href="/">Scriptrx</a>
-        <nav><a href="/#care">Women&apos;s Health</a><a href="/#care">Weight Management</a><a href="/#care">Longevity</a></nav>
+        <a className="order-site-logo" href={sitePath("/")}>Scriptrx</a>
+        <nav><a href={sitePath("/#care")}>Women&apos;s Health</a><a href={sitePath("/#care")}>Weight Management</a><a href={sitePath("/#care")}>Longevity</a></nav>
         <div>
-          {cartCount > 0 && <a className="order-header-cart" href="/cart" aria-label={`Cart with ${cartCount} item`}><img className="cart-icon-image" src="/cart-icon.svg" alt="" /><b>{cartCount}</b></a>}
-          <a className="order-header-account" href="/">My Account</a>
+          {cartCount > 0 && <a className="order-header-cart" href={sitePath("/cart")} aria-label={`Cart with ${cartCount} item`}><img className="cart-icon-image" src={sitePath("/cart-icon.svg")} alt="" /><b>{cartCount}</b></a>}
+          <a className="order-header-account" href={sitePath("/")}>My Account</a>
         </div>
       </header>
     </>
@@ -132,7 +133,7 @@ export default function CartExperience() {
   function removeProduct() {
     localStorage.removeItem("scriptrx-cart-product");
     localStorage.setItem("scriptrx-cart-products", "[]");
-    window.location.href = "/#care";
+    window.location.href = sitePath("/#care");
   }
 
   if (!hasProduct) {
@@ -143,7 +144,7 @@ export default function CartExperience() {
           <span>YOUR CART</span>
           <h1>Nothing here yet.</h1>
           <p>Choose one treatment to begin your order.</p>
-          <a href="/#care">Explore products</a>
+          <a href={sitePath("/#care")}>Explore products</a>
         </section>
       </main>
     );
@@ -160,7 +161,7 @@ export default function CartExperience() {
       <OrderHeader cartCount={1} />
       <div className="order-shell">
         <nav className="order-breadcrumb" aria-label="Breadcrumb">
-          <a href="/">Home</a><span>›</span><a href="/#care">Products</a><span>›</span><strong>Order requirements</strong>
+          <a href={sitePath("/")}>Home</a><span>›</span><a href={sitePath("/#care")}>Products</a><span>›</span><strong>Order requirements</strong>
         </nav>
         <div className="order-heading">
           <h1>Order requirements</h1>
@@ -170,7 +171,7 @@ export default function CartExperience() {
           <section className="requirements-column">
             <article className="requirement-card product-requirement">
               <div className="requirement-product">
-                <div className="order-product-art"><img src={product.image} alt={product.name} /></div>
+                <div className="order-product-art"><img src={sitePath(product.image)} alt={product.name} /></div>
                 <div><span className={ready ? "complete" : ""}>{ready ? "Ready" : "Incomplete"}</span><h2>{product.name}</h2><p>{product.detail}</p></div>
                 <button type="button" onClick={removeProduct}>Remove</button>
               </div>

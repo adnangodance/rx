@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { sitePath } from "@/lib/site-path";
 
 export interface Product {
   name: string;
@@ -95,8 +96,8 @@ function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart }: { row
           <article className={`catalog-card ${isAdded ? "is-added" : ""}`} key={`${product.name}-${idx}`}>
             <div className={`catalog-art ${product.type}`}>
               <div className="product-float">
-                <img className="product-render" src={product.image} alt={product.name} />
-                <img className="product-shadow" src="/product-shadow.png" alt="" />
+                <img className="product-render" src={sitePath(product.image)} alt={product.name} />
+                <img className="product-shadow" src={sitePath("/product-shadow.png")} alt="" />
               </div>
             </div>
             <div className="catalog-copy">

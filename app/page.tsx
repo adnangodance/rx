@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import CatalogSection, { type Product } from "@/components/CatalogSection";
 import HeaderPillNav from "@/components/HeaderPillNav";
+import { sitePath } from "@/lib/site-path";
 
 const productRows = [
   {
@@ -153,14 +154,14 @@ export default function Home() {
         <header className="reference-nav">
           <a className="reference-logo" href="#">Scriptrx</a>
 
-          <nav><a href="/categories?category=womens-health">Women's Health</a><a href="/categories?category=weight-management">Weight Management</a><a href="/categories?category=longevity">Longevity</a></nav>
+          <nav><a href={sitePath("/categories?category=womens-health")}>Women's Health</a><a href={sitePath("/categories?category=weight-management")}>Weight Management</a><a href={sitePath("/categories?category=longevity")}>Longevity</a></nav>
 
           <div>
             {isLoggedIn ? (
               <>
                 {cartCount > 0 && (
-                  <a className="header-cart-link" href="/cart" aria-label={`Cart with ${cartCount} items`}>
-                    <img className="cart-icon-image" src="/cart-icon.svg" alt="" />
+                  <a className="header-cart-link" href={sitePath("/cart")} aria-label={`Cart with ${cartCount} items`}>
+                    <img className="cart-icon-image" src={sitePath("/cart-icon.svg")} alt="" />
                     <b>{cartCount}</b>
                   </a>
                 )}
@@ -170,7 +171,7 @@ export default function Home() {
               </>
             ) : (
               <>
-                <a href={`/login?theme=${version}`}>Log in</a>
+                <a href={sitePath(`/login?theme=${version}`)}>Log in</a>
                 <a className="register" href="#care">Get started</a>
               </>
             )}
@@ -196,15 +197,15 @@ export default function Home() {
               {version === "v2" && <span className="card-pill-btn">Explore weight care</span>}
               {version === "v3" && <span className="card-pill-btn">Explore weight care</span>}
             </div>
-            <img className="weight-tablet" src="/product-tablet.png" alt="White treatment tablet" />
-            <img className="weight-vial" src="/product-b12.png" alt="Vitamin B12 vial" />
-            <img className="weight-pen" src="/weight-pen.png" alt="Blue injectable treatment pen" />
+            <img className="weight-tablet" src={sitePath("/product-tablet.png")} alt="White treatment tablet" />
+            <img className="weight-vial" src={sitePath("/product-b12.png")} alt="Vitamin B12 vial" />
+            <img className="weight-pen" src={sitePath("/weight-pen.png")} alt="Blue injectable treatment pen" />
           </a>
 
           <a className="story-card story-life" href="#care">
             {version === "v1" && (
               <>
-                <img src="/better-sex.jpg" alt="Couple embracing in lavender activewear" />
+                <img src={sitePath("/better-sex.jpg")} alt="Couple embracing in lavender activewear" />
                 <div className="story-copy">
                   <h2>Better sex,<br />deeper intimacy.</h2>
                 </div>
@@ -212,7 +213,7 @@ export default function Home() {
             )}
             {version === "v2" && (
               <>
-                <img src="/light-green-couple.jpg" alt="Couple embracing in light green activewear" />
+                <img src={sitePath("/light-green-couple.jpg")} alt="Couple embracing in light green activewear" />
                 <div className="story-copy">
                   <h2>Feel more like<br />yourself again.</h2>
                   <span className="card-pill-btn">Explore care</span>
@@ -221,7 +222,7 @@ export default function Home() {
             )}
             {version === "v3" && (
               <>
-                <img src="/brown-couple.jpg" alt="Couple embracing in warm brown activewear" />
+                <img src={sitePath("/brown-couple.jpg")} alt="Couple embracing in warm brown activewear" />
                 <div className="story-copy">
                   <h2>Feel more like<br />yourself again.</h2>
                   <span className="card-pill-btn">Explore products</span>
@@ -233,8 +234,8 @@ export default function Home() {
 
         {version === "v3" ? (
           <div className="hero-treatment-row v3-treatment-row">
-            <a href="/categories?category=weight-management">
-              <img className="v3-cat-img" src="/vial-lose-weight.png" alt="Lose weight vial" />
+            <a href={sitePath("/categories?category=weight-management")}>
+              <img className="v3-cat-img" src={sitePath("/vial-lose-weight.png")} alt="Lose weight vial" />
               <span>Lose weight</span>
               <span className="cat-arrow-btn">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -242,8 +243,8 @@ export default function Home() {
                 </svg>
               </span>
             </a>
-            <a href="/categories?category=hair-care">
-              <img className="v3-cat-img" src="/bottle-hair-care.png" alt="Grow fuller hair bottle" />
+            <a href={sitePath("/categories?category=hair-care")}>
+              <img className="v3-cat-img" src={sitePath("/bottle-hair-care.png")} alt="Grow fuller hair bottle" />
               <span>Grow fuller hair</span>
               <span className="cat-arrow-btn">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -251,8 +252,8 @@ export default function Home() {
                 </svg>
               </span>
             </a>
-            <a href="/categories?category=longevity">
-              <img className="v3-cat-img" src="/pill-energy-flame.png" alt="Find your baseline pill" />
+            <a href={sitePath("/categories?category=longevity")}>
+              <img className="v3-cat-img" src={sitePath("/pill-energy-flame.png")} alt="Find your baseline pill" />
               <span>Find your baseline</span>
               <span className="cat-arrow-btn">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -263,10 +264,10 @@ export default function Home() {
           </div>
         ) : (
           <div className="hero-treatment-row">
-            <a href="/categories?category=weight-management"><span>Lose weight</span><img className="treatment-thumb-img" src="/vial-lose-weight.png" alt="Lose weight treatment vial" /></a>
-            <a href="/categories?category=hair-care"><span>Grow fuller hair</span><img className="treatment-thumb-bottle" src="/bottle-hair-care.png" alt="Grow fuller hair treatment bottle" /></a>
-            <a href="/categories?category=longevity"><span>Find your baseline</span><img className="treatment-thumb-pill" src="/pill-energy-flame.png" alt="Find your baseline red flame pill" /></a>
-            <a href="/categories?category=longevity"><span>Know your numbers</span><img className="treatment-thumb-pill-silver" src="/pill-silver-novo.png" alt="Know your numbers silver Novo pill" /></a>
+            <a href={sitePath("/categories?category=weight-management")}><span>Lose weight</span><img className="treatment-thumb-img" src={sitePath("/vial-lose-weight.png")} alt="Lose weight treatment vial" /></a>
+            <a href={sitePath("/categories?category=hair-care")}><span>Grow fuller hair</span><img className="treatment-thumb-bottle" src={sitePath("/bottle-hair-care.png")} alt="Grow fuller hair treatment bottle" /></a>
+            <a href={sitePath("/categories?category=longevity")}><span>Find your baseline</span><img className="treatment-thumb-pill" src={sitePath("/pill-energy-flame.png")} alt="Find your baseline red flame pill" /></a>
+            <a href={sitePath("/categories?category=longevity")}><span>Know your numbers</span><img className="treatment-thumb-pill-silver" src={sitePath("/pill-silver-novo.png")} alt="Know your numbers silver Novo pill" /></a>
           </div>
         )}
       </section>
@@ -312,7 +313,7 @@ export default function Home() {
             <div className="footer-v2-header">
               <div className="footer-v2-switcher">
                 <span className="switcher-label">Version:</span>
-                <button type="button" className={`version-pill ${version === "v1" ? "active" : "inactive"}`} onClick={() => setVersion("v1")}>Version 1</button>
+                <button type="button" className="version-pill inactive" onClick={() => setVersion("v1")}>Version 1</button>
                 <button type="button" className={`version-pill ${version === "v2" ? "active" : "inactive"}`} onClick={() => setVersion("v2")}>Version 2</button>
                 <button type="button" className={`version-pill ${version === "v3" ? "active" : "inactive"}`} onClick={() => setVersion("v3")}>Version 3</button>
               </div>

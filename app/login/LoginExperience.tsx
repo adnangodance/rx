@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { sitePath } from "@/lib/site-path";
 
 type LoginVersion = "v1" | "v2" | "v3";
 
@@ -25,21 +26,21 @@ export default function LoginExperience() {
     event.preventDefault();
     localStorage.setItem("scriptrx-authenticated", "true");
     localStorage.setItem("scriptrx-theme", version);
-    window.location.href = "/";
+    window.location.href = sitePath("/");
   }
 
   return (
     <main className={`login-page login-theme-${version}`}>
       <header className="login-nav">
-        <a className="login-logo" href="/">Scriptrx</a>
+        <a className="login-logo" href={sitePath("/")}>Scriptrx</a>
       </header>
 
       <section className="login-layout">
         <aside className="login-visual" aria-label={`${versionNames[version]} ScriptRx care theme`}>
           <div className="login-glow" />
-          <img className="login-product-tablet" src="/product-tablet.png" alt="" />
-          <img className="login-product-vial" src="/product-b12.png" alt="" />
-          <img className="login-product-pen" src="/weight-pen.png" alt="" />
+          <img className="login-product-tablet" src={sitePath("/product-tablet.png")} alt="" />
+          <img className="login-product-vial" src={sitePath("/product-b12.png")} alt="" />
+          <img className="login-product-pen" src={sitePath("/weight-pen.png")} alt="" />
         </aside>
 
         <div className="login-panel">
@@ -60,7 +61,7 @@ export default function LoginExperience() {
               </div>
               <button className="login-submit login-submit-centered" type="submit">Continue</button>
               <p className="login-legal">By continuing, you agree to our <a href="#">Terms</a> and acknowledge our <a href="#">Privacy Policy</a>.</p>
-              <p className="login-signup">New to ScriptRx? <a href="/#care">Get started</a></p>
+              <p className="login-signup">New to ScriptRx? <a href={sitePath("/#care")}>Get started</a></p>
             </form>
           </div>
           <p className="login-secure"><i>✓</i> Private and securely protected.</p>

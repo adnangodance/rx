@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { sitePath } from "@/lib/site-path";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://scriptrx.com"),
@@ -7,8 +8,8 @@ export const metadata: Metadata = {
   description:
     "Private, personalized online care with licensed providers and discreet delivery.",
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: sitePath("/favicon.svg"),
+    shortcut: sitePath("/favicon.svg"),
   },
   openGraph: {
     title: "ScriptRx — The care you’ve always deserved",

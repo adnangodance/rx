@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Product } from "@/components/CatalogSection";
+import { sitePath } from "@/lib/site-path";
 
 type Category = {
   slug: string;
@@ -112,7 +113,7 @@ export default function CategoryExperience() {
   function chooseCategory(slug: string) {
     setActiveSlug(slug);
     setSearch("");
-    window.history.replaceState({}, "", `/categories?category=${slug}`);
+    window.history.replaceState({}, "", sitePath(`/categories?category=${slug}`));
   }
 
   function addProduct(product: Product) {
@@ -137,11 +138,11 @@ export default function CategoryExperience() {
     <main className="category-page">
       <div className="category-announcement">New: personalized weight care</div>
       <header className="category-header">
-        <a className="category-logo" href="/">Scriptrx</a>
-        <nav><a href="/categories?category=womens-health">Women&apos;s Health</a><a href="/categories?category=weight-management">Weight Management</a><a href="/categories?category=longevity">Longevity</a></nav>
+        <a className="category-logo" href={sitePath("/")}>Scriptrx</a>
+        <nav><a href={sitePath("/categories?category=womens-health")}>Women&apos;s Health</a><a href={sitePath("/categories?category=weight-management")}>Weight Management</a><a href={sitePath("/categories?category=longevity")}>Longevity</a></nav>
         <div>
-          {cartProduct && <a className="category-cart" href="/cart"><img src="/cart-icon.svg" alt="" /><b>1</b></a>}
-          {authenticated ? <a className="category-account" href="/">My Account</a> : <a className="category-account" href="/login">Log in</a>}
+          {cartProduct && <a className="category-cart" href={sitePath("/cart")}><img src={sitePath("/cart-icon.svg")} alt="" /><b>1</b></a>}
+          {authenticated ? <a className="category-account" href={sitePath("/")}>My Account</a> : <a className="category-account" href={sitePath("/login")}>Log in</a>}
         </div>
       </header>
 
@@ -157,7 +158,7 @@ export default function CategoryExperience() {
           <div className="category-list">
             {categories.map((item) => (
               <button className={item.slug === activeSlug ? "active" : ""} type="button" key={item.slug} onClick={() => chooseCategory(item.slug)}>
-                <span><img src={item.thumb} alt="" /></span><b>{item.shortName}</b>
+                <span><img src={sitePath(item.thumb)} alt="" /></span><b>{item.shortName}</b>
               </button>
             ))}
           </div>
@@ -165,7 +166,7 @@ export default function CategoryExperience() {
 
         <section className="category-content">
           <div className="category-cover">
-            <img src={category.cover} alt="" />
+            <img src={sitePath(category.cover)} alt="" />
             <div><span>PERSONALIZED CARE</span><h1>{category.name}</h1><p>{category.description}</p></div>
           </div>
 
@@ -180,8 +181,8 @@ export default function CategoryExperience() {
                 <article className={`catalog-card category-product-card ${added ? "is-added" : ""}`} key={product.name}>
                   <div className={`catalog-art ${product.type}`}>
                     <div className="product-float">
-                      <img className="product-render" src={product.image} alt={product.name} />
-                      <img className="product-shadow" src="/product-shadow.png" alt="" />
+                      <img className="product-render" src={sitePath(product.image)} alt={product.name} />
+                      <img className="product-shadow" src={sitePath("/product-shadow.png")} alt="" />
                     </div>
                   </div>
                   <div className="catalog-copy">
@@ -190,7 +191,7 @@ export default function CategoryExperience() {
                     <span>{product.detail}</span>
                     <div className="product-actions">
                       <button className={added ? "added" : ""} type="button" onClick={() => added ? removeProduct() : addProduct(product)}>{added ? "Remove" : "Add to Cart"}</button>
-                      <a href="/cart">Details</a>
+                      <a href={sitePath("/cart")}>Details</a>
                     </div>
                   </div>
                 </article>
