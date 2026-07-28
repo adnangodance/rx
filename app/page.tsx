@@ -70,6 +70,7 @@ export default function Home() {
   const [version, setVersion] = useState<"v1" | "v2" | "v3" | "v4">("v3");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [addedProducts, setAddedProducts] = useState<string[]>([]);
+  const [pendingProduct, setPendingProduct] = useState<Product | null>(null);
   const [cartNotice, setCartNotice] = useState("");
   const cartCount = addedProducts.length;
 
@@ -96,7 +97,7 @@ export default function Home() {
     setAddedProducts((current) => {
       if (current.includes(product.name)) return current;
       if (current.length > 0) {
-        setCartNotice(`Only one product can be purchased at a time. Remove ${current[0]} from your cart before adding ${product.name}.`);
+        setPendingProduct(product);
         return current;
       }
       const next = [product.name];
@@ -105,6 +106,15 @@ export default function Home() {
       setCartNotice(`${product.name} was added to your cart.`);
       return next;
     });
+  }
+
+  function replaceCartProduct() {
+    if (!pendingProduct) return;
+    setAddedProducts([pendingProduct.name]);
+    localStorage.setItem("scriptrx-cart-products", JSON.stringify([pendingProduct.name]));
+    localStorage.setItem("scriptrx-cart-product", JSON.stringify(pendingProduct));
+    setCartNotice(`${pendingProduct.name} replaced the previous product in your cart.`);
+    setPendingProduct(null);
   }
 
   function handleRemoveFromCart(product: Product) {
@@ -156,6 +166,23 @@ export default function Home() {
         <div className="cart-notice" role="status" aria-live="polite">
           <span>{cartNotice}</span>
           <button type="button" onClick={() => setCartNotice("")} aria-label="Close notification">×</button>
+        </div>
+      )}
+
+      {pendingProduct && (
+        <div className="product-replace-overlay" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget) setPendingProduct(null);
+        }}>
+          <section className="product-replace-dialog" role="dialog" aria-modal="true" aria-labelledby="home-replace-product-title">
+            <button className="product-replace-close" type="button" onClick={() => setPendingProduct(null)} aria-label="Close">×</button>
+            <span>ONE TREATMENT AT A TIME</span>
+            <h2 id="home-replace-product-title">You already have a product in your cart.</h2>
+            <p>Replace <strong>{addedProducts[0]}</strong> with <strong>{pendingProduct.name}</strong>?</p>
+            <div>
+              <button className="product-replace-confirm" type="button" onClick={replaceCartProduct}>Replace product</button>
+              <button className="product-replace-back" type="button" onClick={() => setPendingProduct(null)}>Go back</button>
+            </div>
+          </section>
         </div>
       )}
 

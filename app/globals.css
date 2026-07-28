@@ -663,5 +663,10 @@ footer{padding:24px 16px;background:#fff;color:#fff}
 
 /* Consistent black category actions across every version */
 .category-page .category-product-card .product-actions button,
-.category-page .category-product-card .product-actions button.added,
 .category-page .product-replace-confirm{background:#111;color:#fff}
+
+/* Clearly distinguish the selected product */
+.catalog-card.is-added .catalog-art,
+.category-product-card.is-added>.catalog-art{box-shadow:0 12px 30px rgba(17,17,17,.09)}
+.catalog-card .product-actions button.added,
+.category-page .category-product-card .product-actions button.added{border:2px solid #111!important;background:#fff;color:#111;box-shadow:none}

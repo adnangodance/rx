@@ -105,10 +105,10 @@ function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart }: { row
               <p>From {product.price}</p>
               <span>{product.detail}</span>
               <div className="product-actions">
-                <button type="button" className={isAdded ? "added" : ""} onClick={() => onAddToCart(product)} disabled={isAdded} aria-live="polite">
-                  {isAdded ? "Added ✓" : "Add to Cart"}
+                <button type="button" className={isAdded ? "added" : ""} onClick={() => isAdded ? onRemoveFromCart(product) : onAddToCart(product)} aria-live="polite">
+                  {isAdded ? "Remove" : "Add to Cart"}
                 </button>
-                {isAdded ? <button type="button" className="remove-cart-item" onClick={() => onRemoveFromCart(product)}>Remove</button> : <a href="#care">Details</a>}
+                <a href="#care">Details</a>
               </div>
             </div>
           </article>
