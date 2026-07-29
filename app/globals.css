@@ -535,6 +535,9 @@ footer{padding:24px 16px;background:#fff;color:#fff}
 @media(max-width:700px){.assessment-header h1{white-space:normal;font-size:24px}}
 .assessment-answers button.selected,.assessment-theme-v1 .assessment-answers button.selected,.assessment-theme-v2 .assessment-answers button.selected,.assessment-theme-v3 .assessment-answers button.selected{border-color:#111;background:#111;color:#fff}
 .assessment-complete:disabled{background:#dedcd7!important;color:#999690!important;box-shadow:none;opacity:1;cursor:not-allowed}
+.assessment-question.locked{max-height:76px;opacity:.34;filter:blur(2px);pointer-events:none;user-select:none;transition:opacity .25s ease,filter .25s ease,max-height .25s ease}
+.assessment-question.locked .assessment-question-head{min-height:76px}
+.assessment-question:not(.locked){opacity:1;filter:none;transition:opacity .25s ease,filter .25s ease}
 
 /* Medical consent flow */
 .medical-consent-page{padding-top:18px}.consent-shell{width:min(680px,100%)}.consent-section-title{margin-top:62px}.consent-questions{display:grid;gap:14px}.consent-question{padding:24px 26px;border:1px solid #e2dfd9;border-radius:20px;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.025)}.consent-question-head{display:flex;align-items:center;gap:18px;padding-bottom:18px;border-bottom:1px solid #e8e5df}.consent-question-head i{width:40px;height:40px;display:grid;place-items:center;flex:0 0 auto;border-radius:50%;background:#efede8;color:#77736d;font-size:12px;font-style:normal;font-weight:700}.consent-question.answered .consent-question-head i{background:#52775d;color:#fff}.consent-question-head h2{margin:0;font-size:14px;line-height:1.35;font-weight:600}.consent-question-answers{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-top:18px}.consent-question-answers button{height:56px;border:1px solid #dedbd5;border-radius:13px;background:#fff;color:#66625d;font-size:12px;cursor:pointer}.consent-question-answers button:hover,.consent-question-answers button.selected{border-color:#4f7258;background:#eff5ef;color:#2e5738}.assessment-theme-v1 .consent-question.answered .consent-question-head i{background:#625aab}.assessment-theme-v1 .consent-question-answers button.selected{border-color:#625aab;background:#f4f2ff;color:#4e478f}.assessment-theme-v2 .consent-question.answered .consent-question-head i{background:#315d3d}.assessment-theme-v3 .consent-question.answered .consent-question-head i{background:#6b432c}.assessment-theme-v4 .consent-question.answered .consent-question-head i{background:#c37d80}.consent-save{margin-top:58px}.consent-terms{color:#171717;font-size:13px;line-height:1.48}.consent-terms h2{margin:0 0 15px;font-size:14px}.consent-terms p{margin:0 0 18px}.consent-terms ul{display:grid;gap:16px;margin:0 0 20px;padding:0;list-style:none}.consent-terms li{position:relative;padding-left:17px}.consent-terms li:before{content:"–";position:absolute;left:0}.consent-confirm{min-height:62px;display:flex;align-items:center;gap:14px;margin-top:14px;padding:0 20px;border:1px solid #e2dfd9;border-radius:14px;font-size:12px;cursor:pointer}.consent-confirm input{width:25px;height:25px;margin:0;accent-color:#111}.consent-confirm span{line-height:1.4}
@@ -717,6 +720,15 @@ footer{padding:24px 16px;background:#fff;color:#fff}
 .product-requirement .requirement-step.done>strong{
   background:#111!important;
   color:#fff!important;
+}
+.product-requirement .requirement-step.done>i,
+.product-requirement .requirement-step.muted.done>i{
+  background:#111!important;
+  color:#fff!important;
+}
+.requirements-column .consent-card{
+  border:1px solid #e2e0dc!important;
+  background:#fff!important;
 }
 
 @media(max-width:620px){

@@ -46,6 +46,7 @@ function EligibilityAssessment({ product, theme, onCancel, onComplete }: { produ
     setAnswers((current) => {
       const next = [...current];
       next[activeQuestion] = answer;
+      for (let index = activeQuestion + 1; index < next.length; index += 1) next[index] = "";
       return next;
     });
     if (activeQuestion < questions.length - 1) setActiveQuestion(activeQuestion + 1);
@@ -72,9 +73,10 @@ function EligibilityAssessment({ product, theme, onCancel, onComplete }: { produ
           {questions.map((question, index) => {
             const answered = Boolean(answers[index]);
             const active = activeQuestion === index;
+            const locked = index > answeredCount;
             return (
-              <article className={`assessment-question ${active ? "active" : ""} ${answered ? "answered" : ""}`} key={question}>
-                <button className="assessment-question-head" type="button" onClick={() => setActiveQuestion(index)}>
+              <article className={`assessment-question ${active ? "active" : ""} ${answered ? "answered" : ""} ${locked ? "locked" : ""}`} key={question}>
+                <button className="assessment-question-head" type="button" disabled={locked} onClick={() => !locked && setActiveQuestion(index)}>
                   <i>{answered ? "✓" : index + 1}</i>
                   <span><b>{question}<em>*</em></b>{answered && !active && <small>{answers[index]}</small>}</span>
                   <strong>{active ? "⌃" : "⌄"}</strong>
