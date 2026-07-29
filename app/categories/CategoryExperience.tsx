@@ -223,14 +223,26 @@ export default function CategoryExperience() {
               const added = cartProduct?.name === product.name;
               return (
                 <article className={`catalog-card category-product-card ${added ? "is-added" : ""}`} key={product.name}>
-                  <div className={`catalog-art ${product.type}`}>
+                  <a
+                    className={`catalog-art product-detail-hit ${product.type}`}
+                    href={sitePath("/product")}
+                    onClick={() => localStorage.setItem("scriptrx-detail-product", JSON.stringify(product))}
+                    aria-label={`View details for ${product.name}`}
+                  >
                     <div className="product-float">
                       <img className="product-render" src={sitePath(product.image)} alt={product.name} />
                       <img className="product-shadow" src={sitePath("/product-shadow.png")} alt="" />
                     </div>
-                  </div>
+                  </a>
                   <div className="catalog-copy">
-                    <h4>{product.name}</h4>
+                    <h4>
+                      <a
+                        href={sitePath("/product")}
+                        onClick={() => localStorage.setItem("scriptrx-detail-product", JSON.stringify(product))}
+                      >
+                        {product.name}
+                      </a>
+                    </h4>
                     <p>From {product.price}</p>
                     <span>{product.detail}</span>
                     <div className="product-actions">

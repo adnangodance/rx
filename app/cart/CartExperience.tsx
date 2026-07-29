@@ -99,13 +99,151 @@ function EligibilityAssessment({ product, theme, onCancel, onComplete }: { produ
   );
 }
 
+function MedicalConsent({ theme, onCancel, onComplete }: { theme: "v1" | "v2" | "v3" | "v4"; onCancel: () => void; onComplete: () => void }) {
+  const questions = [
+    "Congestive heart failure?",
+    "Severe renal impairment?",
+    "Heart attack or stroke?",
+    "Sodium retention or electrolyte imbalance?",
+  ];
+  const [answers, setAnswers] = useState<string[]>(Array(questions.length).fill(""));
+  const [step, setStep] = useState<"conditions" | "terms">("terms");
+  const [agreed, setAgreed] = useState(false);
+  const complete = answers.every(Boolean);
+
+  if (step === "terms") {
+    return (
+      <main className={`assessment-page medical-consent-page assessment-theme-${theme}`}>
+        <div className="assessment-shell consent-shell">
+          <header className="assessment-header">
+            <button type="button" onClick={onCancel} aria-label="Back to order">←</button>
+            <div><h1>Medical Consent</h1></div>
+            <button type="button" className="assessment-cancel" onClick={onCancel}>Cancel</button>
+          </header>
+
+          <div className="assessment-section-title consent-section-title"><span />PLEASE READ TERMS AND CONDITIONS<span /></div>
+          <p className="assessment-intro">Please read the following terms and conditions.</p>
+
+          <article className="consent-terms">
+            <h2>Please read the following carefully.</h2>
+            <p>ScriptRx provides access to licensed healthcare professionals who review the health information you submit. Completing an intake or consent form does not guarantee a diagnosis, prescription, or treatment.</p>
+            <p>I understand that:</p>
+            <ul>
+              <li>Treatment may involve prescription medication or self-administered therapy selected by a licensed provider.</li>
+              <li>All treatments may involve short- and long-term risks, side effects, benefits, and alternatives.</li>
+              <li>I have provided complete and accurate information about my health, medications, allergies, and prior reactions.</li>
+              <li>I may ask questions and receive information about any recommended treatment before deciding whether to proceed.</li>
+              <li>I authorize electronic communication, documentation, and signatures related to my care.</li>
+            </ul>
+            <p>By electronically signing this consent, I confirm that I have reviewed the information above, understand it, and consent to receive care through ScriptRx when a licensed provider determines treatment is clinically appropriate.</p>
+          </article>
+
+          <label className="consent-confirm">
+            <input type="checkbox" checked={agreed} onChange={(event) => setAgreed(event.target.checked)} />
+            <span>Do you give your consent to the above?</span>
+          </label>
+          <button className="assessment-complete consent-save" type="button" disabled={!agreed} onClick={() => setStep("conditions")}>Save</button>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className={`assessment-page medical-consent-page assessment-theme-${theme}`}>
+      <div className="assessment-shell consent-shell">
+        <header className="assessment-header">
+          <button type="button" onClick={() => setStep("terms")} aria-label="Back to terms and conditions">←</button>
+          <div><h1>Medical Consent</h1></div>
+          <button type="button" className="assessment-cancel" onClick={onCancel}>Cancel</button>
+        </header>
+
+        <div className="assessment-section-title consent-section-title"><span />DO YOU HAVE ANY OF THE FOLLOWING MEDICAL CONDITIONS?<span /></div>
+        <p className="assessment-intro">Answer the following questions.</p>
+
+        <section className="consent-questions">
+          {questions.map((question, index) => (
+            <article className={`consent-question ${answers[index] ? "answered" : ""}`} key={question}>
+              <div className="consent-question-head"><i>{answers[index] ? "✓" : index + 1}</i><h2>{question}</h2></div>
+              <div className="consent-question-answers">
+                {["Yes", "No"].map((answer) => (
+                  <button
+                    type="button"
+                    className={answers[index] === answer ? "selected" : ""}
+                    onClick={() => setAnswers((current) => current.map((value, answerIndex) => answerIndex === index ? answer : value))}
+                    key={answer}
+                  >
+                    {answer}
+                  </button>
+                ))}
+              </div>
+            </article>
+          ))}
+        </section>
+
+        <button className="assessment-complete consent-save" type="button" disabled={!complete} onClick={onComplete}>Save</button>
+      </div>
+    </main>
+  );
+}
+
+function ProviderReview({ product, theme, onCancel, onComplete }: { product: Product; theme: "v1" | "v2" | "v3" | "v4"; onCancel: () => void; onComplete: () => void }) {
+  const preferences = [
+    { label: "How would you prefer to meet?", options: ["Video visit", "Phone call"] },
+    { label: "What time usually works best?", options: ["Morning", "Afternoon"] },
+    { label: "May your provider contact you about this treatment?", options: ["Yes", "No"] },
+  ];
+  const [answers, setAnswers] = useState<string[]>(Array(preferences.length).fill(""));
+  const complete = answers.every(Boolean);
+
+  return (
+    <main className={`assessment-page provider-review-page assessment-theme-${theme}`}>
+      <div className="assessment-shell consent-shell">
+        <header className="assessment-header">
+          <button type="button" onClick={onCancel} aria-label="Back to order">←</button>
+          <div><h1>Provider Review</h1></div>
+          <button type="button" className="assessment-cancel" onClick={onCancel}>Cancel</button>
+        </header>
+
+        <div className="assessment-section-title consent-section-title"><span />CONSULTATION PREFERENCES<span /></div>
+        <p className="assessment-intro">Tell us how you would like to connect with a licensed provider about {product.name}.</p>
+
+        <section className="consent-questions">
+          {preferences.map((preference, index) => (
+            <article className={`consent-question ${answers[index] ? "answered" : ""}`} key={preference.label}>
+              <div className="consent-question-head"><i>{answers[index] ? "✓" : index + 1}</i><h2>{preference.label}</h2></div>
+              <div className="consent-question-answers">
+                {preference.options.map((answer) => (
+                  <button
+                    type="button"
+                    className={answers[index] === answer ? "selected" : ""}
+                    onClick={() => setAnswers((current) => current.map((value, answerIndex) => answerIndex === index ? answer : value))}
+                    key={answer}
+                  >
+                    {answer}
+                  </button>
+                ))}
+              </div>
+            </article>
+          ))}
+        </section>
+
+        <div className="provider-review-note"><i>i</i><p>A licensed provider will review your health information. Your preferences help us coordinate care but do not guarantee a specific appointment time or treatment.</p></div>
+        <button className="assessment-complete consent-save" type="button" disabled={!complete} onClick={onComplete}>Submit for provider review</button>
+      </div>
+    </main>
+  );
+}
+
 export default function CartExperience() {
   const [product, setProduct] = useState<Product>(fallbackProduct);
   const [theme, setTheme] = useState<"v1" | "v2" | "v3" | "v4">("v3");
   const [eligible, setEligible] = useState(false);
+  const [providerReviewed, setProviderReviewed] = useState(false);
   const [consented, setConsented] = useState(false);
   const [hasProduct, setHasProduct] = useState(false);
   const [showAssessment, setShowAssessment] = useState(false);
+  const [showProviderReview, setShowProviderReview] = useState(false);
+  const [showConsent, setShowConsent] = useState(false);
 
   useEffect(() => {
     try {
@@ -150,10 +288,18 @@ export default function CartExperience() {
     );
   }
 
-  const ready = eligible && consented;
+  const ready = eligible && providerReviewed && consented;
 
   if (showAssessment) {
     return <EligibilityAssessment product={product} theme={theme} onCancel={() => setShowAssessment(false)} onComplete={() => { setEligible(true); setShowAssessment(false); }} />;
+  }
+
+  if (showConsent) {
+    return <MedicalConsent theme={theme} onCancel={() => setShowConsent(false)} onComplete={() => { setConsented(true); setShowConsent(false); }} />;
+  }
+
+  if (showProviderReview) {
+    return <ProviderReview product={product} theme={theme} onCancel={() => setShowProviderReview(false)} onComplete={() => { setProviderReviewed(true); setShowProviderReview(false); }} />;
   }
 
   return (
@@ -177,16 +323,21 @@ export default function CartExperience() {
               </div>
 
               <button className={`requirement-step ${eligible ? "done" : ""}`} type="button" onClick={() => eligible ? undefined : setShowAssessment(true)}>
-                <i>{eligible ? "✓" : "1"}</i><span><b>{eligible ? "Eligibility confirmed" : "Check eligibility"}</b><small>Answer a few private health questions</small></span><strong><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg></strong>
+                <i>{eligible ? "✓" : "1"}</i><span><b>{eligible ? "Eligibility confirmed" : "Check eligibility"}</b><small>Answer a few private health questions</small></span><strong>{eligible ? "Completed" : "Answer"}</strong>
               </button>
-              <div className={`requirement-step muted ${eligible ? "available" : ""}`}>
-                <i>2</i><span><b>Provider review</b><small>Available after eligibility</small></span><strong><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg></strong>
-              </div>
+              <button
+                className={`requirement-step muted ${eligible ? "available" : ""} ${providerReviewed ? "done" : ""}`}
+                type="button"
+                disabled={!eligible}
+                onClick={() => eligible && !providerReviewed ? setShowProviderReview(true) : undefined}
+              >
+                <i>{providerReviewed ? "✓" : "2"}</i><span><b>{providerReviewed ? "Review requested" : "Provider review"}</b><small>{eligible ? "Choose your consultation preferences" : "Available after eligibility"}</small></span><strong>{providerReviewed ? "Completed" : "Answer"}</strong>
+              </button>
             </article>
 
             <article className={`consent-card ${consented ? "done" : ""}`}>
               <div><i>{consented ? "✓" : "!"}</i><span><b>Medical consent</b><small>Required before checkout</small></span></div>
-              <button type="button" onClick={() => setConsented(true)}>{consented ? "Completed" : "Review & sign"}</button>
+              <button type="button" onClick={() => consented ? undefined : setShowConsent(true)}>{consented ? "Completed" : "Review & sign"}</button>
             </article>
           </section>
 
@@ -206,7 +357,7 @@ export default function CartExperience() {
 
             <div className="policy-links"><a href="#">Shipping policy</a><a href="#">Return policy</a></div>
             <button className="checkout-button" type="button" disabled={!ready}>
-              {ready ? `Continue to checkout · $${pricing.total.toFixed(2)}` : "Complete requirements to continue"}
+              ${pricing.total.toFixed(2)} · Proceed to checkout
             </button>
           </aside>
         </div>
