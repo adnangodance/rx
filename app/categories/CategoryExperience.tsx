@@ -235,7 +235,12 @@ export default function CategoryExperience() {
                     <span>{product.detail}</span>
                     <div className="product-actions">
                       <button className={added ? "added" : ""} type="button" onClick={() => added ? removeProduct() : addProduct(product)}>{added ? "Remove" : "Add to Cart"}</button>
-                      <a href={sitePath("/cart")}>Details</a>
+                      <a
+                        href={sitePath("/product")}
+                        onClick={() => localStorage.setItem("scriptrx-detail-product", JSON.stringify(product))}
+                      >
+                        Details
+                      </a>
                     </div>
                   </div>
                 </article>

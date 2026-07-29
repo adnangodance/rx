@@ -108,7 +108,12 @@ function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart }: { row
                 <button type="button" className={isAdded ? "added" : ""} onClick={() => isAdded ? onRemoveFromCart(product) : onAddToCart(product)} aria-live="polite">
                   {isAdded ? "Remove" : "Add to Cart"}
                 </button>
-                <a href="#care">Details</a>
+                <a
+                  href={sitePath("/product")}
+                  onClick={() => localStorage.setItem("scriptrx-detail-product", JSON.stringify(product))}
+                >
+                  Details
+                </a>
               </div>
             </div>
           </article>
