@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import ClassicHeader from "@/components/ClassicHeader";
 import type { Product } from "@/components/CatalogSection";
+import VersionBar from "@/components/VersionBar";
+import { animateProductToCart } from "@/lib/cart-animation";
 import { sitePath } from "@/lib/site-path";
 
 type Category = {
@@ -108,12 +111,43 @@ export default function CategoryExperience() {
   const [search, setSearch] = useState("");
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
   const [pendingProduct, setPendingProduct] = useState<Product | null>(null);
-  const [notice, setNotice] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
+  const [coverHidden, setCoverHidden] = useState(false);
 
   useEffect(() => {
-    const slug = new URLSearchParams(window.location.search).get("category");
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get("category");
+    const query = params.get("q")?.trim() || "";
     if (categories.some((category) => category.slug === slug)) setActiveSlug(slug!);
+    if (query) {
+      const normalizedQuery = query.toLowerCase();
+      const categoryAliases: Record<string, string> = {
+        "weight loss": "weight-management",
+        "weight management": "weight-management",
+        "sexual health": "sexual-health",
+        testosterone: "sexual-health",
+        "hair loss": "hair-care",
+        hair: "hair-care",
+        skin: "acne",
+        acne: "acne",
+        peptide: "longevity",
+        peptides: "longevity",
+        longevity: "longevity",
+      };
+      const aliasSlug = categoryAliases[normalizedQuery];
+      if (aliasSlug) {
+        setActiveSlug(aliasSlug);
+        setSearch("");
+      } else {
+        setSearch(query);
+        const matchingCategory = categories.find((item) =>
+          item.products.map((product) => `${product.name} ${product.detail}`).join(" ")
+          .toLowerCase()
+          .includes(normalizedQuery),
+        );
+        if (matchingCategory) setActiveSlug(matchingCategory.slug);
+      }
+    }
     const savedTheme = localStorage.getItem("scriptrx-theme");
     if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4") setTheme(savedTheme);
     setAuthenticated(localStorage.getItem("scriptrx-authenticated") === "true");
@@ -125,13 +159,32 @@ export default function CategoryExperience() {
     }
   }, []);
 
+  useEffect(() => {
+    const updateCoverOnScroll = () => {
+      if (window.scrollY <= 2) {
+        setCoverHidden(false);
+      } else if (window.scrollY > 12) {
+        setCoverHidden(true);
+      }
+    };
+
+    window.addEventListener("scroll", updateCoverOnScroll, { passive: true });
+    return () => window.removeEventListener("scroll", updateCoverOnScroll);
+  }, []);
+
   const category = categories.find((item) => item.slug === activeSlug) || categories[0];
+  const categoryDisplayName = category.name;
   const products = useMemo(() => category.products.filter((product) => `${product.name} ${product.detail}`.toLowerCase().includes(search.toLowerCase())), [category, search]);
 
   function chooseCategory(slug: string) {
     setActiveSlug(slug);
     setSearch("");
     window.history.replaceState({}, "", sitePath(`/categories?category=${slug}`));
+  }
+
+  function chooseTheme(nextTheme: "v1" | "v2" | "v3" | "v4") {
+    setTheme(nextTheme);
+    localStorage.setItem("scriptrx-theme", nextTheme);
   }
 
   function addProduct(product: Product) {
@@ -142,7 +195,6 @@ export default function CategoryExperience() {
     setCartProduct(product);
     localStorage.setItem("scriptrx-cart-product", JSON.stringify(product));
     localStorage.setItem("scriptrx-cart-products", JSON.stringify([product.name]));
-    setNotice(`${product.name} was added to your cart.`);
   }
 
   function replaceProduct() {
@@ -150,7 +202,6 @@ export default function CategoryExperience() {
     setCartProduct(pendingProduct);
     localStorage.setItem("scriptrx-cart-product", JSON.stringify(pendingProduct));
     localStorage.setItem("scriptrx-cart-products", JSON.stringify([pendingProduct.name]));
-    setNotice(`${pendingProduct.name} replaced the previous product in your cart.`);
     setPendingProduct(null);
   }
 
@@ -158,22 +209,23 @@ export default function CategoryExperience() {
     setCartProduct(null);
     localStorage.removeItem("scriptrx-cart-product");
     localStorage.setItem("scriptrx-cart-products", "[]");
-    setNotice("Product removed. You can now choose another treatment.");
   }
 
   return (
     <main className={`category-page category-theme-${theme}`}>
-      <div className="category-announcement">New: personalized weight care</div>
-      <header className="category-header">
-        <a className="category-logo" href={sitePath("/")}>Scriptrx</a>
+      <VersionBar version={theme} onChange={chooseTheme} />
+      {theme !== "v1" && <div className="category-announcement">New: personalized weight care</div>}
+      {theme === "v1" ? <ClassicHeader cartCount={cartProduct ? 1 : 0} searchValue={search} onSearchChange={setSearch} /> : <header className="category-header">
+        <a className="category-logo" href={sitePath("/")}>
+          {theme === "v1" ? <img className="v1-brand-logo" src={sitePath("/scriptrx-logo-v1.png")} alt="ScriptRx" /> : "Scriptrx"}
+        </a>
         <nav><a href={sitePath("/categories?category=womens-health")}>Women&apos;s Health</a><a href={sitePath("/categories?category=weight-management")}>Weight Management</a><a href={sitePath("/categories?category=longevity")}>Longevity</a></nav>
         <div>
           {cartProduct && <a className="category-cart" href={sitePath("/cart")}><img src={sitePath("/cart-icon.svg")} alt="" /><b>1</b></a>}
           {authenticated ? <a className="category-account" href={sitePath("/")}>My Account</a> : <a className="category-account" href={sitePath(`/login?theme=${theme}`)}>Log in</a>}
         </div>
-      </header>
+      </header>}
 
-      {notice && <div className="cart-notice" role="status"><span>{notice}</span><button type="button" onClick={() => setNotice("")}>×</button></div>}
 
       {pendingProduct && (
         <div className="product-replace-overlay" role="presentation" onMouseDown={(event) => {
@@ -192,7 +244,7 @@ export default function CategoryExperience() {
         </div>
       )}
 
-      <div className="category-shell">
+      <div className="category-shell" id="classic-products">
         <aside className="category-sidebar">
           <label className="category-sidebar-search">
             <span aria-hidden="true" />
@@ -202,20 +254,28 @@ export default function CategoryExperience() {
           <div className="category-list">
             {categories.map((item) => (
               <button className={item.slug === activeSlug ? "active" : ""} type="button" key={item.slug} onClick={() => chooseCategory(item.slug)}>
-                <span><img src={sitePath(item.thumb)} alt="" /></span><b>{item.shortName}</b>
+                <span><img src={sitePath(item.thumb)} alt="" /></span>
+                <b>{theme === "v1" && item.slug === "weight-management" ? "A plan made for you" : theme === "v1" && item.slug === "sexual-health" ? "Better sex" : item.shortName}</b>
               </button>
             ))}
           </div>
         </aside>
 
         <section className="category-content">
-          <div className="category-cover">
+          <div className={`category-cover ${coverHidden ? "is-scroll-hidden" : ""}`}>
             <img src={sitePath(category.cover)} alt="" />
-            <div><span>PERSONALIZED CARE</span><h1>{category.name}</h1><p>{category.description}</p></div>
+            <div><span>PERSONALIZED CARE</span><h1>{categoryDisplayName}</h1><p>{category.description}</p></div>
           </div>
 
           <div className="category-toolbar">
-            <h2>{category.name}</h2>
+            <h2>{categoryDisplayName}</h2>
+            {theme === "v1" && (
+              <label className="classic-product-search">
+                <span aria-hidden="true" />
+                <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search Products" />
+                <kbd>⌘</kbd><kbd>F</kbd>
+              </label>
+            )}
           </div>
 
           <div className="category-product-grid">
@@ -246,7 +306,14 @@ export default function CategoryExperience() {
                     <p>From {product.price}</p>
                     <span>{product.detail}</span>
                     <div className="product-actions">
-                      <button className={added ? "added" : ""} type="button" onClick={() => added ? removeProduct() : addProduct(product)}>{added ? "Remove" : "Add to Cart"}</button>
+                      <button className={added ? "added" : ""} type="button" onClick={(event) => {
+                        if (added) {
+                          removeProduct();
+                        } else {
+                          animateProductToCart(event.currentTarget);
+                          addProduct(product);
+                        }
+                      }}>{added ? "Remove" : "Add to Cart"}</button>
                       <a
                         href={sitePath("/product")}
                         onClick={() => localStorage.setItem("scriptrx-detail-product", JSON.stringify(product))}

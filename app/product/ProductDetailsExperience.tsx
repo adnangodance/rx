@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ClassicHeader from "@/components/ClassicHeader";
 import type { Product } from "@/components/CatalogSection";
+import { animateProductToCart } from "@/lib/cart-animation";
 import { sitePath } from "@/lib/site-path";
+import VersionBar from "@/components/VersionBar";
 
 type Theme = "v1" | "v2" | "v3" | "v4";
 
@@ -49,7 +52,7 @@ export default function ProductDetailsExperience() {
     setShowReplace(false);
   }
 
-  function handlePrimaryAction() {
+  function handlePrimaryAction(source?: HTMLElement) {
     if (isAdded) {
       localStorage.removeItem("scriptrx-cart-product");
       localStorage.setItem("scriptrx-cart-products", "[]");
@@ -60,14 +63,18 @@ export default function ProductDetailsExperience() {
       setShowReplace(true);
       return;
     }
+    if (source) animateProductToCart(source);
     saveProduct();
   }
 
   return (
     <main className={`product-detail-page product-detail-theme-${theme}`}>
-      <div className="product-detail-announcement">Personalized care, reviewed by licensed providers</div>
-      <header className="product-detail-header">
-        <a className="product-detail-logo" href={sitePath("/")}>Scriptrx</a>
+      <VersionBar version={theme} onChange={(nextTheme) => { setTheme(nextTheme); localStorage.setItem("scriptrx-theme", nextTheme); }} />
+      {theme !== "v1" && <div className="product-detail-announcement">Personalized care, reviewed by licensed providers</div>}
+      {theme === "v1" ? <ClassicHeader cartCount={cartProduct ? 1 : 0} /> : <header className="product-detail-header">
+        <a className="product-detail-logo" href={sitePath("/")}>
+          {theme === "v1" ? <img className="v1-brand-logo" src={sitePath("/scriptrx-logo-v1.png")} alt="ScriptRx" /> : "Scriptrx"}
+        </a>
         <nav>
           <a href={sitePath("/categories?category=weight-management")}>Treatments</a>
           <a href={sitePath("/categories?category=longevity")}>Product options</a>
@@ -77,7 +84,7 @@ export default function ProductDetailsExperience() {
           {cartProduct && <a className="category-cart" href={sitePath("/cart")}><img src={sitePath("/cart-icon.svg")} alt="" /><b>1</b></a>}
           <a className="category-account" href={sitePath(`/login?theme=${theme}`)}>My Account</a>
         </div>
-      </header>
+      </header>}
 
       <nav className="product-detail-breadcrumb" aria-label="Breadcrumb">
         <a href={sitePath("/")}>Home</a><span>›</span><a href={sitePath("/categories")}>Treatments</a><span>›</span><strong>{product.name}</strong>
@@ -102,7 +109,7 @@ export default function ProductDetailsExperience() {
             <li>Personalized treatment, if prescribed</li>
             <li>Discreet delivery with ongoing support</li>
           </ul>
-          <button className="product-detail-primary" type="button" onClick={handlePrimaryAction}>
+          <button className="product-detail-primary" type="button" onClick={(event) => handlePrimaryAction(event.currentTarget)}>
             {isAdded ? "Remove" : "Add to cart"}
           </button>
           <button className="product-detail-secondary" type="button" onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}>How it works</button>
@@ -155,7 +162,7 @@ export default function ProductDetailsExperience() {
 
       <div className="product-detail-sticky">
         <div><small>{product.name}</small><strong>{product.price}</strong></div>
-        <button type="button" onClick={handlePrimaryAction}>{isAdded ? "Remove" : "Add to cart"}</button>
+        <button type="button" onClick={(event) => handlePrimaryAction(event.currentTarget)}>{isAdded ? "Remove" : "Add to cart"}</button>
       </div>
 
       {showReplace && (

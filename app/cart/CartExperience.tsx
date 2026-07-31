@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import ClassicHeader from "@/components/ClassicHeader";
 import type { Product } from "@/components/CatalogSection";
+import VersionBar from "@/components/VersionBar";
 import { sitePath } from "@/lib/site-path";
 
 const fallbackProduct: Product = {
@@ -12,12 +14,16 @@ const fallbackProduct: Product = {
   image: "/product-tablet.png",
 };
 
-function OrderHeader({ cartCount }: { cartCount: number }) {
+function OrderHeader({ cartCount, theme }: { cartCount: number; theme: "v1" | "v2" | "v3" | "v4" }) {
+  if (theme === "v1") return <ClassicHeader cartCount={cartCount} />;
+
   return (
     <>
       <div className="order-announcement">New: personalized weight care</div>
       <header className="order-site-nav">
-        <a className="order-site-logo" href={sitePath("/")}>Scriptrx</a>
+        <a className="order-site-logo" href={sitePath("/")}>
+          Scriptrx
+        </a>
         <nav><a href={sitePath("/#care")}>Women&apos;s Health</a><a href={sitePath("/#care")}>Weight Management</a><a href={sitePath("/#care")}>Longevity</a></nav>
         <div>
           {cartCount > 0 && <a className="order-header-cart" href={sitePath("/cart")} aria-label={`Cart with ${cartCount} item`}><img className="cart-icon-image" src={sitePath("/cart-icon.svg")} alt="" /><b>{cartCount}</b></a>}
@@ -28,7 +34,7 @@ function OrderHeader({ cartCount }: { cartCount: number }) {
   );
 }
 
-function EligibilityAssessment({ product, theme, onCancel, onComplete }: { product: Product; theme: "v1" | "v2" | "v3" | "v4"; onCancel: () => void; onComplete: () => void }) {
+function EligibilityAssessment({ product, theme, onThemeChange, onCancel, onComplete }: { product: Product; theme: "v1" | "v2" | "v3" | "v4"; onThemeChange: (theme: "v1" | "v2" | "v3" | "v4") => void; onCancel: () => void; onComplete: () => void }) {
   const questions = [
     `Have you ever had an allergic or adverse reaction to ${product.name} or any of its ingredients?`,
     "Have you ever had an allergic or adverse reaction to a similar medication or treatment?",
@@ -54,6 +60,7 @@ function EligibilityAssessment({ product, theme, onCancel, onComplete }: { produ
 
   return (
     <main className={`assessment-page assessment-theme-${theme}`}>
+      <VersionBar version={theme} onChange={onThemeChange} />
       <div className="assessment-shell">
         <header className="assessment-header">
           <button type="button" onClick={onCancel} aria-label="Back to order">←</button>
@@ -101,7 +108,7 @@ function EligibilityAssessment({ product, theme, onCancel, onComplete }: { produ
   );
 }
 
-function MedicalConsent({ theme, onCancel, onComplete }: { theme: "v1" | "v2" | "v3" | "v4"; onCancel: () => void; onComplete: () => void }) {
+function MedicalConsent({ theme, onThemeChange, onCancel, onComplete }: { theme: "v1" | "v2" | "v3" | "v4"; onThemeChange: (theme: "v1" | "v2" | "v3" | "v4") => void; onCancel: () => void; onComplete: () => void }) {
   const questions = [
     "Congestive heart failure?",
     "Severe renal impairment?",
@@ -116,6 +123,7 @@ function MedicalConsent({ theme, onCancel, onComplete }: { theme: "v1" | "v2" | 
   if (step === "terms") {
     return (
       <main className={`assessment-page medical-consent-page assessment-theme-${theme}`}>
+        <VersionBar version={theme} onChange={onThemeChange} />
         <div className="assessment-shell consent-shell">
           <header className="assessment-header">
             <button type="button" onClick={onCancel} aria-label="Back to order">←</button>
@@ -152,6 +160,7 @@ function MedicalConsent({ theme, onCancel, onComplete }: { theme: "v1" | "v2" | 
 
   return (
     <main className={`assessment-page medical-consent-page assessment-theme-${theme}`}>
+      <VersionBar version={theme} onChange={onThemeChange} />
       <div className="assessment-shell consent-shell">
         <header className="assessment-header">
           <button type="button" onClick={() => setStep("terms")} aria-label="Back to terms and conditions">←</button>
@@ -188,7 +197,7 @@ function MedicalConsent({ theme, onCancel, onComplete }: { theme: "v1" | "v2" | 
   );
 }
 
-function ProviderReview({ product, theme, onCancel, onComplete }: { product: Product; theme: "v1" | "v2" | "v3" | "v4"; onCancel: () => void; onComplete: () => void }) {
+function ProviderReview({ product, theme, onThemeChange, onCancel, onComplete }: { product: Product; theme: "v1" | "v2" | "v3" | "v4"; onThemeChange: (theme: "v1" | "v2" | "v3" | "v4") => void; onCancel: () => void; onComplete: () => void }) {
   const preferences = [
     { label: "How would you prefer to meet?", options: ["Video visit", "Phone call"] },
     { label: "What time usually works best?", options: ["Morning", "Afternoon"] },
@@ -199,6 +208,7 @@ function ProviderReview({ product, theme, onCancel, onComplete }: { product: Pro
 
   return (
     <main className={`assessment-page provider-review-page assessment-theme-${theme}`}>
+      <VersionBar version={theme} onChange={onThemeChange} />
       <div className="assessment-shell consent-shell">
         <header className="assessment-header">
           <button type="button" onClick={onCancel} aria-label="Back to order">←</button>
@@ -279,7 +289,8 @@ export default function CartExperience() {
   if (!hasProduct) {
     return (
       <main className={`order-page order-theme-${theme}`}>
-        <OrderHeader cartCount={0} />
+        <VersionBar version={theme} onChange={(nextTheme) => { setTheme(nextTheme); localStorage.setItem("scriptrx-theme", nextTheme); }} />
+        <OrderHeader cartCount={0} theme={theme} />
         <section className="empty-cart">
           <span>YOUR CART</span>
           <h1>Nothing here yet.</h1>
@@ -291,22 +302,27 @@ export default function CartExperience() {
   }
 
   const ready = eligible && providerReviewed && consented;
+  const chooseTheme = (nextTheme: "v1" | "v2" | "v3" | "v4") => {
+    setTheme(nextTheme);
+    localStorage.setItem("scriptrx-theme", nextTheme);
+  };
 
   if (showAssessment) {
-    return <EligibilityAssessment product={product} theme={theme} onCancel={() => setShowAssessment(false)} onComplete={() => { setEligible(true); setShowAssessment(false); }} />;
+    return <EligibilityAssessment product={product} theme={theme} onThemeChange={chooseTheme} onCancel={() => setShowAssessment(false)} onComplete={() => { setEligible(true); setShowAssessment(false); }} />;
   }
 
   if (showConsent) {
-    return <MedicalConsent theme={theme} onCancel={() => setShowConsent(false)} onComplete={() => { setConsented(true); setShowConsent(false); }} />;
+    return <MedicalConsent theme={theme} onThemeChange={chooseTheme} onCancel={() => setShowConsent(false)} onComplete={() => { setConsented(true); setShowConsent(false); }} />;
   }
 
   if (showProviderReview) {
-    return <ProviderReview product={product} theme={theme} onCancel={() => setShowProviderReview(false)} onComplete={() => { setProviderReviewed(true); setShowProviderReview(false); }} />;
+    return <ProviderReview product={product} theme={theme} onThemeChange={chooseTheme} onCancel={() => setShowProviderReview(false)} onComplete={() => { setProviderReviewed(true); setShowProviderReview(false); }} />;
   }
 
   return (
     <main className={`order-page order-theme-${theme}`}>
-      <OrderHeader cartCount={1} />
+      <VersionBar version={theme} onChange={(nextTheme) => { setTheme(nextTheme); localStorage.setItem("scriptrx-theme", nextTheme); }} />
+      <OrderHeader cartCount={1} theme={theme} />
       <div className="order-shell">
         <nav className="order-breadcrumb" aria-label="Breadcrumb">
           <a href={sitePath("/")}>Home</a><span>›</span><a href={sitePath("/#care")}>Products</a><span>›</span><strong>Order requirements</strong>

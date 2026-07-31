@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { animateProductToCart } from "@/lib/cart-animation";
 import { sitePath } from "@/lib/site-path";
 
 export interface Product {
@@ -12,6 +13,7 @@ export interface Product {
 }
 
 export interface ProductRow {
+  id?: string;
   title: string;
   products: Product[];
 }
@@ -61,7 +63,7 @@ function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart }: { row
   const fillWidth = 25 + (scrollProgress / 100) * 75;
 
   return (
-    <section className="catalog-row">
+    <section className="catalog-row" id={row.id}>
       <div className="catalog-heading">
         <h3>{row.title}</h3>
         <div className="catalog-nav-controls">
@@ -117,7 +119,14 @@ function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart }: { row
               <p>From {product.price}</p>
               <span>{product.detail}</span>
               <div className="product-actions">
-                <button type="button" className={isAdded ? "added" : ""} onClick={() => isAdded ? onRemoveFromCart(product) : onAddToCart(product)} aria-live="polite">
+                <button type="button" className={isAdded ? "added" : ""} onClick={(event) => {
+                  if (isAdded) {
+                    onRemoveFromCart(product);
+                  } else {
+                    animateProductToCart(event.currentTarget);
+                    onAddToCart(product);
+                  }
+                }} aria-live="polite">
                   {isAdded ? "Remove" : "Add to Cart"}
                 </button>
                 <a

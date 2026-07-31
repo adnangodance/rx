@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from "react";
 import CatalogSection, { type Product } from "@/components/CatalogSection";
+import ClassicHeader from "@/components/ClassicHeader";
 import HeaderPillNav from "@/components/HeaderPillNav";
+import VersionBar from "@/components/VersionBar";
 import { sitePath } from "@/lib/site-path";
 
 const productRows = [
   {
+    id: "longevity-products",
     title: "Longevity & everyday health",
     products: [
       { name: "Daily tablet", price: "$39/mo", detail: "Semaglutide", type: "disc", image: "/product-tablet.png" },
@@ -20,6 +23,7 @@ const productRows = [
     ],
   },
   {
+    id: "sexual-health-products",
     title: "Sexual health & intimacy",
     products: [
       { name: "Daily Tadalafil", price: "$24/mo", detail: "Tadalafil 5mg", type: "disc", image: "/product-tablet.png" },
@@ -33,6 +37,7 @@ const productRows = [
     ],
   },
   {
+    id: "weight-management-products",
     title: "Weight & metabolic care",
     products: [
       { name: "Semaglutide Weekly", price: "$49/mo", detail: "Semaglutide Injection", type: "vial", image: "/product-nandrolone.png" },
@@ -43,6 +48,26 @@ const productRows = [
       { name: "Berberine Synergy", price: "$28/mo", detail: "Berberine Complex", type: "amber", image: "/product-b12.png" },
       { name: "Retatrutide Triple Action", price: "$119/mo", detail: "GIP/GLP-1/Glucagon", type: "vial", image: "/product-nandrolone.png" },
       { name: "Amino Vitality Spray", price: "$45/mo", detail: "Essential Aminos", type: "spray", image: "/product-oxytocin.png" },
+    ],
+  },
+  {
+    id: "hair-loss-products",
+    title: "Hair loss",
+    products: [
+      { name: "Daily Hair Tablet", price: "$29/mo", detail: "Personalized oral care", type: "disc", image: "/product-tablet.png" },
+      { name: "Hair Support Serum", price: "$39/mo", detail: "Topical support", type: "spray", image: "/product-oxytocin.png" },
+      { name: "B12 Hair Support", price: "$29/mo", detail: "Vitamin support", type: "amber", image: "/product-b12.png" },
+      { name: "Fuller Hair Formula", price: "$45/mo", detail: "Provider-guided support", type: "vial", image: "/product-nandrolone.png" },
+    ],
+  },
+  {
+    id: "acne-products",
+    title: "Acne & clear skin",
+    products: [
+      { name: "Daily Acne Tablet", price: "$29/mo", detail: "Personalized oral care", type: "disc", image: "/product-tablet.png" },
+      { name: "Clear Skin Formula", price: "$35/mo", detail: "Daily skin support", type: "vial", image: "/product-nandrolone.png" },
+      { name: "Acne Support Spray", price: "$32/mo", detail: "Targeted topical care", type: "spray", image: "/product-oxytocin.png" },
+      { name: "Skin Wellness B12", price: "$29/mo", detail: "Vitamin support", type: "amber", image: "/product-b12.png" },
     ],
   },
 ];
@@ -71,7 +96,6 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [addedProducts, setAddedProducts] = useState<string[]>([]);
   const [pendingProduct, setPendingProduct] = useState<Product | null>(null);
-  const [cartNotice, setCartNotice] = useState("");
   const cartCount = addedProducts.length;
 
   useEffect(() => {
@@ -103,7 +127,6 @@ export default function Home() {
       const next = [product.name];
       localStorage.setItem("scriptrx-cart-products", JSON.stringify(next));
       localStorage.setItem("scriptrx-cart-product", JSON.stringify(product));
-      setCartNotice(`${product.name} was added to your cart.`);
       return next;
     });
   }
@@ -113,7 +136,6 @@ export default function Home() {
     setAddedProducts([pendingProduct.name]);
     localStorage.setItem("scriptrx-cart-products", JSON.stringify([pendingProduct.name]));
     localStorage.setItem("scriptrx-cart-product", JSON.stringify(pendingProduct));
-    setCartNotice(`${pendingProduct.name} replaced the previous product in your cart.`);
     setPendingProduct(null);
   }
 
@@ -122,52 +144,14 @@ export default function Home() {
       const next = current.filter((name) => name !== product.name);
       localStorage.setItem("scriptrx-cart-products", JSON.stringify(next));
       localStorage.removeItem("scriptrx-cart-product");
-      setCartNotice(`${product.name} was removed. You can now choose another product.`);
       return next;
     });
   }
 
   return (
     <main className={`theme-${version}`}>
-      {/* Top Floating Version Toggle Banner */}
-      <div className="version-bar-top">
-        <span>Switch Design Version:</span>
-        <button
-          type="button"
-          className={`v-btn ${version === "v1" ? "active" : ""}`}
-          onClick={() => setVersion("v1")}
-        >
-          Version 1 (Classic)
-        </button>
-        <button
-          type="button"
-          className={`v-btn ${version === "v2" ? "active" : ""}`}
-          onClick={() => setVersion("v2")}
-        >
-          Version 2 (Light Green)
-        </button>
-        <button
-          type="button"
-          className={`v-btn ${version === "v3" ? "active" : ""}`}
-          onClick={() => setVersion("v3")}
-        >
-          Version 3 (Warm Chocolate &amp; Sand)
-        </button>
-        <button
-          type="button"
-          className={`v-btn ${version === "v4" ? "active" : ""}`}
-          onClick={() => setVersion("v4")}
-        >
-          Version 4 (Soft Pink)
-        </button>
-      </div>
+      <VersionBar version={version} onChange={setVersion} />
 
-      {cartNotice && (
-        <div className="cart-notice" role="status" aria-live="polite">
-          <span>{cartNotice}</span>
-          <button type="button" onClick={() => setCartNotice("")} aria-label="Close notification">×</button>
-        </div>
-      )}
 
       {pendingProduct && (
         <div className="product-replace-overlay" role="presentation" onMouseDown={(event) => {
@@ -186,35 +170,37 @@ export default function Home() {
         </div>
       )}
 
+      {version === "v1" && <ClassicHeader cartCount={cartCount} />}
+
       <section className="reference-hero">
-        <div className="hero-announcement">New: personalized weight care</div>
+        {version !== "v1" && <div className="hero-announcement">New: personalized weight care</div>}
 
-        <header className="reference-nav">
-          <a className="reference-logo" href="#">Scriptrx</a>
+        {version !== "v1" && (
+          <header className="reference-nav">
+            <a className="reference-logo" href="#">Scriptrx</a>
 
-          <nav><a href={sitePath("/categories?category=womens-health")}>Women's Health</a><a href={sitePath("/categories?category=weight-management")}>Weight Management</a><a href={sitePath("/categories?category=longevity")}>Longevity</a></nav>
+            <nav><a href={sitePath("/categories?category=womens-health")}>Women's Health</a><a href={sitePath("/categories?category=weight-management")}>Weight Management</a><a href={sitePath("/categories?category=longevity")}>Longevity</a></nav>
 
-          <div>
-            {isLoggedIn ? (
-              <>
-                {cartCount > 0 && (
-                  <a className="header-cart-link" href={sitePath("/cart")} aria-label={`Cart with ${cartCount} items`}>
-                    <img className="cart-icon-image" src={sitePath("/cart-icon.svg")} alt="" />
-                    <b>{cartCount}</b>
-                  </a>
-                )}
+            <div>
+              {cartCount > 0 && (
+                <a className="header-cart-link" href={sitePath("/cart")} aria-label={`Cart with ${cartCount} items`}>
+                  <img className="cart-icon-image" src={sitePath("/cart-icon.svg")} alt="" />
+                  <b>{cartCount}</b>
+                </a>
+              )}
+              {isLoggedIn ? (
                 <a className="account-link" href="#">
                   <span>My Account</span>
                 </a>
-              </>
-            ) : (
-              <>
-                <a href={sitePath(`/login?theme=${version}`)}>Log in</a>
-                <a className="register" href="#care">Get started</a>
-              </>
-            )}
-          </div>
-        </header>
+              ) : (
+                <>
+                  <a href={sitePath(`/login?theme=${version}`)}>Log in</a>
+                  <a className="register" href="#care">Get started</a>
+                </>
+              )}
+            </div>
+          </header>
+        )}
 
         <div className="hero-intro">
           <div>
@@ -229,7 +215,7 @@ export default function Home() {
         </div>
 
         <div className="story-grid">
-          <a className="story-card story-weight" href="#care">
+          <a className="story-card story-weight" href={version === "v1" ? sitePath("/categories?category=weight-management") : "#care"}>
             <div className="story-copy">
               <h2>A plan made<br />for your progress.</h2>
               {version === "v2" && <span className="card-pill-btn">Explore weight care</span>}
@@ -254,7 +240,7 @@ export default function Home() {
             />
           </a>
 
-          <a className="story-card story-life" href={version === "v4" ? sitePath("/categories?category=acne") : "#care"}>
+          <a className="story-card story-life" href={version === "v1" ? sitePath("/categories?category=sexual-health") : version === "v4" ? "#acne-products" : "#care"}>
             {version === "v1" && (
               <>
                 <img src={sitePath("/better-sex.jpg")} alt="Couple embracing in lavender activewear" />
@@ -294,27 +280,36 @@ export default function Home() {
 
         {version === "v3" || version === "v4" ? (
           <div className="hero-treatment-row v3-treatment-row">
-            <a href={sitePath("/categories?category=weight-management")}>
-              <img className="v3-cat-img" src={sitePath("/vial-lose-weight.png")} alt="Lose weight vial" />
-              <span>Lose weight</span>
+            <a href="#weight-management-products">
+              <img className="v3-cat-img" src={sitePath("/vial-lose-weight.png")} alt="Weight management vial" />
+              <span>Weight Management</span>
               <span className="cat-arrow-btn">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </span>
             </a>
-            <a href={sitePath("/categories?category=hair-care")}>
-              <img className="v3-cat-img" src={sitePath("/bottle-hair-care.png")} alt="Grow fuller hair bottle" />
-              <span>Grow fuller hair</span>
+            <a href="#hair-loss-products">
+              <img className="v3-cat-img" src={sitePath("/bottle-hair-care.png")} alt="Hair loss treatment bottle" />
+              <span>Hair Loss</span>
               <span className="cat-arrow-btn">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </span>
             </a>
-            <a href={sitePath("/categories?category=longevity")}>
-              <img className="v3-cat-img" src={sitePath("/pill-energy-flame.png")} alt="Find your baseline pill" />
-              <span>Find your baseline</span>
+            <a href="#sexual-health-products">
+              <img className="v3-cat-img" src={sitePath("/pill-energy-flame.png")} alt="Sexual health treatment" />
+              <span>Sexual Health</span>
+              <span className="cat-arrow-btn">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </span>
+            </a>
+            <a href="#acne-products">
+              <img className="v3-cat-img" src={sitePath("/pill-silver-novo.png")} alt="Acne treatment" />
+              <span>Acne</span>
               <span className="cat-arrow-btn">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -324,10 +319,10 @@ export default function Home() {
           </div>
         ) : (
           <div className="hero-treatment-row">
-            <a href={sitePath("/categories?category=weight-management")}><span>Lose weight</span><img className="treatment-thumb-img" src={sitePath("/vial-lose-weight.png")} alt="Lose weight treatment vial" /></a>
-            <a href={sitePath("/categories?category=hair-care")}><span>Grow fuller hair</span><img className="treatment-thumb-bottle" src={sitePath("/bottle-hair-care.png")} alt="Grow fuller hair treatment bottle" /></a>
-            <a href={sitePath("/categories?category=longevity")}><span>Find your baseline</span><img className="treatment-thumb-pill" src={sitePath("/pill-energy-flame.png")} alt="Find your baseline red flame pill" /></a>
-            <a href={sitePath("/categories?category=longevity")}><span>Know your numbers</span><img className="treatment-thumb-pill-silver" src={sitePath("/pill-silver-novo.png")} alt="Know your numbers silver Novo pill" /></a>
+            <a href="#weight-management-products"><span>Weight Management</span><img className="treatment-thumb-img" src={sitePath("/vial-lose-weight.png")} alt="Weight management treatment vial" /></a>
+            <a href="#hair-loss-products"><span>Hair Loss</span><img className="treatment-thumb-bottle" src={sitePath("/bottle-hair-care.png")} alt="Hair loss treatment bottle" /></a>
+            <a href="#sexual-health-products"><span>Sexual Health</span><img className="treatment-thumb-pill" src={sitePath("/pill-energy-flame.png")} alt="Sexual health treatment" /></a>
+            <a href="#acne-products"><span>Acne</span><img className="treatment-thumb-pill-silver" src={sitePath("/pill-silver-novo.png")} alt="Acne treatment" /></a>
           </div>
         )}
       </section>
