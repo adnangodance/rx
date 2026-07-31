@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import ClassicHeader from "@/components/ClassicHeader";
 import type { Product } from "@/components/CatalogSection";
-import VersionBar from "@/components/VersionBar";
+import VersionBar, { isClassicVersion, type SiteVersion } from "@/components/VersionBar";
 import { animateProductToCart } from "@/lib/cart-animation";
 import { sitePath } from "@/lib/site-path";
 
@@ -105,8 +105,41 @@ const categories: Category[] = [
   },
 ];
 
+const adnanSuggestionCategoryProducts: Record<string, Product[]> = {
+  longevity: [
+    { name: "Amino-Quad Capsules", price: "$45/mo", detail: "THE / INO / PRO / TAU", type: "jar", image: "/adnan-amino-quad.png" },
+    { name: "NAD+ Injection", price: "$69/mo", detail: "20mg/ml provider-guided care", type: "vial", image: "/adnan-nad-injection.png" },
+    { name: "Atropine Sulfate", price: "$29/mo", detail: "1 (3ml) bottle", type: "dropper", image: "/adnan-atropine.png" },
+    { name: "B-Complex", price: "$39/mo", detail: "1 (10ml) vial", type: "vial", image: "/adnan-b-complex.png" },
+  ],
+  "hair-care": [
+    { name: "Hair Loss Gel + Solution", price: "$49/mo", detail: "Personalized topical hair care", type: "spray", image: "/adnan-hair-loss-duo.png" },
+  ],
+  acne: [
+    { name: "Tretinoin Cream", price: "$29/mo", detail: "Prescription retinoid care", type: "cream", image: "/adnan-tretinoin.png" },
+    { name: "GHK-Cu Cream", price: "$49/mo", detail: "1 (30gm) jar", type: "jar", image: "/adnan-ghk-cu-cream.png" },
+  ],
+  "sexual-health": [
+    { name: "Super Strut Mints", price: "$39/mo", detail: "Personalized intimacy support", type: "jar", image: "/adnan-super-strut.png" },
+    { name: "Anastrozole", price: "$39/mo", detail: "Provider-guided hormone support", type: "jar", image: "/adnan-anastrozole.png" },
+    { name: "Anastrozole Capsules", price: "$45/mo", detail: "60 capsules", type: "jar", image: "/adnan-anastrozole-capsules.png" },
+    { name: "PT-141 Nasal Spray", price: "$49/mo", detail: "Personalized intimacy care", type: "spray", image: "/adnan-pt141.png" },
+    { name: "Hydrocortisone / Lidocaine", price: "$45/mo", detail: "20mg / 20mg suppository care", type: "pack", image: "/adnan-hydrocortisone-lidocaine.png" },
+    { name: "Testosterone Cypionate", price: "$69/mo", detail: "200mg/ml provider-guided care", type: "vial", image: "/adnan-testosterone.png" },
+  ],
+  "weight-management": [
+    { name: "Daily Tablet", price: "$39/mo", detail: "Daily oral treatment", type: "tablet", image: "/adnan-daily-tablet.png" },
+    { name: "Lipo-C", price: "$39/mo", detail: "Lipotropic injection support", type: "vial", image: "/adnan-lipo-c.png" },
+  ],
+  "womens-health": [
+    { name: "Estradiol Patches", price: "$39/mo", detail: "Four transdermal patches", type: "pack", image: "/adnan-estradiol.png" },
+    { name: "Boric Acid / EDTA", price: "$35/mo", detail: "1 (30gm) jar", type: "jar", image: "/adnan-boric-acid-edta.png" },
+  ],
+};
+
 export default function CategoryExperience() {
-  const [theme, setTheme] = useState<"v1" | "v2" | "v3" | "v4">("v3");
+  const [theme, setTheme] = useState<SiteVersion>("v3");
+  const isClassic = isClassicVersion(theme);
   const [activeSlug, setActiveSlug] = useState("weight-management");
   const [search, setSearch] = useState("");
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
@@ -149,7 +182,7 @@ export default function CategoryExperience() {
       }
     }
     const savedTheme = localStorage.getItem("scriptrx-theme");
-    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4") setTheme(savedTheme);
+    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4" || savedTheme === "v5") setTheme(savedTheme);
     setAuthenticated(localStorage.getItem("scriptrx-authenticated") === "true");
     try {
       const saved = JSON.parse(localStorage.getItem("scriptrx-cart-product") || "null");
@@ -174,7 +207,12 @@ export default function CategoryExperience() {
 
   const category = categories.find((item) => item.slug === activeSlug) || categories[0];
   const categoryDisplayName = category.name;
-  const products = useMemo(() => category.products.filter((product) => `${product.name} ${product.detail}`.toLowerCase().includes(search.toLowerCase())), [category, search]);
+  const products = useMemo(() => {
+    const categoryProducts = theme === "v5"
+      ? (adnanSuggestionCategoryProducts[category.slug] || category.products)
+      : category.products;
+    return categoryProducts.filter((product) => `${product.name} ${product.detail}`.toLowerCase().includes(search.toLowerCase()));
+  }, [category, search, theme]);
 
   function chooseCategory(slug: string) {
     setActiveSlug(slug);
@@ -182,7 +220,7 @@ export default function CategoryExperience() {
     window.history.replaceState({}, "", sitePath(`/categories?category=${slug}`));
   }
 
-  function chooseTheme(nextTheme: "v1" | "v2" | "v3" | "v4") {
+  function chooseTheme(nextTheme: SiteVersion) {
     setTheme(nextTheme);
     localStorage.setItem("scriptrx-theme", nextTheme);
   }
@@ -212,10 +250,10 @@ export default function CategoryExperience() {
   }
 
   return (
-    <main className={`category-page category-theme-${theme}`}>
+    <main className={`category-page category-theme-${isClassic ? "v1" : theme} ${theme === "v5" ? "category-theme-adnan" : ""}`}>
       <VersionBar version={theme} onChange={chooseTheme} />
-      {theme !== "v1" && <div className="category-announcement">New: personalized weight care</div>}
-      {theme === "v1" ? <ClassicHeader cartCount={cartProduct ? 1 : 0} searchValue={search} onSearchChange={setSearch} /> : <header className="category-header">
+      {!isClassic && <div className="category-announcement">New: personalized weight care</div>}
+      {isClassic ? <ClassicHeader cartCount={cartProduct ? 1 : 0} searchValue={search} onSearchChange={setSearch} theme={theme} /> : <header className="category-header">
         <a className="category-logo" href={sitePath("/")}>
           {theme === "v1" ? <img className="v1-brand-logo" src={sitePath("/scriptrx-logo-v1.png")} alt="ScriptRx" /> : "Scriptrx"}
         </a>
@@ -255,7 +293,7 @@ export default function CategoryExperience() {
             {categories.map((item) => (
               <button className={item.slug === activeSlug ? "active" : ""} type="button" key={item.slug} onClick={() => chooseCategory(item.slug)}>
                 <span><img src={sitePath(item.thumb)} alt="" /></span>
-                <b>{theme === "v1" && item.slug === "weight-management" ? "A plan made for you" : theme === "v1" && item.slug === "sexual-health" ? "Better sex" : item.shortName}</b>
+                <b>{isClassic && item.slug === "weight-management" ? "A plan made for you" : isClassic && item.slug === "sexual-health" ? "Better sex" : item.shortName}</b>
               </button>
             ))}
           </div>
@@ -269,7 +307,7 @@ export default function CategoryExperience() {
 
           <div className="category-toolbar">
             <h2>{categoryDisplayName}</h2>
-            {theme === "v1" && (
+            {isClassic && (
               <label className="classic-product-search">
                 <span aria-hidden="true" />
                 <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search Products" />

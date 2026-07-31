@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import ClassicHeader from "@/components/ClassicHeader";
 import type { Product } from "@/components/CatalogSection";
-import VersionBar from "@/components/VersionBar";
+import VersionBar, { isClassicVersion, type SiteVersion } from "@/components/VersionBar";
 import { sitePath } from "@/lib/site-path";
 
 const fallbackProduct: Product = {
@@ -14,8 +14,8 @@ const fallbackProduct: Product = {
   image: "/product-tablet.png",
 };
 
-function OrderHeader({ cartCount, theme }: { cartCount: number; theme: "v1" | "v2" | "v3" | "v4" }) {
-  if (theme === "v1") return <ClassicHeader cartCount={cartCount} />;
+function OrderHeader({ cartCount, theme }: { cartCount: number; theme: SiteVersion }) {
+  if (isClassicVersion(theme)) return <ClassicHeader cartCount={cartCount} theme={theme} />;
 
   return (
     <>
@@ -34,7 +34,7 @@ function OrderHeader({ cartCount, theme }: { cartCount: number; theme: "v1" | "v
   );
 }
 
-function EligibilityAssessment({ product, theme, onThemeChange, onCancel, onComplete }: { product: Product; theme: "v1" | "v2" | "v3" | "v4"; onThemeChange: (theme: "v1" | "v2" | "v3" | "v4") => void; onCancel: () => void; onComplete: () => void }) {
+function EligibilityAssessment({ product, theme, onThemeChange, onCancel, onComplete }: { product: Product; theme: SiteVersion; onThemeChange: (theme: SiteVersion) => void; onCancel: () => void; onComplete: () => void }) {
   const questions = [
     `Have you ever had an allergic or adverse reaction to ${product.name} or any of its ingredients?`,
     "Have you ever had an allergic or adverse reaction to a similar medication or treatment?",
@@ -59,7 +59,7 @@ function EligibilityAssessment({ product, theme, onThemeChange, onCancel, onComp
   }
 
   return (
-    <main className={`assessment-page assessment-theme-${theme}`}>
+    <main className={`assessment-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
       <VersionBar version={theme} onChange={onThemeChange} />
       <div className="assessment-shell">
         <header className="assessment-header">
@@ -108,7 +108,7 @@ function EligibilityAssessment({ product, theme, onThemeChange, onCancel, onComp
   );
 }
 
-function MedicalConsent({ theme, onThemeChange, onCancel, onComplete }: { theme: "v1" | "v2" | "v3" | "v4"; onThemeChange: (theme: "v1" | "v2" | "v3" | "v4") => void; onCancel: () => void; onComplete: () => void }) {
+function MedicalConsent({ theme, onThemeChange, onCancel, onComplete }: { theme: SiteVersion; onThemeChange: (theme: SiteVersion) => void; onCancel: () => void; onComplete: () => void }) {
   const questions = [
     "Congestive heart failure?",
     "Severe renal impairment?",
@@ -122,7 +122,7 @@ function MedicalConsent({ theme, onThemeChange, onCancel, onComplete }: { theme:
 
   if (step === "terms") {
     return (
-      <main className={`assessment-page medical-consent-page assessment-theme-${theme}`}>
+      <main className={`assessment-page medical-consent-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
         <VersionBar version={theme} onChange={onThemeChange} />
         <div className="assessment-shell consent-shell">
           <header className="assessment-header">
@@ -159,7 +159,7 @@ function MedicalConsent({ theme, onThemeChange, onCancel, onComplete }: { theme:
   }
 
   return (
-    <main className={`assessment-page medical-consent-page assessment-theme-${theme}`}>
+    <main className={`assessment-page medical-consent-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
       <VersionBar version={theme} onChange={onThemeChange} />
       <div className="assessment-shell consent-shell">
         <header className="assessment-header">
@@ -197,7 +197,7 @@ function MedicalConsent({ theme, onThemeChange, onCancel, onComplete }: { theme:
   );
 }
 
-function ProviderReview({ product, theme, onThemeChange, onCancel, onComplete }: { product: Product; theme: "v1" | "v2" | "v3" | "v4"; onThemeChange: (theme: "v1" | "v2" | "v3" | "v4") => void; onCancel: () => void; onComplete: () => void }) {
+function ProviderReview({ product, theme, onThemeChange, onCancel, onComplete }: { product: Product; theme: SiteVersion; onThemeChange: (theme: SiteVersion) => void; onCancel: () => void; onComplete: () => void }) {
   const preferences = [
     { label: "How would you prefer to meet?", options: ["Video visit", "Phone call"] },
     { label: "What time usually works best?", options: ["Morning", "Afternoon"] },
@@ -207,7 +207,7 @@ function ProviderReview({ product, theme, onThemeChange, onCancel, onComplete }:
   const complete = answers.every(Boolean);
 
   return (
-    <main className={`assessment-page provider-review-page assessment-theme-${theme}`}>
+    <main className={`assessment-page provider-review-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
       <VersionBar version={theme} onChange={onThemeChange} />
       <div className="assessment-shell consent-shell">
         <header className="assessment-header">
@@ -248,7 +248,7 @@ function ProviderReview({ product, theme, onThemeChange, onCancel, onComplete }:
 
 export default function CartExperience() {
   const [product, setProduct] = useState<Product>(fallbackProduct);
-  const [theme, setTheme] = useState<"v1" | "v2" | "v3" | "v4">("v3");
+  const [theme, setTheme] = useState<SiteVersion>("v3");
   const [eligible, setEligible] = useState(false);
   const [providerReviewed, setProviderReviewed] = useState(false);
   const [consented, setConsented] = useState(false);
@@ -268,7 +268,7 @@ export default function CartExperience() {
       setHasProduct(false);
     }
     const savedTheme = localStorage.getItem("scriptrx-theme");
-    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4") setTheme(savedTheme);
+    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4" || savedTheme === "v5") setTheme(savedTheme);
   }, []);
 
   const pricing = useMemo(() => {
@@ -288,7 +288,7 @@ export default function CartExperience() {
 
   if (!hasProduct) {
     return (
-      <main className={`order-page order-theme-${theme}`}>
+      <main className={`order-page order-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
         <VersionBar version={theme} onChange={(nextTheme) => { setTheme(nextTheme); localStorage.setItem("scriptrx-theme", nextTheme); }} />
         <OrderHeader cartCount={0} theme={theme} />
         <section className="empty-cart">
@@ -302,7 +302,7 @@ export default function CartExperience() {
   }
 
   const ready = eligible && providerReviewed && consented;
-  const chooseTheme = (nextTheme: "v1" | "v2" | "v3" | "v4") => {
+  const chooseTheme = (nextTheme: SiteVersion) => {
     setTheme(nextTheme);
     localStorage.setItem("scriptrx-theme", nextTheme);
   };
@@ -320,7 +320,7 @@ export default function CartExperience() {
   }
 
   return (
-    <main className={`order-page order-theme-${theme}`}>
+    <main className={`order-page order-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
       <VersionBar version={theme} onChange={(nextTheme) => { setTheme(nextTheme); localStorage.setItem("scriptrx-theme", nextTheme); }} />
       <OrderHeader cartCount={1} theme={theme} />
       <div className="order-shell">

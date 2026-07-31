@@ -5,9 +5,9 @@ import ClassicHeader from "@/components/ClassicHeader";
 import type { Product } from "@/components/CatalogSection";
 import { animateProductToCart } from "@/lib/cart-animation";
 import { sitePath } from "@/lib/site-path";
-import VersionBar from "@/components/VersionBar";
+import VersionBar, { isClassicVersion, type SiteVersion } from "@/components/VersionBar";
 
-type Theme = "v1" | "v2" | "v3" | "v4";
+type Theme = SiteVersion;
 
 const fallbackProduct: Product = {
   name: "NAD+ Complex",
@@ -25,13 +25,14 @@ const benefits = [
 
 export default function ProductDetailsExperience() {
   const [theme, setTheme] = useState<Theme>("v3");
+  const isClassic = isClassicVersion(theme);
   const [product, setProduct] = useState<Product>(fallbackProduct);
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
   const [showReplace, setShowReplace] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("scriptrx-theme");
-    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4") setTheme(savedTheme);
+    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4" || savedTheme === "v5") setTheme(savedTheme);
     try {
       const detail = JSON.parse(localStorage.getItem("scriptrx-detail-product") || "null");
       if (detail?.name && detail?.price && detail?.image) setProduct(detail);
@@ -68,10 +69,10 @@ export default function ProductDetailsExperience() {
   }
 
   return (
-    <main className={`product-detail-page product-detail-theme-${theme}`}>
+    <main className={`product-detail-page product-detail-theme-${isClassic ? "v1" : theme}`}>
       <VersionBar version={theme} onChange={(nextTheme) => { setTheme(nextTheme); localStorage.setItem("scriptrx-theme", nextTheme); }} />
-      {theme !== "v1" && <div className="product-detail-announcement">Personalized care, reviewed by licensed providers</div>}
-      {theme === "v1" ? <ClassicHeader cartCount={cartProduct ? 1 : 0} /> : <header className="product-detail-header">
+      {!isClassic && <div className="product-detail-announcement">Personalized care, reviewed by licensed providers</div>}
+      {isClassic ? <ClassicHeader cartCount={cartProduct ? 1 : 0} theme={theme} /> : <header className="product-detail-header">
         <a className="product-detail-logo" href={sitePath("/")}>
           {theme === "v1" ? <img className="v1-brand-logo" src={sitePath("/scriptrx-logo-v1.png")} alt="ScriptRx" /> : "Scriptrx"}
         </a>

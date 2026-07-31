@@ -4,13 +4,14 @@ import { useEffect, useState, type FormEvent } from "react";
 import ClassicHeader from "@/components/ClassicHeader";
 import { sitePath } from "@/lib/site-path";
 
-type LoginVersion = "v1" | "v2" | "v3" | "v4";
+type LoginVersion = "v1" | "v2" | "v3" | "v4" | "v5";
 
 const versionNames: Record<LoginVersion, string> = {
   v1: "Classic",
   v2: "Light green",
   v3: "Warm",
   v4: "Soft pink",
+  v5: "Adnan Suggestion",
 };
 
 export default function LoginExperience() {
@@ -19,7 +20,7 @@ export default function LoginExperience() {
 
   useEffect(() => {
     const theme = new URLSearchParams(window.location.search).get("theme");
-    if (theme === "v1" || theme === "v2" || theme === "v3" || theme === "v4") {
+    if (theme === "v1" || theme === "v2" || theme === "v3" || theme === "v4" || theme === "v5") {
       setVersion(theme);
     }
   }, []);
@@ -32,8 +33,8 @@ export default function LoginExperience() {
   }
 
   return (
-    <main className={`login-page login-theme-${version}`}>
-      {version === "v1" ? <ClassicHeader /> : <header className="login-nav">
+    <main className={`login-page login-theme-${version === "v5" ? "v1" : version}`}>
+      {version === "v1" || version === "v5" ? <ClassicHeader theme={version} /> : <header className="login-nav">
         <a className="login-logo" href={sitePath("/")}>Scriptrx</a>
       </header>}
 

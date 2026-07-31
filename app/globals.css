@@ -1065,6 +1065,178 @@ footer{padding:24px 16px;background:#fff;color:#fff}
   overscroll-behavior-inline:contain;
 }
 .programs .catalog-card{scroll-snap-align:none}
+.theme-adnan .product-shadow,
+.category-theme-adnan .product-shadow{display:none!important}
+
+/* Adnan Suggestion: keep product cards still and use only a restrained hover zoom. */
+.theme-adnan .catalog-card,
+.theme-adnan .catalog-card:hover,
+.category-theme-adnan .category-product-card,
+.category-theme-adnan .category-product-card:hover{transform:none!important}
+
+.theme-adnan .product-render,
+.category-theme-adnan .category-product-art img{
+  width:82%!important;
+  height:82%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  animation:none!important;
+  transform:none!important;
+  transition:transform .28s ease!important;
+  will-change:transform;
+}
+
+.theme-adnan .catalog-card:hover .product-render,
+.category-theme-adnan .category-product-card:hover .category-product-art img{
+  animation:none!important;
+  transform:scale(1.055)!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .theme-adnan .catalog-card:hover .product-render,
+  .category-theme-adnan .category-product-card:hover .category-product-art img{
+    transform:none!important;
+  }
+}
+
+.theme-adnan .condition-catalog{min-width:0;margin-top:14px;padding-top:6px}
+.theme-adnan .condition-catalog>h3{margin:0 0 24px;font-size:30px;font-weight:500;line-height:1.08;letter-spacing:-.045em}
+.theme-adnan .condition-tabs{display:flex;align-items:center;gap:38px;overflow-x:auto;border-bottom:1px solid #dfdfdc;margin-bottom:32px;scrollbar-width:none}
+.theme-adnan .condition-tabs::-webkit-scrollbar{display:none}
+.theme-adnan .condition-tabs button{position:relative;flex:0 0 auto;padding:0 0 17px;border:0;background:transparent;color:#686868;font:500 15px/1 Inter,sans-serif;letter-spacing:-.015em;cursor:pointer;transition:color .2s,transform .2s}
+.theme-adnan .condition-tabs button:hover,
+.theme-adnan .condition-tabs button.active{color:#111}
+.theme-adnan .condition-tabs button:hover{transform:translateY(-1px)}
+.theme-adnan .condition-tabs button.active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;border-radius:3px 3px 0 0;background:#5b43b8}
+.theme-adnan .condition-catalog .catalog-heading{justify-content:flex-end;margin:0 0 16px}
+.theme-adnan .condition-catalog .catalog-row{overflow:visible}
+
+/* Adnan Suggestion: member proof, care tools and testimonials. */
+.theme-adnan .adnan-proof-sections{width:100vw;margin:88px 0 0 calc(50% - 50vw);color:#171717}
+.theme-adnan .member-proof{display:grid;grid-template-columns:1.06fr .94fr;min-height:520px;background:#f2ede8}
+.theme-adnan .member-story-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:3px;padding-left:max(0px,calc((100vw - 1380px)/2));overflow:hidden}
+.theme-adnan .member-story{position:relative;min-height:258px;overflow:hidden;background:#d7d1cb}
+.theme-adnan .member-story.story-tall{grid-row:span 2}
+.theme-adnan .member-story.story-wide{grid-column:span 1}
+.theme-adnan .member-story>img{width:100%;height:100%;object-fit:cover;filter:saturate(.78);transition:transform .4s ease}
+.theme-adnan .member-story:hover>img{transform:scale(1.025)}
+.theme-adnan .member-story:after{content:"";position:absolute;inset:55% 0 0;background:linear-gradient(transparent,rgba(0,0,0,.46));pointer-events:none}
+.theme-adnan .member-story small{position:absolute;z-index:2;left:12px;bottom:12px;padding:6px 8px;border-radius:12px;background:rgba(33,31,29,.62);color:#fff;font-size:9px;backdrop-filter:blur(8px)}
+.theme-adnan .member-play{position:absolute;z-index:2;left:12px;top:12px;width:25px;height:25px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.88);color:#4c4945;font-size:8px}
+.theme-adnan .member-proof-copy{display:flex;flex-direction:column;justify-content:center;padding:54px clamp(42px,6vw,108px)}
+.theme-adnan .member-rating{margin-bottom:10px;color:#55514d;font-size:11px}
+.theme-adnan .member-proof-copy h3{margin:0;font-size:clamp(54px,6vw,88px);font-weight:500;line-height:.88;letter-spacing:-.065em}
+.theme-adnan .member-count{max-width:500px;margin:14px 0 54px;font-size:18px;line-height:1.3;letter-spacing:-.02em}
+.theme-adnan .member-quote>span{display:block;margin-bottom:10px;font-size:12px}
+.theme-adnan .member-quote blockquote{max-width:500px;margin:0 0 14px;font-size:25px;line-height:1.12;letter-spacing:-.035em}
+.theme-adnan .member-quote small{font-size:10px;color:#68635e}
+
+.theme-adnan .care-toolkit{padding:88px max(32px,calc((100vw - 1320px)/2)) 104px;background:#fff}
+.theme-adnan .care-toolkit>header{text-align:center;margin-bottom:58px}
+.theme-adnan .care-toolkit>header h3{margin:0;font-size:28px;font-weight:600;line-height:1.08;letter-spacing:-.035em}
+.theme-adnan .care-toolkit>header p{margin:3px 0 24px;color:#8d8883;font-size:25px;line-height:1}
+.theme-adnan .care-toolkit>header a{color:#55514e;font-size:11px;text-decoration:none}
+.theme-adnan .care-toolkit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.theme-adnan .care-toolkit-grid article{min-width:0}
+.theme-adnan .toolkit-visual{position:relative;height:312px;display:grid;place-items:center;overflow:hidden;border-radius:22px;background:#f3f4f6}
+.theme-adnan .care-toolkit-grid article:nth-child(2) .toolkit-visual,
+.theme-adnan .care-toolkit-grid article:nth-child(3) .toolkit-visual,
+.theme-adnan .care-toolkit-grid article:nth-child(4) .toolkit-visual{background:#f3f4f6}
+.theme-adnan .care-toolkit-grid h4{margin:17px 0 7px;font-size:15px;font-weight:600;letter-spacing:-.02em}
+.theme-adnan .care-toolkit-grid>article>p{max-width:270px;margin:0;color:#6e6964;font-size:11px;line-height:1.5}
+.theme-adnan .tracker-visual:after,.theme-adnan .dose-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(145deg,rgba(255,255,255,.58),transparent 56%);pointer-events:none}
+.theme-adnan .tracker-card,.theme-adnan .dose-card{position:relative;z-index:1;width:58%;min-height:184px;padding:20px;border:1px solid rgba(255,255,255,.7);border-radius:18px;background:rgba(255,255,255,.73);box-shadow:0 22px 42px rgba(36,42,54,.08);backdrop-filter:blur(10px)}
+.theme-adnan .tracker-card small,.theme-adnan .dose-card small{display:block;margin-bottom:8px;color:#7c7a78;font-size:9px}
+.theme-adnan .tracker-card strong,.theme-adnan .dose-card strong{display:block;font-size:28px;font-weight:500;letter-spacing:-.04em}
+.theme-adnan .tracker-card span{color:#557cb5;font-size:10px}
+.theme-adnan .tracker-card i{position:absolute;left:20px;right:20px;bottom:28px;height:54px;border-bottom:2px solid #6d9ad5;transform:skewY(-13deg)}
+.theme-adnan .dose-card button{position:absolute;left:18px;right:18px;bottom:18px;height:36px;border:0;border-radius:9px;background:#222;color:#fff;font-size:10px}
+.theme-adnan .support-visual>img{position:absolute;top:18px;width:88px;height:88px;object-fit:contain;border-radius:50%}
+.theme-adnan .support-visual>div{width:64%;margin-top:75px;padding:16px;border-radius:18px;background:rgba(255,255,255,.76);box-shadow:0 18px 36px rgba(43,42,37,.08)}
+.theme-adnan .support-visual span{display:block;margin-bottom:10px;font-size:10px;font-weight:600}
+.theme-adnan .support-visual small{display:block;margin:7px 0;padding:8px;border-radius:8px;background:#fff;color:#57534e;font-size:9px}
+.theme-adnan .product-glass{width:58%;height:68%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.8);border-radius:20px;background:rgba(255,255,255,.52);box-shadow:0 20px 38px rgba(57,43,29,.09);backdrop-filter:blur(12px)}
+.theme-adnan .product-glass img{width:95px;height:132px;object-fit:contain}
+.theme-adnan .product-glass span{font-size:10px}
+
+.theme-adnan .member-testimonials{padding:0 0 110px max(32px,calc((100vw - 1320px)/2));background:#fff;overflow:hidden}
+.theme-adnan .testimonial-heading{display:flex;align-items:center;justify-content:space-between;padding-right:max(32px,calc((100vw - 1320px)/2));margin-bottom:34px}
+.theme-adnan .testimonial-heading h3{margin:0;font-size:28px;font-weight:500;letter-spacing:-.04em}
+.theme-adnan .testimonial-heading>div{display:flex;align-items:center;gap:8px}
+.theme-adnan .testimonial-heading>div>span{width:70px;height:34px;display:block;border-radius:18px;background:#f2f2f2;position:relative}
+.theme-adnan .testimonial-heading>div>span:after{content:"";position:absolute;left:12px;top:15px;width:32px;height:3px;border-radius:3px;background:#171717}
+.theme-adnan .testimonial-heading button{width:34px;height:34px;border:0;border-radius:50%;background:#f2f2f2;color:#999}
+.theme-adnan .testimonial-rail{display:flex;gap:32px;width:max-content}
+.theme-adnan .testimonial-rail>article{width:min(780px,78vw);min-height:350px;display:grid;grid-template-columns:1.25fr .75fr;grid-template-rows:auto 1fr;gap:24px;padding:42px;border-radius:16px;background:#f6f5f3}
+.theme-adnan .testimonial-person{grid-column:1/-1;display:flex;align-items:center;gap:12px}
+.theme-adnan .testimonial-person img{width:46px;height:46px;border-radius:50%;object-fit:cover}
+.theme-adnan .testimonial-person span{display:flex;flex-direction:column;gap:4px}
+.theme-adnan .testimonial-person strong{font-size:13px}
+.theme-adnan .testimonial-person small{color:#716d68;font-size:10px}
+.theme-adnan .testimonial-body{padding-right:22px;border-right:1px solid #dedbd7}
+.theme-adnan .testimonial-body blockquote{margin:0 0 28px;font-size:19px;line-height:1.6;letter-spacing:-.02em}
+.theme-adnan .testimonial-body span{display:inline-block;margin-right:6px;padding:7px 9px;border-radius:5px;background:#e3e1de;font-size:9px;font-weight:600}
+.theme-adnan .testimonial-result{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.theme-adnan .testimonial-result small,.theme-adnan .testimonial-result i{font-size:9px;font-style:normal}
+.theme-adnan .testimonial-result strong{margin:9px 0;font-size:25px;font-weight:500}
+.theme-adnan .testimonial-result em{margin-top:12px;padding:6px 8px;border-radius:4px;background:#233f38;color:#fff;font-size:8px;font-style:normal}
+
+.theme-adnan .treatment-discovery{position:relative;width:100vw;margin:2px 0 52px  calc(50% - 50vw);padding-bottom:174px;background:transparent}
+.theme-adnan .treatment-discovery-visual{position:relative;width:100%;height:460px;margin:0;overflow:hidden;border-radius:0;background:#241913}
+.theme-adnan .treatment-discovery-visual>img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:saturate(.88)}
+.theme-adnan .treatment-discovery-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(18,12,9,.5),transparent 48%,rgba(18,12,9,.18));pointer-events:none}
+.theme-adnan .treatment-discovery-message{position:absolute;z-index:2;left:max(48px,calc((100vw - 1200px)/2 + 48px));top:66px;color:#fff}
+.theme-adnan .treatment-discovery-message span{display:block;margin-bottom:14px;font-size:10px;font-weight:700;letter-spacing:.15em}
+.theme-adnan .treatment-discovery-message h3{margin:0;font-size:62px;font-weight:500;line-height:.91;letter-spacing:-.06em}
+.theme-adnan .treatment-discovery-feature{position:absolute;z-index:3;right:max(38px,calc((100vw - 1200px)/2 + 38px));top:37px;width:310px;min-height:132px;display:flex;align-items:center;gap:16px;padding:18px;border:1px solid rgba(255,255,255,.2);border-radius:18px;background:rgba(20,15,13,.36);color:#fff;backdrop-filter:blur(12px)}
+.theme-adnan .treatment-discovery-feature>img{width:72px;height:92px;object-fit:contain}
+.theme-adnan .treatment-discovery-feature strong{display:block;margin-bottom:8px;font-size:16px;line-height:1.15}
+.theme-adnan .treatment-discovery-feature small{display:block;color:rgba(255,255,255,.75);font-size:11px;line-height:1.45}
+.theme-adnan .treatment-discovery-links{position:absolute;z-index:4;left:50%;bottom:24px;width:min(calc(100vw - 96px),1336px);display:grid;grid-template-columns:repeat(3,1fr);gap:16px;transform:translateX(-50%)}
+.theme-adnan .treatment-discovery-links button{min-width:0;height:88px;display:flex;align-items:center;gap:18px;padding:8px 19px;border:0;border-radius:16px;background:#ebe8e2;color:#111;text-align:left;box-shadow:none;cursor:pointer;transition:background .2s,transform .2s}
+.theme-adnan .treatment-discovery-links button:hover{transform:translateY(-2px);background:#e5e1da;box-shadow:none}
+.theme-adnan .treatment-discovery-links button>img{width:106px;height:82px;flex:0 0 auto;object-fit:contain}
+.theme-adnan .treatment-discovery-links button>span{min-width:0;display:block;flex:1}
+.theme-adnan .treatment-discovery-links strong{display:block;margin-bottom:5px;font-size:16px;font-weight:600;letter-spacing:-.02em}
+.theme-adnan .treatment-discovery-links small{display:block;overflow:hidden;color:#8b8882;font-size:12px;white-space:nowrap;text-overflow:ellipsis}
+.theme-adnan .treatment-discovery-links i{width:25px;height:25px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;background:#080808;color:#fff;font-size:12px;font-style:normal}
+
+@media(max-width:700px){
+  .theme-adnan .condition-tabs{gap:22px}
+  .theme-adnan .condition-catalog>h3{font-size:25px}
+  .theme-adnan .condition-tabs button{font-size:14px;padding-bottom:15px}
+  .theme-adnan .treatment-discovery{width:100vw;margin-left:calc(50% - 50vw);padding-bottom:18px;margin-bottom:42px}
+  .theme-adnan .treatment-discovery-visual{height:480px}
+  .theme-adnan .treatment-discovery-message{left:24px;top:48px}
+  .theme-adnan .treatment-discovery-message h3{font-size:45px}
+  .theme-adnan .treatment-discovery-feature{left:20px;right:20px;top:auto;bottom:20px;width:auto}
+  .theme-adnan .treatment-discovery-links{position:relative;left:auto;right:auto;bottom:auto;width:auto;grid-template-columns:1fr;margin:10px 16px 0;transform:none}
+  .theme-adnan .treatment-discovery-links button{height:82px}
+  .theme-adnan .adnan-proof-sections{margin-top:60px}
+  .theme-adnan .member-proof{grid-template-columns:1fr}
+  .theme-adnan .member-story-grid{height:420px;grid-template-columns:repeat(3,1fr);padding:0}
+  .theme-adnan .member-story{min-height:0}
+  .theme-adnan .member-proof-copy{padding:48px 24px 58px}
+  .theme-adnan .member-proof-copy h3{font-size:54px}
+  .theme-adnan .member-count{margin-bottom:38px;font-size:16px}
+  .theme-adnan .member-quote blockquote{font-size:22px}
+  .theme-adnan .care-toolkit{padding:68px 18px 78px}
+  .theme-adnan .care-toolkit>header h3{font-size:24px}
+  .theme-adnan .care-toolkit>header p{font-size:21px}
+  .theme-adnan .care-toolkit-grid{grid-template-columns:1fr 1fr;gap:22px 12px}
+  .theme-adnan .toolkit-visual{height:235px;border-radius:16px}
+  .theme-adnan .tracker-card,.theme-adnan .dose-card{width:68%;min-height:150px;padding:14px}
+  .theme-adnan .care-toolkit-grid>article>p{font-size:10px}
+  .theme-adnan .member-testimonials{padding-left:18px;padding-bottom:70px}
+  .theme-adnan .testimonial-heading{padding-right:18px}
+  .theme-adnan .testimonial-heading h3{font-size:25px}
+  .theme-adnan .testimonial-rail{gap:14px}
+  .theme-adnan .testimonial-rail>article{width:86vw;min-height:440px;grid-template-columns:1fr;padding:26px;gap:20px}
+  .theme-adnan .testimonial-person{grid-column:auto}
+  .theme-adnan .testimonial-body{padding:0 0 22px;border-right:0;border-bottom:1px solid #dedbd7}
+  .theme-adnan .testimonial-body blockquote{font-size:16px}
+}
 @media(max-width:600px){
   .programs .catalog-grid{gap:12px;padding-right:15px;padding-left:15px}
 }

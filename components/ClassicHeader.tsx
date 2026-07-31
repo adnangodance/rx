@@ -2,15 +2,18 @@
 
 import { useState } from "react";
 import { sitePath } from "@/lib/site-path";
+import type { SiteVersion } from "@/components/VersionBar";
 
 export default function ClassicHeader({
   cartCount = 0,
   searchValue,
   onSearchChange,
+  theme = "v1",
 }: {
   cartCount?: number;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
+  theme?: SiteVersion;
 }) {
   const [localSearch, setLocalSearch] = useState("");
   const search = searchValue ?? localSearch;
@@ -64,7 +67,7 @@ export default function ClassicHeader({
             <b>{cartCount}</b>
           </a>
         )}
-        <a className="classic-header-login" href={sitePath("/login?theme=v1")}>
+        <a className="classic-header-login" href={sitePath(`/login?theme=${theme}`)}>
           <span className="classic-login-icon" aria-hidden="true" />
           Log in
         </a>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import CatalogSection, { type Product } from "@/components/CatalogSection";
 import ClassicHeader from "@/components/ClassicHeader";
 import HeaderPillNav from "@/components/HeaderPillNav";
-import VersionBar from "@/components/VersionBar";
+import VersionBar, { isClassicVersion, type SiteVersion } from "@/components/VersionBar";
 import { sitePath } from "@/lib/site-path";
 
 const productRows = [
@@ -72,6 +72,38 @@ const productRows = [
   },
 ];
 
+const adnanSuggestionProducts: Record<string, Product[]> = {
+  "longevity-products": [
+    { name: "Amino-Quad Capsules", price: "$45/mo", detail: "THE / INO / PRO / TAU", type: "jar", image: "/adnan-amino-quad.png" },
+    { name: "NAD+ Injection", price: "$69/mo", detail: "20mg/ml provider-guided care", type: "vial", image: "/adnan-nad-injection.png" },
+    { name: "Atropine Sulfate", price: "$29/mo", detail: "1 (3ml) bottle", type: "dropper", image: "/adnan-atropine.png" },
+    { name: "B-Complex", price: "$39/mo", detail: "1 (10ml) vial", type: "vial", image: "/adnan-b-complex.png" },
+  ],
+  "hair-loss-products": [
+    { name: "Hair Loss Gel + Solution", price: "$49/mo", detail: "Personalized topical hair care", type: "spray", image: "/adnan-hair-loss-duo.png" },
+  ],
+  "acne-products": [
+    { name: "Tretinoin Cream", price: "$29/mo", detail: "Prescription retinoid care", type: "cream", image: "/adnan-tretinoin.png" },
+    { name: "GHK-Cu Cream", price: "$49/mo", detail: "1 (30gm) jar", type: "jar", image: "/adnan-ghk-cu-cream.png" },
+  ],
+  "sexual-health-products": [
+    { name: "Super Strut Mints", price: "$39/mo", detail: "Personalized intimacy support", type: "jar", image: "/adnan-super-strut.png" },
+    { name: "Anastrozole", price: "$39/mo", detail: "Provider-guided hormone support", type: "jar", image: "/adnan-anastrozole.png" },
+    { name: "Anastrozole Capsules", price: "$45/mo", detail: "60 capsules", type: "jar", image: "/adnan-anastrozole-capsules.png" },
+    { name: "PT-141 Nasal Spray", price: "$49/mo", detail: "Personalized intimacy care", type: "spray", image: "/adnan-pt141.png" },
+    { name: "Hydrocortisone / Lidocaine", price: "$45/mo", detail: "20mg / 20mg suppository care", type: "pack", image: "/adnan-hydrocortisone-lidocaine.png" },
+    { name: "Testosterone Cypionate", price: "$69/mo", detail: "200mg/ml provider-guided care", type: "vial", image: "/adnan-testosterone.png" },
+  ],
+  "weight-management-products": [
+    { name: "Daily Tablet", price: "$39/mo", detail: "Daily oral treatment", type: "tablet", image: "/adnan-daily-tablet.png" },
+    { name: "Lipo-C", price: "$39/mo", detail: "Lipotropic injection support", type: "vial", image: "/adnan-lipo-c.png" },
+  ],
+  "womens-health-products": [
+    { name: "Estradiol Patches", price: "$39/mo", detail: "Four transdermal patches", type: "pack", image: "/adnan-estradiol.png" },
+    { name: "Boric Acid / EDTA", price: "$35/mo", detail: "1 (30gm) jar", type: "jar", image: "/adnan-boric-acid-edta.png" },
+  ],
+};
+
 const faqs = [
   {
     question: "How does ScriptRx work?",
@@ -92,11 +124,29 @@ const faqs = [
 ];
 
 export default function Home() {
-  const [version, setVersion] = useState<"v1" | "v2" | "v3" | "v4">("v3");
+  const [version, setVersion] = useState<SiteVersion>("v3");
+  const isClassic = isClassicVersion(version);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [addedProducts, setAddedProducts] = useState<string[]>([]);
   const [pendingProduct, setPendingProduct] = useState<Product | null>(null);
   const cartCount = addedProducts.length;
+  const adnanRowTitles: Record<string, string> = {
+    "longevity-products": "Popular treatments",
+    "sexual-health-products": "Sexual Health",
+    "weight-management-products": "Weight Management",
+    "hair-loss-products": "Hair Loss",
+    "acne-products": "Skin & Hair",
+  };
+  const visibleProductRows = version === "v5"
+    ? [
+        ...productRows.map((row) => ({
+          ...row,
+          title: adnanRowTitles[row.id] || row.title,
+          products: adnanSuggestionProducts[row.id] || [],
+        })),
+        { id: "womens-health-products", title: "Women’s health", products: adnanSuggestionProducts["womens-health-products"] },
+      ]
+    : productRows;
 
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem("scriptrx-authenticated") === "true");
@@ -108,7 +158,7 @@ export default function Home() {
       setAddedProducts([]);
     }
     const savedTheme = localStorage.getItem("scriptrx-theme");
-    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4") {
+    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4" || savedTheme === "v5") {
       setVersion(savedTheme);
     }
   }, []);
@@ -149,7 +199,7 @@ export default function Home() {
   }
 
   return (
-    <main className={`theme-${version}`}>
+    <main className={`theme-${isClassic ? "v1" : version} ${version === "v5" ? "theme-adnan" : ""}`}>
       <VersionBar version={version} onChange={setVersion} />
 
 
@@ -170,12 +220,12 @@ export default function Home() {
         </div>
       )}
 
-      {version === "v1" && <ClassicHeader cartCount={cartCount} />}
+      {isClassic && <ClassicHeader cartCount={cartCount} theme={version} />}
 
       <section className="reference-hero">
-        {version !== "v1" && <div className="hero-announcement">New: personalized weight care</div>}
+        {!isClassic && <div className="hero-announcement">New: personalized weight care</div>}
 
-        {version !== "v1" && (
+        {!isClassic && (
           <header className="reference-nav">
             <a className="reference-logo" href="#">Scriptrx</a>
 
@@ -215,10 +265,10 @@ export default function Home() {
         </div>
 
         <div className="story-grid">
-          <a className="story-card story-weight" href={version === "v1" ? sitePath("/categories?category=weight-management") : "#care"}>
+          <a className="story-card story-weight" href={isClassic ? sitePath("/categories?category=weight-management") : "#care"}>
             <div className="story-copy">
               <h2>A plan made<br />for your progress.</h2>
-              {version === "v1" && (
+              {isClassic && (
                 <span className="v1-story-cta">
                   <span className="v1-story-cta-main">
                     <img src={sitePath("/product-b12.png")} alt="" />
@@ -253,8 +303,8 @@ export default function Home() {
             />
           </a>
 
-          <a className="story-card story-life" href={version === "v1" ? sitePath("/categories?category=sexual-health") : version === "v4" ? "#acne-products" : "#care"}>
-            {version === "v1" && (
+          <a className="story-card story-life" href={isClassic ? sitePath("/categories?category=sexual-health") : version === "v4" ? "#acne-products" : "#care"}>
+            {isClassic && (
               <>
                 <img src={sitePath("/better-sex.jpg")} alt="Couple embracing in lavender activewear" />
                 <div className="story-copy">
@@ -291,7 +341,7 @@ export default function Home() {
           </a>
         </div>
 
-        {version === "v1" || version === "v3" || version === "v4" ? (
+        {isClassic || version === "v3" || version === "v4" ? (
           <div className="hero-treatment-row v3-treatment-row">
             <a href="#weight-management-products">
               <img className="v3-cat-img" src={sitePath("/vial-lose-weight.png")} alt="Weight management vial" />
@@ -340,7 +390,7 @@ export default function Home() {
         )}
       </section>
 
-      <CatalogSection productRows={productRows} addedProducts={addedProducts} onAddToCart={handleAddToCart} onRemoveFromCart={handleRemoveFromCart} />
+      <CatalogSection productRows={visibleProductRows} addedProducts={addedProducts} onAddToCart={handleAddToCart} onRemoveFromCart={handleRemoveFromCart} tabbedAfterFirst={version === "v5"} />
 
       <section className="faq-section" id="faq">
         <div className="faq-shell">
@@ -357,15 +407,16 @@ export default function Home() {
       </section>
 
       <footer>
-        {version === "v1" ? (
+        {isClassic ? (
           <div className="footer-panel">
             <div className="footer-v2-header" style={{ marginBottom: 20 }}>
               <div className="footer-v2-switcher">
                 <span className="switcher-label">Version:</span>
-                <button type="button" className="version-pill active" onClick={() => setVersion("v1")}>Version 1</button>
+                <button type="button" className={`version-pill ${version === "v1" ? "active" : "inactive"}`} onClick={() => setVersion("v1")}>Version 1</button>
                 <button type="button" className="version-pill inactive" onClick={() => setVersion("v2")}>Version 2</button>
                 <button type="button" className="version-pill inactive" onClick={() => setVersion("v3")}>Version 3</button>
                 <button type="button" className="version-pill inactive" onClick={() => setVersion("v4")}>Version 4</button>
+                <button type="button" className={`version-pill ${version === "v5" ? "active" : "inactive"}`} onClick={() => setVersion("v5")}>Adnan Suggestion</button>
               </div>
             </div>
             <div className="footer-links">
@@ -386,6 +437,7 @@ export default function Home() {
                 <button type="button" className={`version-pill ${version === "v2" ? "active" : "inactive"}`} onClick={() => setVersion("v2")}>Version 2</button>
                 <button type="button" className={`version-pill ${version === "v3" ? "active" : "inactive"}`} onClick={() => setVersion("v3")}>Version 3</button>
                 <button type="button" className={`version-pill ${version === "v4" ? "active" : "inactive"}`} onClick={() => setVersion("v4")}>Version 4</button>
+                <button type="button" className={`version-pill ${version === "v5" ? "active" : "inactive"}`} onClick={() => setVersion("v5")}>Adnan Suggestion</button>
               </div>
             </div>
             <div className="footer-links-v2">

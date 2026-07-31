@@ -1,6 +1,8 @@
 "use client";
 
-export type SiteVersion = "v1" | "v2" | "v3" | "v4";
+export type SiteVersion = "v1" | "v2" | "v3" | "v4" | "v5";
+
+export const isClassicVersion = (version: SiteVersion) => version === "v1" || version === "v5";
 
 export default function VersionBar({ version, onChange }: { version: SiteVersion; onChange: (version: SiteVersion) => void }) {
   return (
@@ -10,6 +12,7 @@ export default function VersionBar({ version, onChange }: { version: SiteVersion
       <button type="button" className={`v-btn ${version === "v2" ? "active" : ""}`} onClick={() => onChange("v2")}>Version 2 (Light Green)</button>
       <button type="button" className={`v-btn ${version === "v3" ? "active" : ""}`} onClick={() => onChange("v3")}>Version 3 (Warm Chocolate &amp; Sand)</button>
       <button type="button" className={`v-btn ${version === "v4" ? "active" : ""}`} onClick={() => onChange("v4")}>Version 4 (Soft Pink)</button>
+      <button type="button" className={`v-btn ${version === "v5" ? "active" : ""}`} onClick={() => onChange("v5")}>Adnan Suggestion</button>
     </div>
   );
 }
