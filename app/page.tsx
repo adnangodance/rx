@@ -218,6 +218,19 @@ export default function Home() {
           <a className="story-card story-weight" href={version === "v1" ? sitePath("/categories?category=weight-management") : "#care"}>
             <div className="story-copy">
               <h2>A plan made<br />for your progress.</h2>
+              {version === "v1" && (
+                <span className="v1-story-cta">
+                  <span className="v1-story-cta-main">
+                    <img src={sitePath("/product-b12.png")} alt="" />
+                    <b>Get Started</b>
+                  </span>
+                  <span className="v1-story-cta-arrow">
+                    <svg width="23" height="23" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                      <path d="M6 22L22 6M22 6H9M22 6V19" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </span>
+              )}
               {version === "v2" && <span className="card-pill-btn">Explore weight care</span>}
               {version === "v3" && <span className="card-pill-btn">Explore weight care</span>}
             </div>
@@ -278,7 +291,7 @@ export default function Home() {
           </a>
         </div>
 
-        {version === "v3" || version === "v4" ? (
+        {version === "v1" || version === "v3" || version === "v4" ? (
           <div className="hero-treatment-row v3-treatment-row">
             <a href="#weight-management-products">
               <img className="v3-cat-img" src={sitePath("/vial-lose-weight.png")} alt="Weight management vial" />
