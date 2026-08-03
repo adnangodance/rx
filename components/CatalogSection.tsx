@@ -138,11 +138,10 @@ function CareToolkit() {
 
 function AdnanProofSections() {
   const memberStories = [
-    { image: "/member-story-1.png", name: "Marcus", className: "story-short" },
+    { image: "/member-story-1.png", name: "Marcus", className: "story-tall" },
     { image: "/member-story-2.png", name: "Maya", className: "story-short" },
     { image: "/member-story-3.png", name: "Daniel", className: "story-short" },
     { image: "/member-story-4.png", name: "Alex", className: "story-short" },
-    { image: "/member-story-5.png", name: "James", className: "story-short" },
     { image: "/member-story-6.png", name: "Nina", className: "story-short" },
   ];
 

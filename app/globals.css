@@ -202,11 +202,12 @@ button.version-pill.inactive:hover{color:#fff;background:rgba(255,255,255,.15)}
 .theme-v1 .catalog-art{background:linear-gradient(145deg,#f7f9ff,#edf3fe);border:none}
 .theme-v1 .hero-treatment-row>a{background:#FAF7FD!important;border:none}
 .theme-v1 .hero-treatment-row>a:hover{background:#F4EEF9!important;box-shadow:0 4px 16px rgba(45,35,70,.04)}
-.theme-v1 .story-copy>.v1-story-cta{width:224px;height:48px;display:flex;align-items:center;gap:8px;margin-top:auto;padding:0;border-radius:0;background:transparent;color:#fff;font-size:16px;font-weight:700}
-.theme-v1 .v1-story-cta-main{position:relative;height:48px;flex:1;display:flex;align-items:center;padding:0 18px 0 70px;border-radius:100px;background:#050505;box-shadow:0 8px 20px rgba(28,22,48,.16)}
-.theme-v1 .v1-story-cta-main img{position:absolute;left:5px;bottom:-9px;width:62px;height:76px;object-fit:contain;filter:drop-shadow(0 6px 6px rgba(0,0,0,.28));transform:rotate(-7deg)}
+.theme-v1 .story-copy>.v1-story-cta{width:214px;height:48px;display:flex;align-items:center;gap:0;margin-top:auto;padding:0;border-radius:100px;background:transparent;color:#fff;font-size:16px;font-weight:700}
+.theme-v1 .v1-story-cta-main{position:relative;height:48px;flex:1;display:flex;align-items:center;justify-content:center;padding:0 18px;border-radius:100px;background:#050505;box-shadow:0 8px 20px rgba(28,22,48,.16)}
+.theme-v1 .v1-story-cta-main img{position:absolute;left:-4px;bottom:-9px;width:62px;height:76px;object-fit:contain;filter:drop-shadow(0 6px 6px rgba(0,0,0,.28));transform:rotate(-7deg);transform-origin:center;transition:transform .28s cubic-bezier(.2,.75,.25,1)}
+.theme-v1 .v1-story-cta:hover .v1-story-cta-main img{transform:rotate(1deg)}
 .theme-v1 .v1-story-cta-main b{white-space:nowrap;font-size:16px;line-height:1}
-.theme-v1 .v1-story-cta-arrow{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:50%;background:#050505;color:#fff;box-shadow:0 8px 20px rgba(28,22,48,.16)}
+.theme-v1 .v1-story-cta-arrow{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;margin-left:-2px;border-radius:50%;background:#050505;color:#fff;box-shadow:0 8px 20px rgba(28,22,48,.16)}
 .theme-v1 .reference-hero{display:flow-root;padding-top:0}
 .classic-reference-nav{position:sticky;top:0;z-index:98;height:76px;display:grid;grid-template-columns:auto minmax(500px,1fr) minmax(300px,400px) auto auto;align-items:center;gap:22px;margin-inline:-5.3%;padding:0 22px;border-bottom:1px solid #ececec;background:#fff;font-family:Inter,Arial,sans-serif;color:#0b0b0b}
 .category-page>.classic-reference-nav,
