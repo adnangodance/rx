@@ -19,9 +19,24 @@ export interface ProductRow {
 }
 
 export default function CatalogSection({ productRows, addedProducts, onAddToCart, onRemoveFromCart, tabbedAfterFirst = false }: { productRows: ProductRow[]; addedProducts: string[]; onAddToCart: (product: Product) => void; onRemoveFromCart: (product: Product) => void; tabbedAfterFirst?: boolean }) {
-  const [activeTab, setActiveTab] = useState(0);
   const firstRow = productRows[0];
   const tabRows = productRows.slice(1).filter((row) => row.products.length > 0);
+  const conditionDescriptions: Record<string, [string, string]> = {
+    "sexual-health-products": ["ED and testosterone treatments.", "Oral compounds, custom dosed."],
+    "weight-management-products": ["GLP-1 and metabolic programs.", "Physician-supervised care."],
+    "hair-loss-products": ["Topical and oral hair treatments.", "Personalized provider-guided plans."],
+    "acne-products": ["Prescription skin and hair care.", "Personalized daily formulas."],
+    "womens-health-products": ["Hormone and wellness support.", "Provider-guided treatment plans."],
+    "peptides-products": ["Sermorelin, tesamorelin, NAD+.", "Recovery, energy, body composition."],
+  };
+  const categorySlugs: Record<string, string> = {
+    "sexual-health-products": "sexual-health",
+    "weight-management-products": "weight-management",
+    "hair-loss-products": "hair-care",
+    "acne-products": "acne",
+    "womens-health-products": "womens-health",
+    "peptides-products": "longevity",
+  };
 
   return (
     <section className="programs shell" id="care">
@@ -39,44 +54,48 @@ export default function CatalogSection({ productRows, addedProducts, onAddToCart
                     </div>
                   </div>
                   <div className="treatment-discovery-links">
-                    {tabRows.map((row, index) => {
+                    {tabRows.map((row) => {
                       const firstProduct = row.products[0];
                       return (
-                        <button type="button" key={row.id || row.title} onClick={() => setActiveTab(index)}>
+                        <a key={row.id || row.title} href={sitePath(`/categories?category=${categorySlugs[row.id || ""] || "longevity"}`)}>
                           {firstProduct && <img src={sitePath(firstProduct.image)} alt="" />}
                           <span><strong>{row.title}</strong><small>{firstProduct?.detail || "Explore personalized options"}</small></span>
-                          <i>↗</i>
-                        </button>
+                          <i aria-hidden="true">
+                            <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+                              <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </i>
+                        </a>
                       );
                     })}
                   </div>
                 </section>
-                <section className="condition-catalog" aria-labelledby="condition-catalog-title">
-                <h3 id="condition-catalog-title">What condition can we help with?</h3>
-                <div className="condition-tabs" role="tablist" aria-label="Treatment categories">
-                  {tabRows.map((row, index) => (
-                    <button
-                      key={row.id || row.title}
-                      type="button"
-                      role="tab"
-                      aria-selected={activeTab === index}
-                      className={activeTab === index ? "active" : ""}
-                      onClick={() => setActiveTab(index)}
-                    >
-                      {row.title}
-                    </button>
-                  ))}
-                </div>
-                <CatalogRow
-                  key={tabRows[activeTab]?.id || tabRows[activeTab]?.title}
-                  row={tabRows[activeTab] || tabRows[0]}
-                  addedProducts={addedProducts}
-                  onAddToCart={onAddToCart}
-                  onRemoveFromCart={onRemoveFromCart}
-                  hideTitle
-                />
+                <CareToolkit />
                 <AdnanProofSections />
+                <section className="condition-catalog" aria-labelledby="condition-catalog-title">
+                  <h3 id="condition-catalog-title">What condition can we help with?</h3>
+                  <div className="condition-tabs" aria-label="Treatment categories">
+                    {tabRows.map((row) => {
+                      const categoryProduct = row.products[0];
+                      const categoryDescription = conditionDescriptions[row.id || ""] || [categoryProduct?.detail || "Personalized treatment options.", "Provider-guided care."];
+                      return (
+                        <a
+                          key={row.id || row.title}
+                          href={sitePath(`/categories?category=${categorySlugs[row.id || ""] || "longevity"}`)}
+                        >
+                          <span className="condition-card-art">{categoryProduct && <img src={sitePath(categoryProduct.image)} alt="" />}</span>
+                          <span className="condition-card-copy"><strong>{row.title}</strong><small>{categoryDescription[0]}<br />{categoryDescription[1]}</small></span>
+                          <i aria-hidden="true">
+                            <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+                              <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </i>
+                        </a>
+                      );
+                    })}
+                  </div>
                 </section>
+                <MemberTestimonials />
               </>
             )}
           </>
@@ -88,12 +107,43 @@ export default function CatalogSection({ productRows, addedProducts, onAddToCart
   );
 }
 
+function CareToolkit() {
+  return (
+    <section className="care-toolkit" aria-labelledby="care-toolkit-title">
+      <header>
+        <h3 id="care-toolkit-title">Everything you need to move forward,</h3>
+        <p>all in one place.</p>
+      </header>
+      <div className="care-toolkit-grid">
+        <article>
+          <div className="toolkit-visual tracker-visual"><div className="tracker-card"><small>WEEK 4</small><strong>↓ 22 lbs</strong><span>Keep it up!</span><i /></div></div>
+          <h4>Weight loss trackers</h4><p>Track your journey and celebrate each milestone.</p>
+        </article>
+        <article>
+          <div className="toolkit-visual dose-visual"><div className="dose-card"><small>WEEK 4</small><strong>0.25 mg</strong><button type="button">+ Log</button></div></div>
+          <h4>Injection tracker</h4><p>Never miss a dose with easy, built-in reminders.</p>
+        </article>
+        <article>
+          <div className="toolkit-visual support-visual"><img src={sitePath("/benefit-care-from-home-transparent.png")} alt="" /><div><span>24/7 care team</span><small>Hey, here’s your treatment.</small><small>Weekly medication</small></div></div>
+          <h4>24/7 support</h4><p>Message your care team whenever you need them — day or night.</p>
+        </article>
+        <article>
+          <div className="toolkit-visual product-visual"><div className="product-glass"><img src={sitePath("/adnan-amino-quad.png")} alt="" /><span>Daily support</span></div></div>
+          <h4>Curated wellness products</h4><p>Wellness essentials hand-picked to support your journey.</p>
+        </article>
+      </div>
+    </section>
+  );
+}
+
 function AdnanProofSections() {
   const memberStories = [
-    { image: "/member-story-1.png", name: "Marcus", className: "story-tall" },
+    { image: "/member-story-1.png", name: "Marcus", className: "story-short" },
     { image: "/member-story-2.png", name: "Maya", className: "story-short" },
     { image: "/member-story-3.png", name: "Daniel", className: "story-short" },
-    { image: "/member-story-4.png", name: "Alex", className: "story-tall" },
+    { image: "/member-story-4.png", name: "Alex", className: "story-short" },
+    { image: "/member-story-5.png", name: "James", className: "story-short" },
+    { image: "/member-story-6.png", name: "Nina", className: "story-short" },
   ];
 
   return (
@@ -120,47 +170,43 @@ function AdnanProofSections() {
         </div>
       </section>
 
-      <section className="care-toolkit" aria-labelledby="care-toolkit-title">
-        <header>
-          <h3 id="care-toolkit-title">Everything you need to move forward,</h3>
-          <p>all in one place.</p>
-          <a href="#care">Explore your options <span>›</span></a>
-        </header>
-        <div className="care-toolkit-grid">
-          <article>
-            <div className="toolkit-visual tracker-visual"><div className="tracker-card"><small>WEEK 4</small><strong>↓ 12 lbs</strong><span>Keep it up!</span><i /></div></div>
-            <h4>Progress tracking</h4><p>Follow milestones and see how your care plan is progressing.</p>
-          </article>
-          <article>
-            <div className="toolkit-visual dose-visual"><div className="dose-card"><small>THIS WEEK</small><strong>0.25 mg</strong><button type="button">✓ Logged</button></div></div>
-            <h4>Simple treatment reminders</h4><p>Stay on schedule with clear, easy-to-follow treatment guidance.</p>
-          </article>
-          <article>
-            <div className="toolkit-visual support-visual"><img src={sitePath("/benefit-care-from-home-transparent.png")} alt="" /><div><span>Care team</span><small>How are you feeling today?</small><small>Your provider is here to help.</small></div></div>
-            <h4>Ongoing support</h4><p>Message your care team when questions come up along the way.</p>
-          </article>
-          <article>
-            <div className="toolkit-visual product-visual"><div className="product-glass"><img src={sitePath("/adnan-amino-quad.png")} alt="" /><span>Daily support</span></div></div>
-            <h4>Curated wellness options</h4><p>Thoughtful treatments selected to support your individual goals.</p>
-          </article>
-        </div>
-      </section>
+    </div>
+  );
+}
 
+function MemberTestimonials() {
+  const railRef = useRef<HTMLDivElement>(null);
+  const scrollStories = (direction: -1 | 1) => {
+    const rail = railRef.current;
+    if (!rail) return;
+    rail.scrollBy({ left: direction * rail.clientWidth * 0.72, behavior: "smooth" });
+  };
+
+  return (
+    <div className="adnan-testimonials-section">
       <section className="member-testimonials" aria-labelledby="member-testimonials-title">
         <div className="testimonial-heading">
           <h3 id="member-testimonials-title">Member stories</h3>
-          <div aria-hidden="true"><span /><button type="button">←</button><button type="button">→</button></div>
+          <div><span aria-hidden="true" /><button type="button" aria-label="Previous member story" onClick={() => scrollStories(-1)}>←</button><button type="button" aria-label="Next member story" onClick={() => scrollStories(1)}>→</button></div>
         </div>
-        <div className="testimonial-rail">
+        <div className="testimonial-rail" ref={railRef}>
           <article>
-            <div className="testimonial-person"><img src={sitePath("/weight-management-cover.png")} alt="" /><span><strong>Daniel</strong><small>42 years old</small></span></div>
-            <div className="testimonial-body"><blockquote>“The process felt clear from the beginning. I could focus on my goals without wondering what came next.”</blockquote><div><span>More energy</span><span>Better routine</span></div></div>
-            <div className="testimonial-result"><small>Before treatment</small><strong>9.77</strong><i>3 months</i><strong>26.50</strong><em>171% improvement</em></div>
+            <div className="testimonial-person"><img src={sitePath("/member-story-3.png")} alt="" /><span><strong>Danny</strong><small>42 years old</small></span></div>
+            <div className="testimonial-body"><blockquote className="four-line-quote">TRT improved my energy, mood, and well-being.<br />I improved my diet, exercise, and sleep.<br />This gave me a healthier, positive routine,<br />and better relationships at work and home.</blockquote><div><span>More energy</span><span>Improved mood</span></div></div>
+            <div className="testimonial-result">
+              <div className="result-reading"><small>Before treatment</small><span className="result-gauge gauge-before"><strong>9.77</strong><i>nmol/L</i></span></div>
+              <div className="result-reading"><small>3 Months treatment</small><span className="result-gauge gauge-after"><strong>26.50</strong><i>nmol/L</i></span></div>
+              <div className="result-improvement"><em>171%</em><span>increase in Free Testosterone</span></div>
+            </div>
           </article>
           <article>
-            <div className="testimonial-person"><img src={sitePath("/hair-loss-cover.png")} alt="" /><span><strong>Richard</strong><small>53 years old</small></span></div>
-            <div className="testimonial-body"><blockquote>“Having provider support online made care easier to fit into my week and helped me stay consistent.”</blockquote><div><span>More confidence</span><span>Easy access</span></div></div>
-            <div className="testimonial-result"><small>Member rating</small><strong>4.9</strong><i>out of 5</i><strong>★★★★★</strong><em>Verified experience</em></div>
+            <div className="testimonial-person"><img src={sitePath("/member-story-4.png")} alt="" /><span><strong>Richard</strong><small>53 years old</small></span></div>
+            <div className="testimonial-body"><blockquote>Low energy and brain fog were the two biggest symptoms I had. Then I found TRT. It’s helped me improve my energy, mental clarity, and overall well-being. I was able to achieve my goals, gain muscle, lose body fat, and improve sports performance.</blockquote><div><span>More energy</span><span>More muscle mass</span></div></div>
+            <div className="testimonial-result">
+              <div className="result-reading"><small>Before treatment</small><span className="result-gauge gauge-before"><strong>10.20</strong><i>nmol/L</i></span></div>
+              <div className="result-reading"><small>3 Months treatment</small><span className="result-gauge gauge-after"><strong>24.80</strong><i>nmol/L</i></span></div>
+              <div className="result-improvement"><em>143%</em><span>increase in Free Testosterone</span></div>
+            </div>
           </article>
         </div>
       </section>
@@ -185,7 +231,7 @@ function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart, hideTit
     updateProgress();
     window.addEventListener("resize", updateProgress);
     return () => window.removeEventListener("resize", updateProgress);
-  }, []);
+  }, [row.products.length]);
 
   const handleScroll = (direction: "left" | "right") => {
     if (gridRef.current) {

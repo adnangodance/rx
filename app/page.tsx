@@ -78,6 +78,10 @@ const adnanSuggestionProducts: Record<string, Product[]> = {
     { name: "NAD+ Injection", price: "$69/mo", detail: "20mg/ml provider-guided care", type: "vial", image: "/adnan-nad-injection.png" },
     { name: "Atropine Sulfate", price: "$29/mo", detail: "1 (3ml) bottle", type: "dropper", image: "/adnan-atropine.png" },
     { name: "B-Complex", price: "$39/mo", detail: "1 (10ml) vial", type: "vial", image: "/adnan-b-complex.png" },
+    { name: "Beta Glucan", price: "$39/mo", detail: "Daily immune wellness support", type: "jar", image: "/adnan-beta-glucan.png" },
+    { name: "MIC + B12", price: "$45/mo", detail: "Metabolic vitamin injection", type: "vial", image: "/adnan-mic-b12.png" },
+    { name: "Lipo-C", price: "$39/mo", detail: "Lipotropic injection support", type: "vial", image: "/adnan-lipo-c.png" },
+    { name: "GHK-Cu Cream", price: "$49/mo", detail: "Peptide skin support", type: "jar", image: "/adnan-ghk-cu-cream.png" },
   ],
   "hair-loss-products": [
     { name: "Hair Loss Gel + Solution", price: "$49/mo", detail: "Personalized topical hair care", type: "spray", image: "/adnan-hair-loss-duo.png" },
@@ -145,6 +149,7 @@ export default function Home() {
           products: adnanSuggestionProducts[row.id] || [],
         })),
         { id: "womens-health-products", title: "Women’s health", products: adnanSuggestionProducts["womens-health-products"] },
+        { id: "peptides-products", title: "Peptides & Longevity", products: adnanSuggestionProducts["longevity-products"].slice(0, 4) },
       ]
     : productRows;
 
@@ -341,53 +346,33 @@ export default function Home() {
           </a>
         </div>
 
-        {isClassic || version === "v3" || version === "v4" ? (
+        {version !== "v5" && (isClassic || version === "v3" || version === "v4" ? (
           <div className="hero-treatment-row v3-treatment-row">
-            <a href="#weight-management-products">
-              <img className="v3-cat-img" src={sitePath("/vial-lose-weight.png")} alt="Weight management vial" />
-              <span>Weight Management</span>
-              <span className="cat-arrow-btn">
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </span>
-            </a>
-            <a href="#hair-loss-products">
-              <img className="v3-cat-img" src={sitePath("/bottle-hair-care.png")} alt="Hair loss treatment bottle" />
-              <span>Hair Loss</span>
-              <span className="cat-arrow-btn">
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </span>
-            </a>
-            <a href="#sexual-health-products">
-              <img className="v3-cat-img" src={sitePath("/pill-energy-flame.png")} alt="Sexual health treatment" />
-              <span>Sexual Health</span>
-              <span className="cat-arrow-btn">
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </span>
-            </a>
-            <a href="#acne-products">
-              <img className="v3-cat-img" src={sitePath("/pill-silver-novo.png")} alt="Acne treatment" />
-              <span>Acne</span>
-              <span className="cat-arrow-btn">
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </span>
-            </a>
+            {[
+              { name: "Weight Management", href: "#weight-management-products", image: "/vial-lose-weight.png" },
+              { name: "Hair Loss", href: "#hair-loss-products", image: "/bottle-hair-care.png" },
+              { name: "Sexual Health", href: "#sexual-health-products", image: "/pill-energy-flame.png" },
+              { name: "Acne", href: "#acne-products", image: "/pill-silver-novo.png" },
+            ].map((category) => (
+              <a key={category.name} href={category.href}>
+                <img className="v3-cat-img" src={sitePath(category.image)} alt="" />
+                <span>{category.name}</span>
+                <span className="cat-arrow-btn" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                    <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.5M11.5 4.5V10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              </a>
+            ))}
           </div>
         ) : (
           <div className="hero-treatment-row">
-            <a href="#weight-management-products"><span>Weight Management</span><img className="treatment-thumb-img" src={sitePath("/vial-lose-weight.png")} alt="Weight management treatment vial" /></a>
-            <a href="#hair-loss-products"><span>Hair Loss</span><img className="treatment-thumb-bottle" src={sitePath("/bottle-hair-care.png")} alt="Hair loss treatment bottle" /></a>
-            <a href="#sexual-health-products"><span>Sexual Health</span><img className="treatment-thumb-pill" src={sitePath("/pill-energy-flame.png")} alt="Sexual health treatment" /></a>
-            <a href="#acne-products"><span>Acne</span><img className="treatment-thumb-pill-silver" src={sitePath("/pill-silver-novo.png")} alt="Acne treatment" /></a>
+            <a href="#weight-management-products"><span>Weight Management</span><img className="treatment-thumb-img" src={sitePath("/vial-lose-weight.png")} alt="" /></a>
+            <a href="#hair-loss-products"><span>Hair Loss</span><img className="treatment-thumb-bottle" src={sitePath("/bottle-hair-care.png")} alt="" /></a>
+            <a href="#sexual-health-products"><span>Sexual Health</span><img className="treatment-thumb-pill" src={sitePath("/pill-energy-flame.png")} alt="" /></a>
+            <a href="#acne-products"><span>Acne</span><img className="treatment-thumb-pill-silver" src={sitePath("/pill-silver-novo.png")} alt="" /></a>
           </div>
-        )}
+        ))}
       </section>
 
       <CatalogSection productRows={visibleProductRows} addedProducts={addedProducts} onAddToCart={handleAddToCart} onRemoveFromCart={handleRemoveFromCart} tabbedAfterFirst={version === "v5"} />
@@ -430,7 +415,8 @@ export default function Home() {
           </div>
         ) : (
           <div className="footer-panel-v2">
-            <div className="footer-v2-header">
+            <div className="footer-v2-grid">
+              <div className="footer-v2-header">
               <div className="footer-v2-switcher">
                 <span className="switcher-label">Version:</span>
                 <button type="button" className="version-pill inactive" onClick={() => setVersion("v1")}>Version 1</button>
@@ -439,8 +425,8 @@ export default function Home() {
                 <button type="button" className={`version-pill ${version === "v4" ? "active" : "inactive"}`} onClick={() => setVersion("v4")}>Version 4</button>
                 <button type="button" className={`version-pill ${version === "v5" ? "active" : "inactive"}`} onClick={() => setVersion("v5")}>Adnan Suggestion</button>
               </div>
-            </div>
-            <div className="footer-links-v2">
+              </div>
+              <div className="footer-links-v2">
               <p className="footer-intro-text">Simple, honest care for your offerings, and accurate clinical care — 100% online from licensed providers.</p>
               <div>
                 <b>Categories</b>
@@ -464,8 +450,9 @@ export default function Home() {
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms</a>
               </div>
+              </div>
+              <a className="footer-wordmark-v2" href="#">Scriptrx</a>
             </div>
-            <a className="footer-wordmark-v2" href="#">Scriptrx</a>
           </div>
         )}
       </footer>
