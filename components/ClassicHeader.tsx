@@ -56,10 +56,6 @@ export default function ClassicHeader({
           aria-label="Search ScriptRx"
         />
       </form>
-      <a className="classic-header-location" href="#">
-        <span aria-hidden="true">●</span>
-        New York City, NY
-      </a>
       <div className="classic-header-actions">
         {cartCount > 0 && (
           <a className="category-cart classic-header-cart" href={sitePath("/cart")} aria-label={`Cart with ${cartCount} items`}>
