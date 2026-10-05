@@ -2183,9 +2183,11 @@ html{scrollbar-gutter:stable}
   letter-spacing: -.02em;
 }
 .theme-new :is(h1,h2,h3,h4):not(.new-eden-footer *, .new-hero-title) :is(a,span) { color: inherit!important; }
-.theme-new .reference-hero .story-copy h2 {
+.theme-new .reference-hero :is(.story-copy h2,.new-hero-care-copy h3) {
   font-family: Arial,Helvetica,sans-serif!important;
   font-weight: 500!important;
+}
+.theme-new .reference-hero .story-copy h2 {
   letter-spacing: -.065em;
 }
 .theme-new .faq-list summary { color: #29377d; }
