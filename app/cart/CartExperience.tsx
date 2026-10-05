@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import ClassicHeader from "@/components/ClassicHeader";
 import type { Product } from "@/components/CatalogSection";
-import VersionBar, { isClassicVersion, type SiteVersion } from "@/components/VersionBar";
+import VersionBar, { DEFAULT_SITE_VERSION, isClassicVersion, resolveSiteVersion, type SiteVersion } from "@/components/VersionBar";
 import { sitePath } from "@/lib/site-path";
+import "./NewOrder.css";
 
 const fallbackProduct: Product = {
   name: "Your treatment",
@@ -13,6 +14,14 @@ const fallbackProduct: Product = {
   type: "disc",
   image: "/product-tablet.png",
 };
+
+function CompletedRequirement({ title, description }: { title: string; description: string }) {
+  return <div className="new-order-completed-row">
+    <span className="new-order-completed-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="m5 10 3 3 7-7" /></svg></span>
+    <div><b>{title}</b><p>{description}</p></div>
+    <span className="new-order-completed-status">Complete</span>
+  </div>;
+}
 
 function OrderHeader({ cartCount, theme }: { cartCount: number; theme: SiteVersion }) {
   if (isClassicVersion(theme)) return <ClassicHeader cartCount={cartCount} theme={theme} />;
@@ -48,18 +57,19 @@ function EligibilityAssessment({ product, theme, onThemeChange, onCancel, onComp
   const answeredCount = answers.filter(Boolean).length;
   const complete = answeredCount === questions.length;
 
-  function answerQuestion(answer: string) {
+  function answerQuestion(questionIndex: number, answer: string) {
     setAnswers((current) => {
+      if (current[questionIndex] === answer) return current;
       const next = [...current];
-      next[activeQuestion] = answer;
-      for (let index = activeQuestion + 1; index < next.length; index += 1) next[index] = "";
+      next[questionIndex] = answer;
+      for (let index = questionIndex + 1; index < next.length; index += 1) next[index] = "";
       return next;
     });
-    if (activeQuestion < questions.length - 1) setActiveQuestion(activeQuestion + 1);
+    setActiveQuestion(Math.min(questionIndex + 1, questions.length - 1));
   }
 
   return (
-    <main className={`assessment-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
+    <main className={`assessment-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}${theme === "v6" ? " eligibility-new theme-new" : ""}`}>
       <VersionBar version={theme} onChange={onThemeChange} />
       <div className="assessment-shell">
         <header className="assessment-header">
@@ -69,7 +79,7 @@ function EligibilityAssessment({ product, theme, onThemeChange, onCancel, onComp
         </header>
 
         <div className="assessment-progress">
-          <div><span style={{ width: `${(answeredCount / questions.length) * 100}%` }} /></div>
+          <div role="progressbar" aria-label="Assessment questions answered" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={answeredCount}><span style={{ width: `${(answeredCount / questions.length) * 100}%` }} /></div>
           <p><span>{answeredCount} of {questions.length} answered</span><b>Eligibility</b></p>
         </div>
 
@@ -81,17 +91,25 @@ function EligibilityAssessment({ product, theme, onThemeChange, onCancel, onComp
             const answered = Boolean(answers[index]);
             const active = activeQuestion === index;
             const locked = index > answeredCount;
+            const showAnswers = theme === "v6" ? !locked : active;
             return (
               <article className={`assessment-question ${active ? "active" : ""} ${answered ? "answered" : ""} ${locked ? "locked" : ""}`} key={question}>
-                <button className="assessment-question-head" type="button" disabled={locked} onClick={() => !locked && setActiveQuestion(index)}>
+                {theme === "v6" ? <div className="assessment-question-head">
+                  <i aria-hidden="true">{answered ? "✓" : index + 1}</i>
+                  <span><b id={`assessment-question-${index}`}>{question}<em>*</em></b></span>
+                </div> : <button className="assessment-question-head" type="button" disabled={locked} aria-expanded={active} aria-controls={active ? `assessment-answers-${index}` : undefined} onClick={() => !locked && setActiveQuestion(index)}>
                   <i>{answered ? "✓" : index + 1}</i>
-                  <span><b>{question}<em>*</em></b>{answered && !active && <small>{answers[index]}</small>}</span>
+                  <span><b id={`assessment-question-${index}`}>{question}<em>*</em></b>{answered && !active && <small>{answers[index]}</small>}</span>
                   <strong>{active ? "⌃" : "⌄"}</strong>
-                </button>
-                {active && (
-                  <div className="assessment-answers">
-                    <button type="button" className={answers[index] === "Yes" ? "selected" : ""} onClick={() => answerQuestion("Yes")}>Yes</button>
-                    <button type="button" className={answers[index] === "No" ? "selected" : ""} onClick={() => answerQuestion("No")}>No</button>
+                </button>}
+                {showAnswers && (
+                  <div className="assessment-answers" id={`assessment-answers-${index}`} role="group" aria-labelledby={`assessment-question-${index}`}>
+                    {["Yes", "No"].map((answer) => (
+                      <button type="button" key={answer} aria-pressed={answers[index] === answer} className={answers[index] === answer ? "selected" : ""} onClick={() => answerQuestion(index, answer)}>
+                        {theme === "v6" && <span className="new-review-choice-mark" aria-hidden="true">{answers[index] === answer && <svg viewBox="0 0 20 20" fill="none"><path d="m5 10 3 3 7-7" /></svg>}</span>}
+                        {answer}
+                      </button>
+                    ))}
                   </div>
                 )}
               </article>
@@ -119,10 +137,11 @@ function MedicalConsent({ theme, onThemeChange, onCancel, onComplete }: { theme:
   const [step, setStep] = useState<"conditions" | "terms">("terms");
   const [agreed, setAgreed] = useState(false);
   const complete = answers.every(Boolean);
+  const answeredCount = answers.filter(Boolean).length;
 
   if (step === "terms") {
     return (
-      <main className={`assessment-page medical-consent-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
+      <main className={`assessment-page medical-consent-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}${theme === "v6" ? " medical-consent-new theme-new" : ""}`}>
         <VersionBar version={theme} onChange={onThemeChange} />
         <div className="assessment-shell consent-shell">
           <header className="assessment-header">
@@ -159,7 +178,7 @@ function MedicalConsent({ theme, onThemeChange, onCancel, onComplete }: { theme:
   }
 
   return (
-    <main className={`assessment-page medical-consent-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
+    <main className={`assessment-page medical-consent-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}${theme === "v6" ? " medical-consent-new theme-new" : ""}`}>
       <VersionBar version={theme} onChange={onThemeChange} />
       <div className="assessment-shell consent-shell">
         <header className="assessment-header">
@@ -170,20 +189,22 @@ function MedicalConsent({ theme, onThemeChange, onCancel, onComplete }: { theme:
 
         <div className="assessment-section-title consent-section-title"><span />DO YOU HAVE ANY OF THE FOLLOWING MEDICAL CONDITIONS?<span /></div>
         <p className="assessment-intro">Answer the following questions.</p>
+        {theme === "v6" && <div className="new-review-progress"><span>{answeredCount} of {questions.length} answered</span><div role="progressbar" aria-label="Medical consent questions answered" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={answeredCount}><i style={{ width: `${answeredCount / questions.length * 100}%` }} /></div></div>}
 
         <section className="consent-questions">
           {questions.map((question, index) => (
             <article className={`consent-question ${answers[index] ? "answered" : ""}`} key={question}>
-              <div className="consent-question-head"><i>{answers[index] ? "✓" : index + 1}</i><h2>{question}</h2></div>
-              <div className="consent-question-answers">
+              <div className="consent-question-head"><i>{answers[index] ? "✓" : index + 1}</i><h2 id={`consent-condition-${index}`}>{question}</h2></div>
+              <div className="consent-question-answers" role="group" aria-labelledby={`consent-condition-${index}`}>
                 {["Yes", "No"].map((answer) => (
                   <button
                     type="button"
                     className={answers[index] === answer ? "selected" : ""}
+                    aria-pressed={answers[index] === answer}
                     onClick={() => setAnswers((current) => current.map((value, answerIndex) => answerIndex === index ? answer : value))}
                     key={answer}
                   >
-                    {answer}
+                    {theme === "v6" && <span className="new-review-choice-mark" aria-hidden="true">{answers[index] === answer && <svg viewBox="0 0 20 20" fill="none"><path d="m5 10 3 3 7-7" /></svg>}</span>}{answer}
                   </button>
                 ))}
               </div>
@@ -205,9 +226,10 @@ function ProviderReview({ product, theme, onThemeChange, onCancel, onComplete }:
   ];
   const [answers, setAnswers] = useState<string[]>(Array(preferences.length).fill(""));
   const complete = answers.every(Boolean);
+  const answeredCount = answers.filter(Boolean).length;
 
   return (
-    <main className={`assessment-page provider-review-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
+    <main className={`assessment-page provider-review-page assessment-theme-${isClassicVersion(theme) ? "v1" : theme}${theme === "v6" ? " provider-review-new theme-new" : ""}`}>
       <VersionBar version={theme} onChange={onThemeChange} />
       <div className="assessment-shell consent-shell">
         <header className="assessment-header">
@@ -218,20 +240,22 @@ function ProviderReview({ product, theme, onThemeChange, onCancel, onComplete }:
 
         <div className="assessment-section-title consent-section-title"><span />CONSULTATION PREFERENCES<span /></div>
         <p className="assessment-intro">Tell us how you would like to connect with a licensed provider about {product.name}.</p>
+        {theme === "v6" && <div className="new-review-progress"><span>{answeredCount} of 3 preferences selected</span><div role="progressbar" aria-label="Consultation preferences selected" aria-valuemin={0} aria-valuemax={3} aria-valuenow={answeredCount}><i style={{ width: `${answeredCount / 3 * 100}%` }} /></div></div>}
 
         <section className="consent-questions">
           {preferences.map((preference, index) => (
             <article className={`consent-question ${answers[index] ? "answered" : ""}`} key={preference.label}>
-              <div className="consent-question-head"><i>{answers[index] ? "✓" : index + 1}</i><h2>{preference.label}</h2></div>
-              <div className="consent-question-answers">
+              <div className="consent-question-head"><i>{answers[index] ? "✓" : index + 1}</i><h2 id={`provider-preference-${index}`}>{preference.label}</h2></div>
+              <div className="consent-question-answers" role="group" aria-labelledby={`provider-preference-${index}`}>
                 {preference.options.map((answer) => (
                   <button
                     type="button"
                     className={answers[index] === answer ? "selected" : ""}
+                    aria-pressed={answers[index] === answer}
                     onClick={() => setAnswers((current) => current.map((value, answerIndex) => answerIndex === index ? answer : value))}
                     key={answer}
                   >
-                    {answer}
+                    {theme === "v6" && <span className="new-review-choice-mark" aria-hidden="true">{answers[index] === answer && <svg viewBox="0 0 20 20" fill="none"><path d="m5 10 3 3 7-7" /></svg>}</span>}{answer}
                   </button>
                 ))}
               </div>
@@ -248,7 +272,7 @@ function ProviderReview({ product, theme, onThemeChange, onCancel, onComplete }:
 
 export default function CartExperience() {
   const [product, setProduct] = useState<Product>(fallbackProduct);
-  const [theme, setTheme] = useState<SiteVersion>("v3");
+  const [theme, setTheme] = useState<SiteVersion>(DEFAULT_SITE_VERSION);
   const [eligible, setEligible] = useState(false);
   const [providerReviewed, setProviderReviewed] = useState(false);
   const [consented, setConsented] = useState(false);
@@ -268,7 +292,7 @@ export default function CartExperience() {
       setHasProduct(false);
     }
     const savedTheme = localStorage.getItem("scriptrx-theme");
-    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4" || savedTheme === "v5") setTheme(savedTheme);
+    setTheme(resolveSiteVersion(savedTheme));
   }, []);
 
   const pricing = useMemo(() => {
@@ -288,7 +312,7 @@ export default function CartExperience() {
 
   if (!hasProduct) {
     return (
-      <main className={`order-page order-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
+      <main className={`order-page order-theme-${isClassicVersion(theme) ? "v1" : theme}${theme === "v6" ? " order-theme-new theme-new" : ""}`}>
         <VersionBar version={theme} onChange={(nextTheme) => { setTheme(nextTheme); localStorage.setItem("scriptrx-theme", nextTheme); }} />
         <OrderHeader cartCount={0} theme={theme} />
         <section className="empty-cart">
@@ -302,6 +326,7 @@ export default function CartExperience() {
   }
 
   const ready = eligible && providerReviewed && consented;
+  const completedSteps = Number(eligible) + Number(providerReviewed) + Number(consented);
   const chooseTheme = (nextTheme: SiteVersion) => {
     setTheme(nextTheme);
     localStorage.setItem("scriptrx-theme", nextTheme);
@@ -320,7 +345,7 @@ export default function CartExperience() {
   }
 
   return (
-    <main className={`order-page order-theme-${isClassicVersion(theme) ? "v1" : theme}`}>
+    <main className={`order-page order-theme-${isClassicVersion(theme) ? "v1" : theme}${theme === "v6" ? " order-theme-new theme-new" : ""}`}>
       <VersionBar version={theme} onChange={(nextTheme) => { setTheme(nextTheme); localStorage.setItem("scriptrx-theme", nextTheme); }} />
       <OrderHeader cartCount={1} theme={theme} />
       <div className="order-shell">
@@ -328,7 +353,8 @@ export default function CartExperience() {
           <a href={sitePath("/")}>Home</a><span>›</span><a href={sitePath("/#care")}>Products</a><span>›</span><strong>Order requirements</strong>
         </nav>
         <div className="order-heading">
-          <h1>Order requirements</h1>
+          <div><h1>Order requirements</h1>{theme === "v6" && <p>{ready ? "Everything is complete. You can now continue to checkout." : "Complete these steps before checkout."}</p>}</div>
+          {theme === "v6" && <div className="new-order-progress"><span>{completedSteps} of 3 complete</span><div role="progressbar" aria-label="Order requirements completed" aria-valuemin={0} aria-valuemax={3} aria-valuenow={completedSteps}><i style={{ width: `${completedSteps / 3 * 100}%` }} /></div></div>}
         </div>
 
         <div className="order-grid">
@@ -340,23 +366,32 @@ export default function CartExperience() {
                 <button type="button" onClick={removeProduct}>Remove</button>
               </div>
 
-              <button className={`requirement-step ${eligible ? "done" : ""}`} type="button" onClick={() => eligible ? undefined : setShowAssessment(true)}>
+              {theme === "v6" && ready ? <section className="new-order-completed-summary" aria-labelledby="new-order-ready-title">
+                <div className="new-order-ready-heading"><h3 id="new-order-ready-title">Ready for checkout</h3><p>All three order requirements are complete.</p></div>
+                <ul>
+                  <li><CompletedRequirement title="Eligibility confirmed" description="Health questions completed." /></li>
+                  <li><CompletedRequirement title="Review requested" description="Consultation preferences saved." /></li>
+                  <li><CompletedRequirement title="Medical consent" description="Consent completed." /></li>
+                </ul>
+              </section> : <>
+              {theme === "v6" && eligible ? <CompletedRequirement title="Eligibility confirmed" description="Health questions completed." /> : <button className={`requirement-step ${eligible ? "done" : ""}`} type="button" onClick={() => eligible ? undefined : setShowAssessment(true)}>
                 <i>{eligible ? "✓" : "1"}</i><span><b>{eligible ? "Eligibility confirmed" : "Check eligibility"}</b><small>Answer a few private health questions</small></span><strong>{eligible ? "Completed" : "Answer"}</strong>
-              </button>
-              <button
+              </button>}
+              {theme === "v6" && providerReviewed ? <CompletedRequirement title="Review requested" description="Consultation preferences saved." /> : <button
                 className={`requirement-step muted ${eligible ? "available" : ""} ${providerReviewed ? "done" : ""}`}
                 type="button"
                 disabled={!eligible}
                 onClick={() => eligible && !providerReviewed ? setShowProviderReview(true) : undefined}
               >
                 <i>{providerReviewed ? "✓" : "2"}</i><span><b>{providerReviewed ? "Review requested" : "Provider review"}</b><small>{eligible ? "Choose your consultation preferences" : "Available after eligibility"}</small></span><strong>{providerReviewed ? "Completed" : "Answer"}</strong>
-              </button>
+              </button>}
+              </>}
             </article>
 
-            <article className={`consent-card ${consented ? "done" : ""}`}>
-              <div><i>{consented ? "✓" : "!"}</i><span><b>Medical consent</b><small>Required before checkout</small></span></div>
+            {theme === "v6" && ready ? null : theme === "v6" && consented ? <article className="new-order-completed-consent"><CompletedRequirement title="Medical consent" description="Consent completed." /></article> : <article className={`consent-card ${consented ? "done" : ""}`}>
+              <div><i>{consented ? "✓" : theme === "v6" ? "3" : "!"}</i><span><b>Medical consent</b><small>Required before checkout</small></span></div>
               <button type="button" onClick={() => consented ? undefined : setShowConsent(true)}>{consented ? "Completed" : "Review & sign"}</button>
-            </article>
+            </article>}
           </section>
 
           <aside className="summary-column">
@@ -377,6 +412,7 @@ export default function CartExperience() {
             <button className="checkout-button" type="button" disabled={!ready}>
               ${pricing.total.toFixed(2)} · Proceed to checkout
             </button>
+            {theme === "v6" && !ready && <p className="new-order-checkout-note">Complete all three requirements to continue.</p>}
           </aside>
         </div>
       </div>

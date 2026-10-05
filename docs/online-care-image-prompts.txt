@@ -1,0 +1,9 @@
+Online care artwork
+
+Generated with the built-in image_gen tool.
+
+Final asset: public/online-care-provider.jpg
+Prompt: Use case: photorealistic-natural. Asset type: healthcare website benefit card photograph. Primary request: warm professional portrait of a smiling woman doctor in her early forties, dark hair neatly tied back, white lab coat over a cream top, a stethoscope around her neck. Composition: vertical 2:3, waist-up seated portrait, head begins around the upper third leaving clear pale lavender background above it for HTML heading, centered figure with room around shoulders. Background: seamless softly lit pale lavender studio, matching a modern purple healthcare brand. Lighting: soft natural daylight, realistic skin texture, gentle premium editorial photography. No text, no logos, no watermarks, no UI, no frames.
+
+Final asset: public/online-care-delivery.jpg
+Prompt: Use case: product-mockup. Asset type: healthcare website benefit card photograph. Primary request: a person's hand extending from the right holding a closed minimal pale lavender cardboard medicine delivery box, the box centered in the lower two thirds with a subtle diagonal angle. Composition: vertical 2:3, generous empty space in upper third for a heading added in HTML. Background: softly lit very pale lavender studio backdrop. Box: smooth matte pale lavender paperboard, unmarked, no text or logo. Lighting: soft realistic studio light, subtle shadow, modern premium healthcare product photography. No text, no branding, no watermarks, no UI, no frames.

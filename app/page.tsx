@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import CatalogSection, { type Product } from "@/components/CatalogSection";
 import ClassicHeader from "@/components/ClassicHeader";
+import NewHeroTitle from "@/components/NewHeroTitle";
+import NewFooter from "@/components/NewFooter";
 import HeaderPillNav from "@/components/HeaderPillNav";
-import VersionBar, { isClassicVersion, type SiteVersion } from "@/components/VersionBar";
+import VersionBar, { DEFAULT_SITE_VERSION, isClassicVersion, resolveSiteVersion, usesAdnanDesign, type SiteVersion } from "@/components/VersionBar";
 import { sitePath } from "@/lib/site-path";
 
 const productRows = [
@@ -128,8 +130,9 @@ const faqs = [
 ];
 
 export default function Home() {
-  const [version, setVersion] = useState<SiteVersion>("v3");
+  const [version, setVersion] = useState<SiteVersion>(DEFAULT_SITE_VERSION);
   const isClassic = isClassicVersion(version);
+  const isAdnanDesign = usesAdnanDesign(version);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [addedProducts, setAddedProducts] = useState<string[]>([]);
   const [pendingProduct, setPendingProduct] = useState<Product | null>(null);
@@ -141,7 +144,7 @@ export default function Home() {
     "hair-loss-products": "Hair Loss",
     "acne-products": "Skin & Hair",
   };
-  const visibleProductRows = version === "v5"
+  const visibleProductRows = isAdnanDesign
     ? [
         ...productRows.map((row) => ({
           ...row,
@@ -163,9 +166,7 @@ export default function Home() {
       setAddedProducts([]);
     }
     const savedTheme = localStorage.getItem("scriptrx-theme");
-    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4" || savedTheme === "v5") {
-      setVersion(savedTheme);
-    }
+    setVersion(resolveSiteVersion(savedTheme));
   }, []);
 
   useEffect(() => {
@@ -204,7 +205,7 @@ export default function Home() {
   }
 
   return (
-    <main className={`theme-${isClassic ? "v1" : version} ${version === "v5" ? "theme-adnan" : ""}`}>
+    <main id="top" className={`theme-${isClassic ? "v1" : version} ${isAdnanDesign ? "theme-adnan" : ""} ${version === "v6" ? "theme-new" : ""}`}>
       <VersionBar version={version} onChange={setVersion} />
 
 
@@ -260,7 +261,7 @@ export default function Home() {
         <div className="hero-intro">
           <div>
             <span className="hero-kicker">CARE THAT MOVES WITH YOU</span>
-            <h1>Your health.<br />More in your hands.</h1>
+            {version === "v6" ? <NewHeroTitle /> : <h1>Your health.<br />More in your hands.</h1>}
           </div>
           <ul>
             <li><i>✓</i> Licensed providers, nationwide</li>
@@ -311,7 +312,7 @@ export default function Home() {
           <a className="story-card story-life" href={isClassic ? sitePath("/categories?category=sexual-health") : version === "v4" ? "#acne-products" : "#care"}>
             {isClassic && (
               <>
-                <img src={sitePath("/better-sex.jpg")} alt="Couple embracing in lavender activewear" />
+                <img src={sitePath(version === "v6" ? "/hero-couple-mint.png" : "/better-sex.jpg")} alt={version === "v6" ? "A couple sitting together in mint activewear" : "Couple embracing in lavender activewear"} />
                 <div className="story-copy">
                   <h2>Better sex,<br />deeper intimacy.</h2>
                 </div>
@@ -346,7 +347,26 @@ export default function Home() {
           </a>
         </div>
 
-        {version !== "v5" && (isClassic || version === "v3" || version === "v4" ? (
+        {version === "v6" && (
+          <nav className="new-hero-care-cards" aria-label="Explore more treatments">
+            {[
+              { title: "MIC+B12", description: <>for mood<br />and energy</>, image: "/hero-mic-b12.webp", category: "longevity" },
+              { title: <>Hormone<br />Therapy</>, description: "for women", image: "/hero-hormone-therapy.webp", category: "womens-health" },
+              { title: "Glutathione", description: <>for antioxidant<br />support</>, image: "/hero-glutathione.webp", category: "longevity" },
+              { title: "Skin Care", description: "with NAD+", image: "/hero-skin-care.webp", category: "acne" },
+            ].map((card) => (
+              <a key={card.image} href={sitePath(`/categories?category=${card.category}`)}>
+                <div className="new-hero-care-copy"><h3>{card.title}</h3><p>{card.description}</p></div>
+                <img src={sitePath(card.image)} alt="" />
+                <span className="new-hero-care-arrow" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </span>
+              </a>
+            ))}
+          </nav>
+        )}
+
+        {!isAdnanDesign && (isClassic || version === "v3" || version === "v4" ? (
           <div className="hero-treatment-row v3-treatment-row">
             {[
               { name: "Weight Management", href: "#weight-management-products", image: "/vial-lose-weight.png" },
@@ -375,15 +395,17 @@ export default function Home() {
         ))}
       </section>
 
-      <CatalogSection productRows={visibleProductRows} addedProducts={addedProducts} onAddToCart={handleAddToCart} onRemoveFromCart={handleRemoveFromCart} tabbedAfterFirst={version === "v5"} />
+      <CatalogSection productRows={visibleProductRows} addedProducts={addedProducts} onAddToCart={handleAddToCart} onRemoveFromCart={handleRemoveFromCart} tabbedAfterFirst={isAdnanDesign} newOnlineCare={version === "v6"} />
 
       <section className="faq-section" id="faq">
         <div className="faq-shell">
-          <div className="faq-heading"><h2>Have questions?<br />Get clear answers.</h2></div>
+          <div className="faq-heading">
+            {version === "v6" ? <><h2>Online care FAQs</h2><p>Questions about online care?<br />Find answers about pricing, treatments, and prescriptions.</p></> : <h2>Have questions?<br />Get clear answers.</h2>}
+          </div>
           <div className="faq-list">
-            {faqs.map((faq) => (
-              <details key={faq.question}>
-                <summary><span>{faq.question}</span><i>+</i></summary>
+            {faqs.map((faq, index) => (
+              <details key={faq.question} name={version === "v6" ? "new-home-faq" : undefined} open={version === "v6" && index === 0 ? true : undefined}>
+                <summary><span>{faq.question}</span>{version === "v6" ? <svg className="new-faq-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 6 5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg> : <i>+</i>}</summary>
                 <p>{faq.answer}</p>
               </details>
             ))}
@@ -391,7 +413,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer>
+      {version === "v6" ? <NewFooter /> : <footer>
         {isClassic ? (
           <div className="footer-panel">
             <div className="footer-v2-header" style={{ marginBottom: 20 }}>
@@ -402,6 +424,7 @@ export default function Home() {
                 <button type="button" className="version-pill inactive" onClick={() => setVersion("v3")}>Version 3</button>
                 <button type="button" className="version-pill inactive" onClick={() => setVersion("v4")}>Version 4</button>
                 <button type="button" className={`version-pill ${version === "v5" ? "active" : "inactive"}`} onClick={() => setVersion("v5")}>Adnan Suggestion</button>
+                <button type="button" className="version-pill inactive" onClick={() => setVersion("v6")}>New</button>
               </div>
             </div>
             <div className="footer-links">
@@ -424,6 +447,7 @@ export default function Home() {
                 <button type="button" className={`version-pill ${version === "v3" ? "active" : "inactive"}`} onClick={() => setVersion("v3")}>Version 3</button>
                 <button type="button" className={`version-pill ${version === "v4" ? "active" : "inactive"}`} onClick={() => setVersion("v4")}>Version 4</button>
                 <button type="button" className={`version-pill ${version === "v5" ? "active" : "inactive"}`} onClick={() => setVersion("v5")}>Adnan Suggestion</button>
+                <button type="button" className="version-pill inactive" onClick={() => setVersion("v6")}>New</button>
               </div>
               </div>
               <div className="footer-links-v2">
@@ -455,7 +479,7 @@ export default function Home() {
             </div>
           </div>
         )}
-      </footer>
+      </footer>}
     </main>
   );
 }

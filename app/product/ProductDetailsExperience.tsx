@@ -5,7 +5,8 @@ import ClassicHeader from "@/components/ClassicHeader";
 import type { Product } from "@/components/CatalogSection";
 import { animateProductToCart } from "@/lib/cart-animation";
 import { sitePath } from "@/lib/site-path";
-import VersionBar, { isClassicVersion, type SiteVersion } from "@/components/VersionBar";
+import VersionBar, { DEFAULT_SITE_VERSION, isClassicVersion, resolveSiteVersion, type SiteVersion } from "@/components/VersionBar";
+import "./NewProductDetails.css";
 
 type Theme = SiteVersion;
 
@@ -24,7 +25,7 @@ const benefits = [
 ];
 
 export default function ProductDetailsExperience() {
-  const [theme, setTheme] = useState<Theme>("v3");
+  const [theme, setTheme] = useState<Theme>(DEFAULT_SITE_VERSION);
   const isClassic = isClassicVersion(theme);
   const [product, setProduct] = useState<Product>(fallbackProduct);
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
@@ -32,7 +33,7 @@ export default function ProductDetailsExperience() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("scriptrx-theme");
-    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4" || savedTheme === "v5") setTheme(savedTheme);
+    setTheme(resolveSiteVersion(savedTheme));
     try {
       const detail = JSON.parse(localStorage.getItem("scriptrx-detail-product") || "null");
       if (detail?.name && detail?.price && detail?.image) setProduct(detail);
@@ -69,7 +70,7 @@ export default function ProductDetailsExperience() {
   }
 
   return (
-    <main className={`product-detail-page product-detail-theme-${isClassic ? "v1" : theme}`}>
+    <main className={`product-detail-page product-detail-theme-${isClassic ? "v1" : theme}${theme === "v6" ? " product-detail-new" : ""}`}>
       <VersionBar version={theme} onChange={(nextTheme) => { setTheme(nextTheme); localStorage.setItem("scriptrx-theme", nextTheme); }} />
       {!isClassic && <div className="product-detail-announcement">Personalized care, reviewed by licensed providers</div>}
       {isClassic ? <ClassicHeader cartCount={cartProduct ? 1 : 0} theme={theme} /> : <header className="product-detail-header">

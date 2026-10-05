@@ -1,0 +1,19 @@
+Generated care portraits
+
+Tool: built-in image_gen
+
+public/care-portrait-metabolic.jpg
+
+Use case: photorealistic-natural. Asset type: one tall portrait photograph for a healthcare website category card. Subject: an East Asian woman in her early 30s, dark hair loosely tied back, charcoal ribbed athletic tank top, relaxed confident expression, looking slightly toward camera, warm taupe wall behind her, sunlit apartment. Composition: portrait 2:3 aspect ratio, from mid torso upward, subject centered, some space above head for a category label that will be added separately in HTML. Style: candid premium editorial wellness photography, natural skin texture, realistic anatomy, soft natural daylight, understated colors. No text, no logos, no borders, no product, no UI, no collage.
+
+public/care-portrait-hormone.jpg
+
+Use case: photorealistic-natural. Asset type: one tall portrait photograph for a healthcare website category card. Subject: a man in his early 30s with short wavy dark brown hair, clean shaven, wearing a textured grey athletic t-shirt, looking slightly to the right, modern gym background softly out of focus. Composition: portrait 2:3 aspect ratio, from mid torso upward, subject centered, some space above head for a category label that will be added separately in HTML. Style: candid premium editorial wellness photography, natural skin texture, realistic anatomy, soft natural daylight, understated colors. No text, no logos, no borders, no product, no UI, no collage.
+
+public/care-portrait-weight.jpg
+
+Use case: photorealistic-natural. Asset type: one tall portrait photograph for a healthcare website category card. Subject: an East Asian woman in her early 30s with black hair tied back, wearing a pale grey athletic tank top, warm natural smile, outdoor neighborhood with trees and muted blue sky. Composition: portrait 2:3 aspect ratio, from mid torso upward, subject centered, some space above head for a category label that will be added separately in HTML. Style: candid premium editorial wellness photography, natural skin texture, realistic anatomy, soft natural daylight, understated colors. No text, no logos, no borders, no product, no UI, no collage.
+
+public/care-portrait-sexual.jpg
+
+Use case: photorealistic-natural. Asset type: one tall portrait photograph for a healthcare website category card. Subject: a man in his late 40s with short salt-and-pepper hair and light stubble, wearing a light grey athletic t-shirt, calm confident expression, waterfront path with blurred trees and blue sky. Composition: portrait 2:3 aspect ratio, from mid torso upward, subject centered, some space above head for a category label that will be added separately in HTML. Style: candid premium editorial wellness photography, natural skin texture, realistic anatomy, soft natural daylight, understated colors. No text, no logos, no borders, no product, no UI, no collage.

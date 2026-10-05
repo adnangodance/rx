@@ -2,8 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ClassicHeader from "@/components/ClassicHeader";
+import NewCategoryContent from "@/components/NewCategoryContent";
+import NewFooter from "@/components/NewFooter";
+import { adnanSuggestionCategoryProducts } from "@/lib/new-care-products";
 import type { Product } from "@/components/CatalogSection";
-import VersionBar, { isClassicVersion, type SiteVersion } from "@/components/VersionBar";
+import VersionBar, { DEFAULT_SITE_VERSION, isClassicVersion, resolveSiteVersion, usesAdnanDesign, type SiteVersion } from "@/components/VersionBar";
 import { animateProductToCart } from "@/lib/cart-animation";
 import { sitePath } from "@/lib/site-path";
 
@@ -105,41 +108,10 @@ const categories: Category[] = [
   },
 ];
 
-const adnanSuggestionCategoryProducts: Record<string, Product[]> = {
-  longevity: [
-    { name: "Amino-Quad Capsules", price: "$45/mo", detail: "THE / INO / PRO / TAU", type: "jar", image: "/adnan-amino-quad.png" },
-    { name: "NAD+ Injection", price: "$69/mo", detail: "20mg/ml provider-guided care", type: "vial", image: "/adnan-nad-injection.png" },
-    { name: "Atropine Sulfate", price: "$29/mo", detail: "1 (3ml) bottle", type: "dropper", image: "/adnan-atropine.png" },
-    { name: "B-Complex", price: "$39/mo", detail: "1 (10ml) vial", type: "vial", image: "/adnan-b-complex.png" },
-  ],
-  "hair-care": [
-    { name: "Hair Loss Gel + Solution", price: "$49/mo", detail: "Personalized topical hair care", type: "spray", image: "/adnan-hair-loss-duo.png" },
-  ],
-  acne: [
-    { name: "Tretinoin Cream", price: "$29/mo", detail: "Prescription retinoid care", type: "cream", image: "/adnan-tretinoin.png" },
-    { name: "GHK-Cu Cream", price: "$49/mo", detail: "1 (30gm) jar", type: "jar", image: "/adnan-ghk-cu-cream.png" },
-  ],
-  "sexual-health": [
-    { name: "Super Strut Mints", price: "$39/mo", detail: "Personalized intimacy support", type: "jar", image: "/adnan-super-strut.png" },
-    { name: "Anastrozole", price: "$39/mo", detail: "Provider-guided hormone support", type: "jar", image: "/adnan-anastrozole.png" },
-    { name: "Anastrozole Capsules", price: "$45/mo", detail: "60 capsules", type: "jar", image: "/adnan-anastrozole-capsules.png" },
-    { name: "PT-141 Nasal Spray", price: "$49/mo", detail: "Personalized intimacy care", type: "spray", image: "/adnan-pt141.png" },
-    { name: "Hydrocortisone / Lidocaine", price: "$45/mo", detail: "20mg / 20mg suppository care", type: "pack", image: "/adnan-hydrocortisone-lidocaine.png" },
-    { name: "Testosterone Cypionate", price: "$69/mo", detail: "200mg/ml provider-guided care", type: "vial", image: "/adnan-testosterone.png" },
-  ],
-  "weight-management": [
-    { name: "Daily Tablet", price: "$39/mo", detail: "Daily oral treatment", type: "tablet", image: "/adnan-daily-tablet.png" },
-    { name: "Lipo-C", price: "$39/mo", detail: "Lipotropic injection support", type: "vial", image: "/adnan-lipo-c.png" },
-  ],
-  "womens-health": [
-    { name: "Estradiol Patches", price: "$39/mo", detail: "Four transdermal patches", type: "pack", image: "/adnan-estradiol.png" },
-    { name: "Boric Acid / EDTA", price: "$35/mo", detail: "1 (30gm) jar", type: "jar", image: "/adnan-boric-acid-edta.png" },
-  ],
-};
-
 export default function CategoryExperience() {
-  const [theme, setTheme] = useState<SiteVersion>("v3");
+  const [theme, setTheme] = useState<SiteVersion>(DEFAULT_SITE_VERSION);
   const isClassic = isClassicVersion(theme);
+  const isAdnanDesign = usesAdnanDesign(theme);
   const [activeSlug, setActiveSlug] = useState("weight-management");
   const [search, setSearch] = useState("");
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
@@ -182,7 +154,7 @@ export default function CategoryExperience() {
       }
     }
     const savedTheme = localStorage.getItem("scriptrx-theme");
-    if (savedTheme === "v1" || savedTheme === "v2" || savedTheme === "v3" || savedTheme === "v4" || savedTheme === "v5") setTheme(savedTheme);
+    setTheme(resolveSiteVersion(savedTheme));
     setAuthenticated(localStorage.getItem("scriptrx-authenticated") === "true");
     try {
       const saved = JSON.parse(localStorage.getItem("scriptrx-cart-product") || "null");
@@ -208,7 +180,7 @@ export default function CategoryExperience() {
   const category = categories.find((item) => item.slug === activeSlug) || categories[0];
   const categoryDisplayName = category.name;
   const products = useMemo(() => {
-    const categoryProducts = theme === "v5"
+    const categoryProducts = usesAdnanDesign(theme)
       ? (adnanSuggestionCategoryProducts[category.slug] || category.products)
       : category.products;
     return categoryProducts.filter((product) => `${product.name} ${product.detail}`.toLowerCase().includes(search.toLowerCase()));
@@ -250,7 +222,7 @@ export default function CategoryExperience() {
   }
 
   return (
-    <main className={`category-page category-theme-${isClassic ? "v1" : theme} ${theme === "v5" ? "category-theme-adnan" : ""}`}>
+    <main id="top" className={`category-page category-theme-${isClassic ? "v1" : theme} ${isAdnanDesign ? "category-theme-adnan" : ""} ${theme === "v6" ? "category-theme-new theme-new" : ""}`}>
       <VersionBar version={theme} onChange={chooseTheme} />
       {!isClassic && <div className="category-announcement">New: personalized weight care</div>}
       {isClassic ? <ClassicHeader cartCount={cartProduct ? 1 : 0} searchValue={search} onSearchChange={setSearch} theme={theme} /> : <header className="category-header">
@@ -282,7 +254,10 @@ export default function CategoryExperience() {
         </div>
       )}
 
-      <div className="category-shell" id="classic-products">
+      {theme === "v6" ? <>
+        <NewCategoryContent category={category} products={adnanSuggestionCategoryProducts[category.slug] || category.products} cartProduct={cartProduct} search={search} onSearchChange={setSearch} onAddToCart={addProduct} onRemoveFromCart={removeProduct} />
+        <NewFooter homeLinks />
+      </> : <div className="category-shell" id="classic-products">
         <aside className="category-sidebar">
           <label className="category-sidebar-search">
             <span aria-hidden="true" />
@@ -366,7 +341,7 @@ export default function CategoryExperience() {
           </div>
           {products.length === 0 && <div className="category-empty">No products match “{search}”.</div>}
         </section>
-      </div>
+      </div>}
     </main>
   );
 }

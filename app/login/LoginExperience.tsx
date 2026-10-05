@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { DEFAULT_SITE_VERSION, isClassicVersion, resolveSiteVersion, type SiteVersion } from "@/components/VersionBar";
 import ClassicHeader from "@/components/ClassicHeader";
 import { sitePath } from "@/lib/site-path";
 
-type LoginVersion = "v1" | "v2" | "v3" | "v4" | "v5";
+type LoginVersion = SiteVersion;
 
 const versionNames: Record<LoginVersion, string> = {
   v1: "Classic",
@@ -12,17 +13,16 @@ const versionNames: Record<LoginVersion, string> = {
   v3: "Warm",
   v4: "Soft pink",
   v5: "Adnan Suggestion",
+  v6: "New",
 };
 
 export default function LoginExperience() {
-  const [version, setVersion] = useState<LoginVersion>("v3");
+  const [version, setVersion] = useState<LoginVersion>(DEFAULT_SITE_VERSION);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
     const theme = new URLSearchParams(window.location.search).get("theme");
-    if (theme === "v1" || theme === "v2" || theme === "v3" || theme === "v4" || theme === "v5") {
-      setVersion(theme);
-    }
+    setVersion(resolveSiteVersion(theme));
   }, []);
 
   function handleContinue(event: FormEvent<HTMLFormElement>) {
@@ -33,8 +33,8 @@ export default function LoginExperience() {
   }
 
   return (
-    <main className={`login-page login-theme-${version === "v5" ? "v1" : version}`}>
-      {version === "v1" || version === "v5" ? <ClassicHeader theme={version} /> : <header className="login-nav">
+    <main className={`login-page login-theme-${isClassicVersion(version) ? "v1" : version}`}>
+      {isClassicVersion(version) ? <ClassicHeader theme={version} /> : <header className="login-nav">
         <a className="login-logo" href={sitePath("/")}>Scriptrx</a>
       </header>}
 

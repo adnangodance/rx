@@ -1,0 +1,235 @@
+.order-theme-new { color: #46556f; font-family: CareSans,Arial,sans-serif; }
+.order-theme-new .order-shell { width: min(1260px,calc(100% - 48px)); padding: 36px 0 80px; }
+.order-theme-new .order-breadcrumb { margin-bottom: 24px; color: #788093; font-family: inherit; font-size: 12px; }
+.order-theme-new .order-breadcrumb a,.order-theme-new .order-breadcrumb strong { color: #46556f; }
+.order-theme-new .order-heading { display: flex; align-items: center; justify-content: space-between; gap: 32px; margin-bottom: 32px; }
+.order-theme-new .order-heading h1 { font-size: clamp(36px,3.5vw,48px)!important; line-height: 1.12!important; letter-spacing: -.025em!important; }
+.order-theme-new .order-heading p { margin: 12px 0 0; font-size: 15px; line-height: 1.5; }
+.order-theme-new .new-order-progress { width: 210px; flex-shrink: 0; }
+.order-theme-new .new-order-progress>span { display: block; margin-bottom: 10px; font-size: 12px; text-align: right; }
+.order-theme-new .new-order-progress>div { height: 5px; overflow: hidden; border-radius: 99px; background: #e8ecf3; }
+.order-theme-new .new-order-progress i { display: block; height: 100%; border-radius: inherit; background: #29377d; transition: width .3s ease; }
+.order-theme-new .order-grid { grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr)!important; gap: 28px; }
+.order-theme-new .requirements-column { min-width: 0; gap: 18px; }
+.order-theme-new .product-requirement { padding: 28px; border: 1px solid #e0e5ee; border-radius: 24px; }
+.order-theme-new .product-requirement .requirement-product { grid-template-columns: 76px minmax(0,1fr) auto; gap: 18px; margin: 0 0 28px; }
+.order-theme-new .product-requirement .order-product-art { width: 76px; height: 88px; }
+.order-theme-new .product-requirement .requirement-product>div:nth-child(2)>span { width: fit-content; margin-bottom: 9px; padding: 5px 9px; border-radius: 99px; background: #fff2df!important; color: #926124!important; font-size: 10px; line-height: 1.2; }
+.order-theme-new .product-requirement .requirement-product>div:nth-child(2)>span.complete { background: #e9f4ee!important; color: #3e7259!important; }
+.order-theme-new .product-requirement .requirement-product h2 { margin-bottom: 7px; font-size: 24px; line-height: 1.2; }
+.order-theme-new .product-requirement .requirement-product p { color: #758095; font-size: 12px; line-height: 1.5; }
+.order-theme-new .product-requirement .requirement-product>button { font-family: inherit; font-size: 12px; color: #758095; }
+.order-theme-new .product-requirement .requirement-step { min-height: 100px; grid-template-columns: 40px minmax(0,1fr) auto; gap: 16px; margin-top: 12px; padding: 20px; border: 1px solid #dfe7f1; border-radius: 16px; background: linear-gradient(135deg,#eff5fa,#f3f6fa); font-family: inherit; }
+.order-theme-new .product-requirement .requirement-step>i,.order-theme-new .consent-card i { width: 40px; height: 40px; font-size: 13px; background: #29377d; }
+.order-theme-new .product-requirement .requirement-step b { margin: 0; color: #29377d; font-size: 15px; font-weight: 600; line-height: 1.4; }
+.order-theme-new .product-requirement .requirement-step span { gap: 5px; }
+.order-theme-new .product-requirement .requirement-step small { color: #6c7b92; font-size: 12px; line-height: 1.5; }
+.order-theme-new .product-requirement .requirement-step>strong { min-width: 84px!important; height: 40px!important; padding: 0 16px!important; font-size: 12px!important; }
+.order-theme-new .product-requirement .requirement-step:not(:disabled):not(.done):hover { border-color: #aabbd6; background: #eaf1f8; }
+.order-theme-new .product-requirement .requirement-step:disabled { background: #fafbfc; border-color: #e9edf2; }
+.order-theme-new .product-requirement .requirement-step:disabled>i { background: #e3e7ed; color: #7b889b; }
+.order-theme-new .product-requirement .requirement-step:disabled b { color: #8390a3; }
+.order-theme-new .product-requirement .requirement-step:disabled small { color: #8a94a5; }
+.order-theme-new .product-requirement .requirement-step:disabled>strong { background: #e9edf2!important; color: #8190a3!important; }
+.order-theme-new .product-requirement .requirement-step.done { background: #f0f7f3; border-color: #d5e6dc; }
+.order-theme-new .product-requirement .requirement-step.done>i { background: #497e64!important; }
+.order-theme-new .consent-card { min-height: 100px; gap: 18px; padding: 24px 28px; border-color: #e0e5ee!important; border-radius: 20px; }
+.order-theme-new .consent-card>div { gap: 16px; }
+.order-theme-new .consent-card i { display: grid; flex-shrink: 0; }
+.order-theme-new .consent-card b { margin: 0; color: #29377d; font-size: 15px; line-height: 1.4; }
+.order-theme-new .consent-card span { gap: 5px; }
+.order-theme-new .consent-card small { color: #6c7b92; font-size: 12px; line-height: 1.5; }
+.order-theme-new .consent-card button { min-height: 40px; padding: 0 18px; font-family: inherit; font-size: 12px; white-space: nowrap; }
+.order-theme-new .consent-card button:hover { background: #29377d; }
+.order-theme-new .consent-card.done { background: #f0f7f3!important; }
+.order-theme-new .consent-card.done i { background: #497e64; }
+.order-theme-new .summary-column { position: sticky; top: 128px; order: initial!important; min-width: 0; gap: 18px; }
+.order-theme-new .summary-column .price-card { padding: 28px!important; border: 1px solid #e0e7ec!important; border-radius: 24px!important; background: linear-gradient(135deg,rgb(243 239 235 / 60%),rgb(226 237 240 / 60%))!important; }
+.order-theme-new .summary-column .price-card>span { color: #6c7b92!important; font-size: 10px; line-height: 1.4; letter-spacing: .12em; }
+.order-theme-new .summary-column .price-card>h2 { margin: 12px 0 28px; font-size: 26px; line-height: 1.25; }
+.order-theme-new .summary-column .price-list,.order-theme-new .summary-column .price-subtotal { gap: 14px; }
+.order-theme-new .summary-column .price-list p,.order-theme-new .summary-column .price-subtotal p { gap: 16px; font-size: 14px; line-height: 1.4; }
+.order-theme-new .summary-column .price-list p span,.order-theme-new .summary-column .price-subtotal p span { color: #64738a!important; }
+.order-theme-new .summary-column .price-list b,.order-theme-new .summary-column .price-subtotal b { color: #34445e; font-weight: 600; font-variant-numeric: tabular-nums; }
+.order-theme-new .summary-column .price-subtotal { margin-top: 24px; padding-top: 24px; border-color: #d8e0e6!important; }
+.order-theme-new .summary-column .price-total { margin-top: 24px; padding-top: 24px; border-color: #d8e0e6!important; color: #29377d; font-size: 16px; }
+.order-theme-new .summary-column .price-total b { font-size: 30px; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
+.order-theme-new .summary-column .billing-note { margin-top: 24px; padding: 14px; gap: 10px; background: rgb(255 255 255 / 70%)!important; }
+.order-theme-new .summary-column .billing-note i { background: #75859b!important; }
+.order-theme-new .summary-column .billing-note p { max-width: none; color: #64738a; font-size: 11px; line-height: 1.5; }
+.order-theme-new .summary-column .policy-links { justify-content: center; padding: 0; min-height: 24px; border: 0; background: transparent; }
+.order-theme-new .summary-column .policy-links a { color: #64738a!important; font-size: 12px!important; }
+.order-theme-new .summary-column .checkout-button { height: 52px; font-family: inherit; font-size: 13px; font-weight: 600; }
+.order-theme-new .summary-column .checkout-button:disabled { background: #edf0f4!important; color: #7a879a!important; }
+.order-theme-new .new-order-checkout-note { margin: -6px 0 0; text-align: center; font-size: 12px; line-height: 1.5; color: #758095; }
+.order-theme-new :is(button,a):focus-visible { outline: 2px solid #29377d; outline-offset: 4px; }
+.order-theme-new .new-order-completed-summary { padding-top: 24px; border-top: 1px solid #e5eaf1; }
+.order-theme-new .new-order-ready-heading { margin-bottom: 18px; }
+.order-theme-new .new-order-ready-heading h3 { margin: 0 0 8px; font-size: 28px; line-height: 1.2; }
+.order-theme-new .new-order-ready-heading p { margin: 0; color: #758095; font-size: 13px; line-height: 1.5; }
+.order-theme-new .new-order-completed-summary ul { margin: 0; padding: 0; list-style: none; }
+.order-theme-new .new-order-completed-summary li+li { border-top: 1px solid #edf0f5; }
+.order-theme-new .new-order-completed-row { display: flex; align-items: center; gap: 14px; padding: 18px 0; }
+.order-theme-new .new-order-completed-row>div { flex: 1; min-width: 0; }
+.order-theme-new .new-order-completed-row b { display: block; color: #34445e; font-size: 14px; font-weight: 500; line-height: 1.4; }
+.order-theme-new .new-order-completed-row p { margin: 5px 0 0; color: #758095; font-size: 12px; line-height: 1.5; }
+.order-theme-new .new-order-completed-icon { display: grid; place-items: center; flex: 0 0 32px; width: 32px; height: 32px; border: 1px solid #d3e6db; border-radius: 50%; background: #f3f9f6; color: #497e64; }
+.order-theme-new .new-order-completed-icon svg { width: 19px; height: 19px; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.order-theme-new .new-order-completed-status { color: #497e64; font-size: 11px; }
+.order-theme-new .product-requirement>.new-order-completed-row { padding: 20px 0; border-top: 1px solid #edf0f5; }
+.order-theme-new .new-order-completed-consent { padding: 4px 28px; border: 1px solid #e0e5ee; border-radius: 20px; background: #fff; }
+@media(max-width:900px) {
+  .order-theme-new .order-grid { grid-template-columns: minmax(0,1fr)!important; }
+  .order-theme-new .summary-column { position: static; }
+}
+@media(max-width:620px) {
+  .order-theme-new .order-shell { width: calc(100% - 30px); padding: 24px 0 48px; }
+  .order-theme-new .order-heading { align-items: flex-start; flex-direction: column; gap: 20px; margin-bottom: 24px; }
+  .order-theme-new .order-heading h1 { font-size: 36px!important; }
+  .order-theme-new .order-heading p { font-size: 14px; }
+  .order-theme-new .new-order-progress { width: 100%; }
+  .order-theme-new .new-order-progress>span { text-align: left; }
+  .order-theme-new .product-requirement { padding: 20px 16px 16px; border-radius: 20px; }
+  .order-theme-new .product-requirement .requirement-product { grid-template-columns: 56px minmax(0,1fr) auto; gap: 10px; margin-bottom: 22px; }
+  .order-theme-new .product-requirement .order-product-art { width: 56px; height: 76px; }
+  .order-theme-new .product-requirement .requirement-product h2 { font-size: 21px; }
+  .order-theme-new .product-requirement .requirement-product>button { grid-column: auto; font-size: 11px; }
+  .order-theme-new .product-requirement .requirement-step { grid-template-columns: 32px minmax(0,1fr); gap: 10px 12px; padding: 16px; }
+  .order-theme-new .product-requirement .requirement-step>i { width: 32px; height: 32px; align-self: start; }
+  .order-theme-new .product-requirement .requirement-step>strong { grid-column: 2; justify-self: start; }
+  .order-theme-new .consent-card { padding: 20px; flex-wrap: wrap; }
+  .order-theme-new .consent-card i { width: 32px; height: 32px; }
+  .order-theme-new .consent-card>div { gap: 12px; }
+  .order-theme-new .consent-card button { margin-left: 44px; }
+  .order-theme-new .summary-column .price-card { padding: 24px!important; border-radius: 20px!important; }
+  .order-theme-new .new-order-completed-summary { padding-top: 20px; }
+  .order-theme-new .new-order-ready-heading h3 { font-size: 26px; }
+  .order-theme-new .new-order-completed-row { gap: 12px; flex-wrap: wrap; }
+  .order-theme-new .new-order-completed-status { display: none; }
+  .order-theme-new .new-order-completed-consent { padding-inline: 20px; }
+}
+@media(prefers-reduced-motion:reduce) { .order-theme-new .new-order-progress i { transition: none; } }
+
+:is(.provider-review-new,.medical-consent-new) { padding: 40px 24px 72px; color: #46556f; font-family: CareSans,Arial,sans-serif; background: radial-gradient(ellipse at 50% 0%,#edf4fa,transparent 600px),#fff; }
+:is(.provider-review-new,.medical-consent-new) .assessment-shell { width: min(760px,100%); }
+:is(.provider-review-new,.medical-consent-new) .assessment-header { grid-template-columns: 44px minmax(0,1fr) auto; gap: 18px; }
+:is(.provider-review-new,.medical-consent-new) .assessment-header h1 { white-space: normal; font-size: 44px; line-height: 1.15; }
+:is(.provider-review-new,.medical-consent-new) .assessment-header>button:first-child { border: 1px solid #dce3ef; border-radius: 50%; box-shadow: none; }
+:is(.provider-review-new,.medical-consent-new) .assessment-header>button:first-child:before { background: #29377d; }
+:is(.provider-review-new,.medical-consent-new) .assessment-header>button:first-child:after { border-color: #29377d; }
+:is(.provider-review-new,.medical-consent-new) .assessment-cancel { padding: 10px 0 10px 12px; color: #65728e; font-family: inherit; font-size: 13px; font-weight: 400; }
+:is(.provider-review-new,.medical-consent-new) .assessment-cancel:hover { color: #29377d; }
+:is(.provider-review-new,.medical-consent-new) .consent-section-title { margin: 34px 0 12px; color: #758095; font-size: 10px; font-weight: 500; line-height: 1.5; letter-spacing: .13em; }
+:is(.provider-review-new,.medical-consent-new) .consent-section-title span { display: none; }
+:is(.provider-review-new,.medical-consent-new) .assessment-intro { max-width: 650px; margin: 0 0 24px; color: #64738a; font-size: 15px; line-height: 1.7; text-align: left; }
+:is(.provider-review-new,.medical-consent-new) .new-review-progress { margin-bottom: 26px; }
+:is(.provider-review-new,.medical-consent-new) .new-review-progress>span { display: block; margin-bottom: 10px; color: #758095; font-size: 12px; }
+:is(.provider-review-new,.medical-consent-new) .new-review-progress>div { height: 4px; overflow: hidden; border-radius: 99px; background: #e5ebf3; }
+:is(.provider-review-new,.medical-consent-new) .new-review-progress i { display: block; height: 100%; border-radius: inherit; background: #29377d; transition: width .2s ease; }
+:is(.provider-review-new,.medical-consent-new) .consent-questions { gap: 16px; }
+:is(.provider-review-new,.medical-consent-new) .consent-question { padding: 24px; border-color: #dfe5ee; border-radius: 20px; background: #fff; box-shadow: none; }
+:is(.provider-review-new,.medical-consent-new) .consent-question-head { gap: 14px; padding-bottom: 20px; border: 0; }
+:is(.provider-review-new,.medical-consent-new) .consent-question-head i { width: 32px; height: 32px; background: #eef2f8; color: #64738a; font-size: 11px; font-weight: 500; }
+:is(.provider-review-new,.medical-consent-new) .consent-question.answered .consent-question-head i { background: #e8eff9; color: #29377d; }
+:is(.provider-review-new,.medical-consent-new) .consent-question-head h2 { margin: 0; font-size: 22px; line-height: 1.3; }
+:is(.provider-review-new,.medical-consent-new) .consent-question-answers { gap: 12px; padding: 0; }
+:is(.provider-review-new,.medical-consent-new) .consent-question-answers button { display: flex; align-items: center; justify-content: flex-start; gap: 12px; min-height: 56px; height: auto; padding: 14px 18px; border-color: #dce3ed; border-radius: 12px; color: #46556f; font-family: inherit; font-size: 14px; transition: background .15s,border-color .15s; }
+:is(.provider-review-new,.medical-consent-new) .consent-question-answers button:hover { border-color: #aebcd6; background: #f3f6fb; color: #29377d; }
+:is(.provider-review-new,.medical-consent-new) .consent-question-answers button.selected { border-color: #29377d; background: #29377d; color: #fff; }
+:is(.provider-review-new,.medical-consent-new) .new-review-choice-mark { display: grid; place-items: center; width: 20px; height: 20px; flex: 0 0 20px; border: 1px solid #cbd4e2; border-radius: 50%; }
+:is(.provider-review-new,.medical-consent-new) .selected .new-review-choice-mark { border-color: #fff; background: #fff; color: #29377d; }
+:is(.provider-review-new,.medical-consent-new) .new-review-choice-mark svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+:is(.provider-review-new,.medical-consent-new) .provider-review-note { gap: 12px; margin-top: 20px; padding: 16px 18px; border: 1px solid #e8edf3; background: #f4f7fa; }
+:is(.provider-review-new,.medical-consent-new) .provider-review-note i { background: #75859b; }
+:is(.provider-review-new,.medical-consent-new) .provider-review-note p { color: #6c7b92; font-size: 12px; line-height: 1.6; }
+:is(.provider-review-new,.medical-consent-new) .consent-save { margin-top: 24px; height: 54px; background: #111; color: #fff; font-family: inherit; font-size: 14px; font-weight: 600; }
+:is(.provider-review-new,.medical-consent-new) .consent-save:disabled { background: #e9edf3!important; color: #8090a5!important; }
+:is(.provider-review-new,.medical-consent-new) :is(button,a):focus-visible { outline: 2px solid #29377d; outline-offset: 4px; }
+@media(max-width:620px) {
+  :is(.provider-review-new,.medical-consent-new) { padding: 24px 15px 48px; }
+  :is(.provider-review-new,.medical-consent-new) .assessment-header { grid-template-columns: 36px minmax(0,1fr) auto; gap: 12px; }
+  :is(.provider-review-new,.medical-consent-new) .assessment-header>button:first-child { width: 36px; height: 36px; }
+  :is(.provider-review-new,.medical-consent-new) .assessment-header h1 { font-size: 32px; }
+  :is(.provider-review-new,.medical-consent-new) .assessment-cancel { font-size: 12px; }
+  :is(.provider-review-new,.medical-consent-new) .consent-section-title { margin-top: 28px; }
+  :is(.provider-review-new,.medical-consent-new) .assessment-intro { font-size: 14px; }
+  :is(.provider-review-new,.medical-consent-new) .consent-question { padding: 20px; }
+  :is(.provider-review-new,.medical-consent-new) .consent-question-head { align-items: flex-start; gap: 12px; padding-bottom: 18px; }
+  :is(.provider-review-new,.medical-consent-new) .consent-question-head h2 { font-size: 21px; }
+  :is(.provider-review-new,.medical-consent-new) .consent-question-answers { gap: 10px; }
+  :is(.provider-review-new,.medical-consent-new) .consent-question-answers button { gap: 8px; padding: 12px; font-size: 13px; }
+  :is(.provider-review-new,.medical-consent-new) .provider-review-note { padding: 14px; }
+}
+@media(prefers-reduced-motion:reduce) { :is(.provider-review-new,.medical-consent-new) .new-review-progress i,:is(.provider-review-new,.medical-consent-new) .consent-question-answers button { transition: none; } }
+
+.eligibility-new { padding: 40px 24px 72px; color: #46556f; font-family: CareSans,Arial,sans-serif; background: radial-gradient(ellipse at 50% 0%,#edf4fa,transparent 600px),#fff; }
+.eligibility-new .assessment-shell { width: min(760px,100%); }
+.eligibility-new .assessment-header { grid-template-columns: 44px minmax(0,1fr) auto; gap: 18px; }
+.eligibility-new .assessment-header h1 { white-space: normal; font-size: 40px; line-height: 1.15; }
+.eligibility-new .assessment-header>button:first-child { border: 1px solid #dce3ef; border-radius: 50%; box-shadow: none; }
+.eligibility-new .assessment-header>button:first-child:before { background: #29377d; }
+.eligibility-new .assessment-header>button:first-child:after { border-color: #29377d; }
+.eligibility-new .assessment-cancel { padding: 10px 0 10px 12px; color: #65728e; font-family: inherit; font-size: 13px; font-weight: 400; }
+.eligibility-new .assessment-cancel:hover { color: #29377d; }
+.eligibility-new .assessment-progress { margin: 28px 0 30px; }
+.eligibility-new .assessment-progress>div { height: 4px; background: #e5ebf3; }
+.eligibility-new .assessment-progress>div>span { background: #29377d; }
+.eligibility-new .assessment-progress p { align-items: center; margin-top: 12px; color: #758095; font-size: 12px; }
+.eligibility-new .assessment-progress p b { padding: 5px 10px; background: #e8eff9; color: #29377d; font-size: 10px; font-weight: 500; }
+.eligibility-new .assessment-section-title { color: #758095; font-size: 10px; font-weight: 500; line-height: 1.5; letter-spacing: .13em; }
+.eligibility-new .assessment-section-title span { display: none; }
+.eligibility-new .assessment-intro { max-width: 650px; margin: 12px 0 24px; color: #64738a; font-size: 15px; line-height: 1.7; text-align: left; }
+.eligibility-new .assessment-questions { gap: 12px; }
+.eligibility-new .assessment-question { border-color: #dfe5ee; border-radius: 20px; box-shadow: none; }
+.eligibility-new .assessment-question.active { border-color: #b6c4df; box-shadow: 0 4px 20px rgb(41 55 125 / 4%); }
+.eligibility-new .assessment-question-head { min-height: 0; grid-template-columns: 32px minmax(0,1fr); gap: 14px; padding: 22px 24px; color: #29377d; font-family: inherit; cursor: default; }
+.eligibility-new .assessment-question-head i { width: 32px; height: 32px; background: #eef2f8; color: #64738a; font-size: 11px; font-weight: 500; }
+.eligibility-new .assessment-question-head b { font-family: CareSerif,Georgia,serif; font-size: 21px; font-weight: 400; line-height: 1.4; }
+.eligibility-new .assessment-question-head em { color: #8995b0; font-size: 15px; }
+.eligibility-new .assessment-question-head strong { color: #8995b0; font-weight: 400; }
+.eligibility-new .assessment-question-head small { color: #64738a; font-size: 12px; }
+.eligibility-new .assessment-question.answered .assessment-question-head i { background: #e8eff9; color: #29377d; }
+.eligibility-new .assessment-question.locked { max-height: none; opacity: 1; filter: none; background: #fafbfd; }
+.eligibility-new .assessment-question.locked .assessment-question-head { min-height: 0; color: #7b879b; }
+.eligibility-new .assessment-question.locked .assessment-question-head i { background: #f0f2f6; color: #8a95a7; }
+.eligibility-new .assessment-answers { margin: 0 24px 24px; padding: 0; border: 0; }
+.eligibility-new .assessment-answers button { display: flex; align-items: center; gap: 12px; min-height: 56px; height: auto; padding: 14px 18px; border-color: #dce3ed; color: #46556f; font-family: inherit; font-size: 14px; transition: background .15s,border-color .15s; }
+.eligibility-new .assessment-answers button:hover { border-color: #aebcd6; background: #f3f6fb; color: #29377d; }
+.eligibility-new .assessment-answers button.selected { border-color: #29377d; background: #29377d; color: #fff; }
+.eligibility-new .new-review-choice-mark { display: grid; place-items: center; width: 20px; height: 20px; flex: 0 0 20px; border: 1px solid #cbd4e2; border-radius: 50%; }
+.eligibility-new .selected .new-review-choice-mark { border-color: #fff; background: #fff; color: #29377d; }
+.eligibility-new .new-review-choice-mark svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.eligibility-new .assessment-complete { height: 54px; margin-top: 24px; font-family: inherit; font-size: 14px; font-weight: 600; }
+.eligibility-new .assessment-complete:disabled { background: #e9edf3!important; color: #8090a5!important; }
+.eligibility-new .assessment-disclaimer { max-width: 650px; color: #758095; font-size: 12px; line-height: 1.6; }
+.eligibility-new button:focus-visible { outline: 2px solid #29377d; outline-offset: 4px; }
+@media(max-width:620px) {
+  .eligibility-new { padding: 24px 15px 48px; }
+  .eligibility-new .assessment-header { grid-template-columns: 36px minmax(0,1fr) auto; gap: 12px; }
+  .eligibility-new .assessment-header>button:first-child { width: 36px; height: 36px; }
+  .eligibility-new .assessment-header h1 { font-size: 30px; }
+  .eligibility-new .assessment-cancel { font-size: 12px; }
+  .eligibility-new .assessment-intro { font-size: 14px; }
+  .eligibility-new .assessment-question-head { gap: 10px; padding: 20px 16px; }
+  .eligibility-new .assessment-question-head b { font-size: 19px; }
+  .eligibility-new .assessment-answers { margin: 0 16px 20px; gap: 10px; }
+  .eligibility-new .assessment-answers button { gap: 8px; padding: 12px; font-size: 13px; }
+  .eligibility-new .assessment-disclaimer { font-size: 11px; }
+}
+@media(prefers-reduced-motion:reduce) { .eligibility-new .assessment-question,.eligibility-new .assessment-progress>div>span,.eligibility-new .assessment-answers button { transition: none; } }
+
+.medical-consent-new .consent-terms { padding: 28px; border: 1px solid #dfe5ee; border-radius: 20px; background: #fff; color: #64738a; font-size: 14px; line-height: 1.75; }
+.medical-consent-new .consent-terms h2 { margin-bottom: 20px; font-size: 26px; line-height: 1.3; }
+.medical-consent-new .consent-terms ul { gap: 14px; margin-bottom: 24px; }
+.medical-consent-new .consent-terms li { padding-left: 20px; }
+.medical-consent-new .consent-terms li:before { color: #29377d; }
+.medical-consent-new .consent-terms p:last-child { margin-bottom: 0; }
+.medical-consent-new .consent-confirm { gap: 14px; margin-top: 18px; padding: 18px 20px; border-color: #dfe5ee; background: #fff; color: #46556f; font-size: 14px; line-height: 1.6; }
+.medical-consent-new .consent-confirm:has(input:checked) { border-color: #aebcd6; background: #f1f5fb; }
+.medical-consent-new .consent-confirm input { width: 22px; height: 22px; flex: 0 0 22px; accent-color: #29377d; }
+.medical-consent-new .consent-confirm input:focus-visible { outline: 2px solid #29377d; outline-offset: 4px; }
+@media(max-width:620px) {
+  .medical-consent-new .consent-terms { padding: 20px; font-size: 13px; }
+  .medical-consent-new .consent-terms h2 { font-size: 24px; }
+  .medical-consent-new .consent-confirm { padding: 16px; font-size: 13px; }
+}

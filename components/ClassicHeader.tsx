@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { sitePath } from "@/lib/site-path";
 import type { SiteVersion } from "@/components/VersionBar";
+import NewHeader from "@/components/NewHeader";
 
 export default function ClassicHeader({
   cartCount = 0,
@@ -17,6 +18,8 @@ export default function ClassicHeader({
 }) {
   const [localSearch, setLocalSearch] = useState("");
   const search = searchValue ?? localSearch;
+
+  if (theme === "v6") return <NewHeader cartCount={cartCount} />;
 
   return (
     <header className="classic-reference-nav">

@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { animateProductToCart } from "@/lib/cart-animation";
 import { sitePath } from "@/lib/site-path";
+import NewProductCatalog from "@/components/NewProductCatalog";
+import NewCarePortraits from "@/components/NewCarePortraits";
+import NewWeightPlan from "@/components/NewWeightPlan";
 
 export interface Product {
   name: string;
@@ -18,7 +21,7 @@ export interface ProductRow {
   products: Product[];
 }
 
-export default function CatalogSection({ productRows, addedProducts, onAddToCart, onRemoveFromCart, tabbedAfterFirst = false }: { productRows: ProductRow[]; addedProducts: string[]; onAddToCart: (product: Product) => void; onRemoveFromCart: (product: Product) => void; tabbedAfterFirst?: boolean }) {
+export default function CatalogSection({ productRows, addedProducts, onAddToCart, onRemoveFromCart, tabbedAfterFirst = false, newOnlineCare = false }: { productRows: ProductRow[]; addedProducts: string[]; onAddToCart: (product: Product) => void; onRemoveFromCart: (product: Product) => void; tabbedAfterFirst?: boolean; newOnlineCare?: boolean }) {
   const firstRow = productRows[0];
   const tabRows = productRows.slice(1).filter((row) => row.products.length > 0);
   const conditionDescriptions: Record<string, [string, string]> = {
@@ -43,10 +46,11 @@ export default function CatalogSection({ productRows, addedProducts, onAddToCart
       <div className="catalog">
         {tabbedAfterFirst ? (
           <>
-            {firstRow && <CatalogRow row={firstRow} addedProducts={addedProducts} onAddToCart={onAddToCart} onRemoveFromCart={onRemoveFromCart} />}
+            {firstRow && (newOnlineCare ? <NewProductCatalog row={firstRow} addedProducts={addedProducts} onAddToCart={onAddToCart} onRemoveFromCart={onRemoveFromCart} /> : <CatalogRow row={firstRow} addedProducts={addedProducts} onAddToCart={onAddToCart} onRemoveFromCart={onRemoveFromCart} />)}
+            {newOnlineCare && <div className="new-catalog-care-section"><NewCarePortraits /></div>}
             {tabRows.length > 0 && (
               <>
-                <section className="treatment-discovery" aria-label="Explore treatment categories">
+                {!newOnlineCare && <section className="treatment-discovery" aria-label="Explore treatment categories">
                   <div className="treatment-discovery-visual">
                     <img src={sitePath("/adnan-treatment-discovery.png")} alt="A woman relaxing at home" />
                     <div className="treatment-discovery-message">
@@ -69,10 +73,10 @@ export default function CatalogSection({ productRows, addedProducts, onAddToCart
                       );
                     })}
                   </div>
-                </section>
-                <CareToolkit />
-                <AdnanProofSections />
-                <section className="condition-catalog" aria-labelledby="condition-catalog-title">
+                </section>}
+                {!newOnlineCare && <CareToolkit />}
+                {!newOnlineCare && <AdnanProofSections />}
+                {!newOnlineCare && <section className="condition-catalog" aria-labelledby="condition-catalog-title">
                   <h3 id="condition-catalog-title">What condition can we help with?</h3>
                   <div className="condition-tabs" aria-label="Treatment categories">
                     {tabRows.map((row) => {
@@ -94,10 +98,11 @@ export default function CatalogSection({ productRows, addedProducts, onAddToCart
                       );
                     })}
                   </div>
-                </section>
+                </section>}
                 <MemberTestimonials />
               </>
             )}
+            {newOnlineCare && <NewWeightPlan />}
           </>
         ) : productRows.map((row) => (
           <CatalogRow key={row.title} row={row} addedProducts={addedProducts} onAddToCart={onAddToCart} onRemoveFromCart={onRemoveFromCart} />
@@ -213,9 +218,10 @@ function MemberTestimonials() {
   );
 }
 
-function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart, hideTitle = false }: { row: ProductRow; addedProducts: string[]; onAddToCart: (product: Product) => void; onRemoveFromCart: (product: Product) => void; hideTitle?: boolean }) {
+function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart, hideTitle = false, enhanced = false }: { row: ProductRow; addedProducts: string[]; onAddToCart: (product: Product) => void; onRemoveFromCart: (product: Product) => void; hideTitle?: boolean; enhanced?: boolean }) {
   const gridRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [scrollRange, setScrollRange] = useState({ start: true, end: false, first: 1, last: row.products.length });
 
   const updateProgress = () => {
     if (gridRef.current) {
@@ -223,21 +229,33 @@ function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart, hideTit
       const maxScroll = scrollWidth - clientWidth;
       const progress = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
       setScrollProgress(Math.min(100, Math.max(0, progress)));
+      if (enhanced) {
+        const card = gridRef.current.querySelector("article");
+        const gap = Number.parseFloat(getComputedStyle(gridRef.current).columnGap) || 0;
+        const step = (card?.offsetWidth || clientWidth) + gap;
+        const first = Math.min(row.products.length, Math.round(scrollLeft / Math.max(step, 1)) + 1);
+        const visible = Math.max(1, Math.round((clientWidth + gap) / Math.max(step, 1)));
+        const next = { start: scrollLeft < 2, end: scrollLeft >= maxScroll - 2, first, last: Math.min(row.products.length, first + visible - 1) };
+        setScrollRange(current => current.start === next.start && current.end === next.end && current.first === next.first && current.last === next.last ? current : next);
+      }
     }
   };
 
   useEffect(() => {
     updateProgress();
+    const observer = new ResizeObserver(updateProgress);
+    if (gridRef.current) observer.observe(gridRef.current);
     window.addEventListener("resize", updateProgress);
-    return () => window.removeEventListener("resize", updateProgress);
-  }, [row.products.length]);
+    return () => { observer.disconnect(); window.removeEventListener("resize", updateProgress); };
+  }, [row.products.length, enhanced]);
 
   const handleScroll = (direction: "left" | "right") => {
     if (gridRef.current) {
-      const scrollAmount = gridRef.current.clientWidth * 0.75;
+      const gap = Number.parseFloat(getComputedStyle(gridRef.current).columnGap) || 0;
+      const scrollAmount = enhanced ? gridRef.current.clientWidth + gap : gridRef.current.clientWidth * 0.75;
       gridRef.current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
+        behavior: enhanced && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
       });
     }
   };
@@ -246,35 +264,37 @@ function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart, hideTit
   const fillWidth = 25 + (scrollProgress / 100) * 75;
 
   return (
-    <section className="catalog-row" id={row.id}>
+    <section className={`catalog-row${enhanced ? " new-popular-treatments" : ""}`} id={row.id}>
       <div className="catalog-heading">
-        {!hideTitle && <h3>{row.title}</h3>}
+        {!hideTitle && (enhanced ? <div className="new-popular-heading"><span>EXPLORE YOUR OPTIONS</span><h3>{row.title}</h3><p>Find the next step in your personalized care.</p></div> : <h3>{row.title}</h3>)}
         <div className="catalog-nav-controls">
           <div className="catalog-progress-pill" aria-hidden="true">
-            <div className="catalog-progress-track">
+            {enhanced ? <span className="new-popular-range">{scrollRange.first}–{scrollRange.last}<span> / {row.products.length}</span></span> : <div className="catalog-progress-track">
               <div
                 className="catalog-progress-fill"
                 style={{ width: `${fillWidth}%` }}
               />
-            </div>
+            </div>}
           </div>
           <button
             type="button"
             onClick={() => handleScroll("left")}
             aria-label={`Previous ${row.title} products`}
+            disabled={enhanced ? scrollRange.start : undefined}
           >
-            ←
+            {enhanced ? <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 6-6 6 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg> : "←"}
           </button>
           <button
             type="button"
             onClick={() => handleScroll("right")}
             aria-label={`Next ${row.title} products`}
+            disabled={enhanced ? scrollRange.end : undefined}
           >
-            →
+            {enhanced ? <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m10 6 6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg> : "→"}
           </button>
         </div>
       </div>
-      <div className="catalog-grid" ref={gridRef} onScroll={updateProgress}>
+      <div className="catalog-grid" ref={gridRef} onScroll={updateProgress} tabIndex={enhanced ? 0 : undefined} role={enhanced ? "region" : undefined} aria-label={enhanced ? `${row.title} carousel` : undefined}>
         {row.products.map((product, idx) => {
           const isAdded = addedProducts.includes(product.name);
           return (
@@ -285,8 +305,9 @@ function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart, hideTit
               onClick={() => localStorage.setItem("scriptrx-detail-product", JSON.stringify(product))}
               aria-label={`View details for ${product.name}`}
             >
+              {enhanced && isAdded && <span className="new-popular-added"><span aria-hidden="true">✓</span> In your cart</span>}
               <div className="product-float">
-                <img className="product-render" src={sitePath(product.image)} alt={product.name} />
+                <img className="product-render" src={sitePath(product.image)} alt={product.name} loading={enhanced ? "lazy" : undefined} />
                 <img className="product-shadow" src={sitePath("/product-shadow.png")} alt="" />
               </div>
             </a>
@@ -299,7 +320,7 @@ function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart, hideTit
                   {product.name}
                 </a>
               </h4>
-              <p>From {product.price}</p>
+              {enhanced ? <p className="new-popular-price"><span>From</span><strong>{product.price}</strong></p> : <p>From {product.price}</p>}
               <span>{product.detail}</span>
               <div className="product-actions">
                 <button type="button" className={isAdded ? "added" : ""} onClick={(event) => {
@@ -309,14 +330,15 @@ function CatalogRow({ row, addedProducts, onAddToCart, onRemoveFromCart, hideTit
                     animateProductToCart(event.currentTarget);
                     onAddToCart(product);
                   }
-                }} aria-live="polite">
+                }} aria-live="polite" aria-label={enhanced ? `${isAdded ? "Remove" : "Add"} ${product.name} ${isAdded ? "from" : "to"} cart` : undefined}>
+                  {enhanced && <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">{isAdded ? <path d="M5 10h10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /> : <><path d="M4 7h12l1 10H3L4 7Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" /><path d="M7 7V5a3 3 0 0 1 6 0v2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></>}</svg>}
                   {isAdded ? "Remove" : "Add to Cart"}
                 </button>
                 <a
                   href={sitePath("/product")}
                   onClick={() => localStorage.setItem("scriptrx-detail-product", JSON.stringify(product))}
                 >
-                  Details
+                  Details{enhanced && <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m6 14 8-8M6 6h8v8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>}
                 </a>
               </div>
             </div>

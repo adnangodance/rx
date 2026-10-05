@@ -1,0 +1,12 @@
+Tool: built-in image_gen
+Asset: public/hero-womens-editorial.png
+
+Use case: photorealistic-natural
+Asset type: tall editorial photograph for a Women's Health website hero.
+Primary request: a warm, candid portrait of a woman in her early 40s enjoying a quiet moment at home, authentic and assured.
+Scene/backdrop: sunlit modern home, softly blurred pale blue and ivory surroundings, linen curtains, subtle leafy shadows.
+Subject: one woman, medium-length chestnut hair loosely tucked behind her ear, wearing a relaxed pale blue linen shirt with sleeves rolled up. Seated beside a window, relaxed shoulders, gentle natural smile, looking toward the camera.
+Composition/framing: portrait 4:5, waist upward, subject slightly right of center, comfortable room around head and shoulders. Natural unposed editorial composition.
+Lighting/mood: soft side daylight, calm and intimate, tasteful premium wellness photography.
+Materials/textures: visible natural skin texture, real linen fabric, subtle film grain, understated colors.
+Constraints: no text, logos, watermark, UI, border, other people, medical props, athletic poses, exaggerated retouching.

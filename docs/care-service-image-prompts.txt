@@ -1,0 +1,17 @@
+Mode: built-in imagegen. Existing portrait edits; transparent cutouts.
+
+metabolic
+Output: public/care-service-metabolic.png
+Use case: background-extraction. Asset type: transparent portrait cutout for an online healthcare service card. Input image 1 is the edit target: the existing metabolic care portrait. Remove the background completely, leaving actual alpha transparency. Keep the same person's face, hairstyle, expression, pose, body proportions and clothing unchanged. Output an isolated photorealistic waist-up cutout, with the full head and shoulders and both outer arms visible, no clipped head or shoulders. Crop at the lower torso. Center the subject in a square canvas, with small transparent padding above the head and at both sides. Preserve realistic skin texture and soft natural light. Change only background and framing. No new people, no text, no logos, no badges, no card UI, no shadow backdrop, no colored background.
+
+hormone
+Output: public/care-service-hormone.png
+Use case: background-extraction. Asset type: transparent portrait cutout for an online healthcare service card. Input image 1 is the edit target: the existing hormone care portrait. Remove the background completely, leaving actual alpha transparency. Keep the same person's face, hairstyle, expression, pose, body proportions and clothing unchanged. Output an isolated photorealistic waist-up cutout, with the full head and shoulders and both outer arms visible, no clipped head or shoulders. Crop at the lower torso. Center the subject in a square canvas, with small transparent padding above the head and at both sides. Preserve realistic skin texture and soft natural light. Change only background and framing. No new people, no text, no logos, no badges, no card UI, no shadow backdrop, no colored background.
+
+weight
+Output: public/care-service-weight.png
+Use case: background-extraction. Asset type: transparent portrait cutout for an online healthcare service card. Input image 1 is the edit target: the existing weight care portrait. Remove the background completely, leaving actual alpha transparency. Keep the same person's face, hairstyle, expression, pose, body proportions and clothing unchanged. Output an isolated photorealistic waist-up cutout, with the full head and shoulders and both outer arms visible, no clipped head or shoulders. Crop at the lower torso. Center the subject in a square canvas, with small transparent padding above the head and at both sides. Preserve realistic skin texture and soft natural light. Change only background and framing. No new people, no text, no logos, no badges, no card UI, no shadow backdrop, no colored background.
+
+sexual
+Output: public/care-service-sexual.png
+Use case: background-extraction. Asset type: transparent portrait cutout for an online healthcare service card. Input image 1 is the edit target: the existing sexual care portrait. Remove the background completely, leaving actual alpha transparency. Keep the same person's face, hairstyle, expression, pose, body proportions and clothing unchanged. Output an isolated photorealistic waist-up cutout, with the full head and shoulders and both outer arms visible, no clipped head or shoulders. Crop at the lower torso. Center the subject in a square canvas, with small transparent padding above the head and at both sides. Preserve realistic skin texture and soft natural light. Change only background and framing. No new people, no text, no logos, no badges, no card UI, no shadow backdrop, no colored background.
