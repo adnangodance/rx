@@ -1725,8 +1725,8 @@ html{scrollbar-gutter:stable}
 @media(prefers-reduced-motion:reduce){.theme-new .new-online-care-actions a{transition:none}}
 
 /* New: a split FAQ layout with warm accordion cards. */
-@font-face{font-family:CareSans;src:url('/fonts/care-dm-sans-latin.woff2') format('woff2');font-style:normal;font-weight:400 500;font-display:swap}
-@font-face{font-family:CareSerif;src:url('/fonts/care-source-serif-latin.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:CareSans;src:url('../public/fonts/care-dm-sans-latin.woff2') format('woff2');font-style:normal;font-weight:400 500;font-display:swap}
+@font-face{font-family:CareSerif;src:url('../public/fonts/care-source-serif-latin.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
 .theme-new .faq-section{padding:64px 4.8% 72px;background:#fff}
 .theme-new .faq-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);align-items:start;gap:64px}
 .theme-new .faq-heading{margin:0}
@@ -1896,7 +1896,7 @@ html{scrollbar-gutter:stable}
 .theme-new .result-improvement em{background:#46556f}
 
 /* New: DealRx's dark framed footer and purple prismatic light band. */
-@font-face{font-family:FooterInter;src:url('/fonts/footer-inter.woff2') format('woff2');font-style:normal;font-weight:100 900;font-display:swap}
+@font-face{font-family:FooterInter;src:url('../public/fonts/footer-inter.woff2') format('woff2');font-style:normal;font-weight:100 900;font-display:swap}
 .theme-new .new-deal-footer {
   --closing-background: #171827;
   padding: 0;
@@ -2071,11 +2071,11 @@ html{scrollbar-gutter:stable}
 /* New: product cards and picker layout matched to Amino's bulk catalog. */
 .theme-new .catalog{grid-template-columns:minmax(0,1fr)}
 .theme-new .new-catalog-care-section{width:100vw;min-width:0;margin-left:calc(50% - 50vw)}
-@font-face{font-family:AminoSans;src:url('/fonts/amino-anek.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap}
-@font-face{font-family:AminoSerif;src:url('/fonts/amino-fraunces.woff2') format('woff2');font-weight:500 700;font-style:normal;font-display:swap}
-@font-face{font-family:AminoPoppins;src:url('/fonts/amino-poppins-regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:AminoPoppins;src:url('/fonts/amino-poppins-medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
-@font-face{font-family:AminoPoppins;src:url('/fonts/amino-poppins-semibold.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:AminoSans;src:url('../public/fonts/amino-anek.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap}
+@font-face{font-family:AminoSerif;src:url('../public/fonts/amino-fraunces.woff2') format('woff2');font-weight:500 700;font-style:normal;font-display:swap}
+@font-face{font-family:AminoPoppins;src:url('../public/fonts/amino-poppins-regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:AminoPoppins;src:url('../public/fonts/amino-poppins-medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:AminoPoppins;src:url('../public/fonts/amino-poppins-semibold.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
 .theme-new .new-amino-catalog{min-width:0;color:#131315;font-family:AminoSans,Arial,sans-serif}
 .theme-new .new-amino-catalog>header{max-width:672px;margin:0 0 40px}
 .theme-new .new-amino-catalog>header>span{display:block;color:#9ca3af;font:600 12px/1.5 AminoPoppins,Arial,sans-serif;letter-spacing:.14em}
