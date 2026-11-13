@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import CatalogSection, { type Product } from "@/components/CatalogSection";
 import ClassicHeader from "@/components/ClassicHeader";
-import NewHeroTitle from "@/components/NewHeroTitle";
+import PlatformHome from "@/components/platform/PlatformHome";
 import NewFooter from "@/components/NewFooter";
 import HeaderPillNav from "@/components/HeaderPillNav";
 import VersionBar, { DEFAULT_SITE_VERSION, isClassicVersion, resolveSiteVersion, usesAdnanDesign, type SiteVersion } from "@/components/VersionBar";
@@ -129,6 +129,9 @@ const faqs = [
   },
 ];
 
+// Plain boolean (not a type guard) so the legacy designs below keep their full version type.
+const showsPlatformHome = (version: SiteVersion): boolean => version === "v6";
+
 export default function Home() {
   const [version, setVersion] = useState<SiteVersion>(DEFAULT_SITE_VERSION);
   const isClassic = isClassicVersion(version);
@@ -204,6 +207,9 @@ export default function Home() {
     });
   }
 
+  // The New design (v6) is the ScriptRx platform homepage for clinics and pharmacies.
+  if (showsPlatformHome(version)) return <PlatformHome />;
+
   return (
     <main id="top" className={`theme-${isClassic ? "v1" : version} ${isAdnanDesign ? "theme-adnan" : ""} ${version === "v6" ? "theme-new" : ""}`}>
       <VersionBar version={version} onChange={setVersion} />
@@ -258,10 +264,11 @@ export default function Home() {
           </header>
         )}
 
+        {version !== "v6" && <>
         <div className="hero-intro">
           <div>
             <span className="hero-kicker">CARE THAT MOVES WITH YOU</span>
-            {version === "v6" ? <NewHeroTitle /> : <h1>Your health.<br />More in your hands.</h1>}
+            <h1>Your health.<br />More in your hands.</h1>
           </div>
           <ul>
             <li><i>✓</i> Licensed providers, nationwide</li>
@@ -312,7 +319,7 @@ export default function Home() {
           <a className="story-card story-life" href={isClassic ? sitePath("/categories?category=sexual-health") : version === "v4" ? "#acne-products" : "#care"}>
             {isClassic && (
               <>
-                <img src={sitePath(version === "v6" ? "/hero-couple-mint.png" : "/better-sex.jpg")} alt={version === "v6" ? "A couple sitting together in mint activewear" : "Couple embracing in lavender activewear"} />
+                <img src={sitePath("/better-sex.jpg")} alt="Couple embracing in lavender activewear" />
                 <div className="story-copy">
                   <h2>Better sex,<br />deeper intimacy.</h2>
                 </div>
@@ -346,6 +353,7 @@ export default function Home() {
             )}
           </a>
         </div>
+        </>}
 
         {version === "v6" && (
           <nav className="new-hero-care-cards" aria-label="Explore more treatments">

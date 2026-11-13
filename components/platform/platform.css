@@ -1,0 +1,67 @@
+/* ScriptRx platform homepage — Superpower-style system: fluid --sp-u unit, zinc ink, soft cards. */
+.pl-home { --pl-navy: #29377d; --pl-muted: rgba(24, 24, 27, .62); --pl-line: rgba(24, 24, 27, .08); --pl-soft: #f4f4f5; min-height: 100vh; background: #fff; color: var(--sp-ink); font-family: FooterInter, Inter, Arial, sans-serif; }
+
+/* ---------- Hero tweaks ---------- */
+.pl-home .sp-hero-card { background: #f3e6d6; }
+.pl-home .sp-hero-poster { object-position: 70% 30%; }
+.pl-home .sp-hero-content { max-width: calc(var(--sp-u) * 30); }
+.pl-home .sp-hero .sp-hero-title { font-size: calc(var(--sp-u) * 3); line-height: 1.08; letter-spacing: -.03em; }
+
+
+@media screen and (max-width: 991px) {
+  .pl-home .sp-hero-card { background: #f7f0e7; }
+  .pl-home .sp-hero-media::after { background: linear-gradient(180deg, rgba(247, 240, 231, 0) 0%, rgba(247, 240, 231, .7) 55%, #f7f0e7 100%); }
+  .pl-home .sp-hero-media { background: #f3e6d6; }
+  .pl-home .sp-hero-poster { object-position: 78% 40%; }
+  .pl-home .sp-hero .sp-hero-title { font-size: 2.25rem; }
+}
+
+/* ---------- Shared section system ---------- */
+.pl-shell { width: min(calc(var(--sp-u) * 80), 100%); margin: 0 auto; padding: 0 calc(var(--sp-u) * 3.125); }
+.pl-section { padding: calc(var(--sp-u) * 7) 0; background: #fff; }
+.pl-section.is-soft { margin: 0 calc(var(--sp-u) * .5); border-radius: calc(var(--sp-u) * .75); background: #f4f4f5; }
+.pl-section.is-warm { margin: 0 calc(var(--sp-u) * .5); border-radius: calc(var(--sp-u) * .75); background: #f3efeb; }
+.pl-section.is-dark { margin: 0 calc(var(--sp-u) * .5); border-radius: calc(var(--sp-u) * .75); background: #111113; color: #fff; }
+.pl-eyebrow { display: block; margin-bottom: calc(var(--sp-u) * 1); color: var(--pl-muted); font-size: calc(var(--sp-u) * .875); line-height: 1.4; }
+.pl-home h2:not(.new-eden-footer *) { margin: 0; color: inherit !important; font-family: inherit !important; font-size: calc(var(--sp-u) * 3); font-weight: 400 !important; line-height: 1.08; letter-spacing: -.03em; }
+.pl-lead { max-width: calc(var(--sp-u) * 30); margin: 0; color: var(--pl-muted); font-size: calc(var(--sp-u) * 1.0625); line-height: 1.5; }
+.pl-head { display: grid; gap: calc(var(--sp-u) * 1.25); margin-bottom: calc(var(--sp-u) * 3.5); }
+.pl-head.is-split { grid-template-columns: minmax(0, 1fr) minmax(0, calc(var(--sp-u) * 30)); align-items: end; gap: calc(var(--sp-u) * 4); }
+.pl-section.is-dark .pl-eyebrow, .pl-section.is-dark .pl-lead { color: rgba(255, 255, 255, .62); }
+.pl-note { margin: calc(var(--sp-u) * 1.5) 0 0; color: var(--pl-muted); font-size: calc(var(--sp-u) * .875); }
+.pl-chip { display: inline-flex; align-items: center; padding: 1px 7px; border-radius: 99px; background: #fff1cc; color: #7a5200; font-size: .72em; font-weight: 600; white-space: nowrap; vertical-align: middle; }
+.pl-chip.is-light { background: rgba(255, 255, 255, .85); color: var(--sp-ink); }
+
+.pl-btn { display: inline-flex; align-items: center; gap: .5rem; min-height: calc(var(--sp-u) * 2.875); padding: 0 calc(var(--sp-u) * 1.25); border-radius: 100vw; background: var(--sp-ink); color: #fff; font-size: calc(var(--sp-u) * 1); white-space: nowrap; text-decoration: none; transition: background-color .25s var(--sp-ease), scale .15s ease-out; }
+.pl-btn svg { width: 1rem; height: 1rem; transition: transform .25s var(--sp-ease); }
+.pl-btn:hover svg { transform: translateX(3px); }
+.pl-btn:active { scale: .96; }
+.pl-btn.is-light { background: #fff; color: var(--sp-ink); }
+.pl-btn.is-light:hover { background: #f4f4f5; }
+.pl-btn.is-outline { background: transparent; color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .4); }
+.pl-btn.is-outline:hover { background: rgba(255, 255, 255, .08); }
+.pl-home :is(a, button, summary):focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* Scroll-linked panel entrance (see useExpandOnScroll) */
+.pl-expand { position: relative; margin-top: 50px; }
+.pl-expand-panel { transform-origin: 50% 0; will-change: transform; }
+
+/* Scroll reveal (same blur-up curve as the hero) */
+.pl-js [data-reveal] { opacity: 0; transform: translateY(1.5rem); filter: blur(8px); transition: opacity .9s cubic-bezier(.22, 1, .36, 1) var(--d, 0s), transform .9s cubic-bezier(.22, 1, .36, 1) var(--d, 0s), filter .9s cubic-bezier(.22, 1, .36, 1) var(--d, 0s); }
+.pl-js [data-reveal].is-in { opacity: 1; transform: none; filter: none; }
+
+
+/* ---------- Responsive (shared) ---------- */
+@media screen and (max-width: 991px) {
+  .pl-section { padding: 4.5rem 0; }
+  .pl-shell { padding: 0 1.5rem; }
+  .pl-home h2:not(.new-eden-footer *) { font-size: 2.25rem; }
+  .pl-head.is-split { grid-template-columns: 1fr; gap: 1.25rem; }
+}
+@media screen and (max-width: 560px) {
+  .pl-home h2:not(.new-eden-footer *) { font-size: 2rem; }
+  .pl-home h2:not(.new-eden-footer *) br { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pl-js [data-reveal] { opacity: 1; transform: none; filter: none; transition: none; }
+}

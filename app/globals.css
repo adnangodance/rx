@@ -1639,7 +1639,7 @@ html{scrollbar-gutter:stable}
 }
 
 /* New: a compact care row directly below the two hero images. */
-.theme-new .reference-hero{padding-bottom:24px}
+.theme-new .reference-hero{padding-top:calc(var(--sp-u) * 1);padding-bottom:24px}
 .classic-reference-nav-new .classic-reference-logo{width:123.2px;height:56px;color:#111;font-family:CareSans,Inter,Arial,sans-serif;font-size:30px;font-weight:700;line-height:1;letter-spacing:-.05em;white-space:nowrap}
 .classic-reference-nav-new .classic-reference-logo img{width:123.2px;height:56px;object-fit:contain}
 .classic-reference-nav-new .classic-header-search{min-width:0}
