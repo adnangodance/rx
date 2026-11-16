@@ -19,7 +19,7 @@ export function ThemeBuilder() {
   const [name, setName] = useState("Willow");
   const [domain, setDomain] = useState("willow.example");
   const [domainEdited, setDomainEdited] = useState(false);
-  const [colour, setColour] = useState(themeColours[0]);
+  const [colour, setColour] = useState(themeColours[2]);
   const brandName = name.trim() || "Your brand";
   const style = { "--brand": colour.value, "--brand-ink": colour.ink, "--brand-tint": colour.tint } as CSSProperties;
 

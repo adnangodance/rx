@@ -240,7 +240,6 @@ export function PricingBuilder() {
     return ending === "99" ? Math.max(0.99, Math.ceil(raw) - 0.01) : Math.round(raw);
   };
 
-  const avgCost = catalog.reduce((sum, p) => sum + p.cost, 0) / catalog.length;
   const avgPrice = catalog.reduce((sum, p) => sum + priceOf(p.cost), 0) / catalog.length;
 
   return (
@@ -256,7 +255,7 @@ export function PricingBuilder() {
                   <b>{p.name}</b>
                   <small>{p.category}</small>
                   <div className="pl-price-rows">
-                    <span>ScriptRx cost<em>{money(p.cost)}</em></span>
+                    <span>Pricing<em>{markup}% markup</em></span>
                     <span className="is-price">Your price<em><PriceCell value={priceOf(p.cost)} /> / mo</em></span>
                   </div>
                 </div>
@@ -264,7 +263,7 @@ export function PricingBuilder() {
             </div>
             <div className="pl-price-summary">
               <span><small>Average price</small><b><PriceCell value={avgPrice} /> / mo</b></span>
-              <span><small>Average margin per order</small><b className="is-margin"><PriceCell value={avgPrice - avgCost} /></b></span>
+              <span><small>Default markup</small><b>{markup}%</b></span>
               <span><small>Products priced</small><b>{catalog.length} of {catalog.length}</b></span>
             </div>
           </div>

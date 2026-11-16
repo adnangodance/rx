@@ -154,7 +154,6 @@
 .pl-price-summary > span { display: grid; gap: .15em; padding: .9em 1em; border-radius: .9em; background: #fff; box-shadow: 0 1px 3px rgba(24, 24, 27, .06); }
 .pl-price-summary small { color: var(--pl-muted); font-size: .82em; }
 .pl-price-summary b { font-size: 1.45em; font-weight: 500; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.pl-price-summary b.is-margin { color: #c2410c; }
 .pl-price-card:hover .pl-price-photo img { transform: scale(1.05); }
 .pl-price-card b { font-weight: 600; }
 .pl-price-card small { color: var(--pl-muted); font-size: .85em; }

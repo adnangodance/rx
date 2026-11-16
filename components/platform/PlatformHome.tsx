@@ -161,15 +161,15 @@ export default function PlatformHome() {
         <DomainBuilder />
       </Feature>
 
-      <Feature id="offer" eyebrow="Care categories" title={<>What will your{" "}<br />storefront offer?</>} lead="Care for what matters to you. Find a personalized treatment path, with a licensed prescriber to guide your next step.">
+      <Feature id="offer" eyebrow="Care categories" title={<>What will your{" "}<br />storefront offer?</>} lead="Choose the care categories your storefront offers. Each one comes with an online health intake and a licensed prescriber who reviews it and recommends a plan.">
         <CareBuilder />
       </Feature>
 
-      <Feature id="catalog" tone="soft" eyebrow="Catalog and pricing" title={<>Your catalog.{" "}<br />Your prices.</>} lead="Products sync from ScriptRx Pharmacy into ScriptRx Office. A catalog-wide markup % applies to any plan without an explicit price.">
+      <Feature id="catalog" tone="soft" expand eyebrow="Catalog and pricing" title={<>Your catalog.{" "}<br />Your prices.</>} lead="Products sync from ScriptRx Pharmacy into ScriptRx Office. A catalog-wide markup % applies to any plan without an explicit price.">
         <PricingBuilder />
       </Feature>
 
-      <Feature id="pharmacy" tone="dark" eyebrow="ScriptRx Pharmacy" title={<>Run fulfilment from one{" "}<br />pharmacy portal.</>} lead="Orders, consultations, products, patients, refills, coupons, links, patient contacts, support tickets, sales analytics, payouts and users.">
+      <Feature id="pharmacy" tone="dark" expand eyebrow="ScriptRx Pharmacy" title={<>Run fulfilment from one{" "}<br />pharmacy portal.</>} lead="Orders, consultations, products, patients, refills, coupons, links, patient contacts, support tickets, sales analytics, payouts and users.">
         <PharmacyQueue />
       </Feature>
 
@@ -191,7 +191,8 @@ export default function PlatformHome() {
       </section>
 
       {/* Closing CTA + footer — one photo backdrop, footer card floats on it (Superpower pattern) */}
-      <div className="pl-closing">
+      <div className="pl-expand" data-expand>
+      <div className="pl-closing pl-expand-panel">
         <div className="pl-closing-photo" aria-hidden="true"><img src={img("closing-golden.png")} alt="" /></div>
         <section className="pl-closing-cta" aria-labelledby="pl-cta-title" id="demo">
           <div className="pl-closing-copy" data-reveal>
@@ -231,6 +232,7 @@ export default function PlatformHome() {
             <a href="#top">Back to top ↑</a>
           </div>
         </footer>
+      </div>
       </div>
     </main>
   );
