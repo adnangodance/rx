@@ -1,33 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import { useEffect, useState, type ReactNode, type RefObject } from "react";
 import NewHeader from "@/components/NewHeader";
 import NewHero from "@/components/NewHero";
 import { sitePath } from "@/lib/site-path";
 import { sectionRevealFrame } from "@/lib/section-reveal";
 import { ThemeBuilder } from "./Mockups";
+import { Arrow, PlatformFooter, SectionHead, useReveal } from "./shared";
 import { CareBuilder, Check, DomainBuilder, PharmacyQueue, PricingBuilder, ProviderReview } from "./Features";
 import "./platform.css";
 import "./mockups.css";
 import "./features.css";
 
 const img = (file: string) => sitePath(`/platform/${file}`);
-
-function Arrow() {
-  return <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
-}
-
-function SectionHead({ eyebrow, title, lead, id }: { eyebrow: string; title: ReactNode; lead?: string; id: string }) {
-  return (
-    <header className="pl-head is-split" data-reveal>
-      <div>
-        <span className="pl-eyebrow">{eyebrow}</span>
-        <h2 id={id}>{title}</h2>
-      </div>
-      {lead && <p className="pl-lead">{lead}</p>}
-    </header>
-  );
-}
 
 function Feature({ id, eyebrow, title, lead, tone, expand = false, children }: { id: string; eyebrow: string; title: ReactNode; lead: string; tone?: "soft" | "dark"; expand?: boolean; children: ReactNode }) {
   const section = (
@@ -81,12 +66,6 @@ const faqs = [
   { q: "Do my patients need insurance?", a: "No. ScriptRx supports self-pay care. Applicable consultation, treatment and delivery costs are shown before a patient completes their order." },
 ];
 
-const footerColumns: { title: string; links: [string, string][] }[] = [
-  { title: "Platform", links: [["Storefronts", "/#storefronts"], ["Catalog & pricing", "/#catalog"], ["ScriptRx Pharmacy", "/#pharmacy"], ["Provider app", "/#provider-app"]] },
-  { title: "For patients", links: [["Browse treatments", "/categories"], ["Weight management", "/categories?category=weight-management"], ["Sexual health", "/categories?category=sexual-health"], ["Your account", "/login?theme=v6"], ["Your cart", "/cart"]] },
-  { title: "Company", links: [["FAQs", "/#faq"], ["Request a demo", "/#demo"], ["Log in", "/login?theme=v6"]] },
-];
-
 function FaqList() {
   const [open, setOpen] = useState(0);
   return (
@@ -111,27 +90,6 @@ function FaqList() {
   );
 }
 
-/** Adds `is-in` to every [data-reveal] element as it scrolls into view. */
-function useReveal() {
-  const rootRef = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root || !("IntersectionObserver" in window)) return;
-    const items = root.querySelectorAll<HTMLElement>("[data-reveal]");
-    root.classList.add("pl-js");
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-in");
-        observer.unobserve(entry.target);
-      });
-    }, { rootMargin: "0px 0px -10% 0px" });
-    items.forEach(item => observer.observe(item));
-    return () => observer.disconnect();
-  }, []);
-  return rootRef;
-}
-
 export default function PlatformHome() {
   const rootRef = useReveal();
   useExpandOnScroll(rootRef);
@@ -147,7 +105,7 @@ export default function PlatformHome() {
           "Licensed prescriber review built in",
           "Pharmacy portal and admin office included",
         ]}
-        primary={{ label: "Request a demo", href: "/#demo" }}
+        primary={{ label: "Request a demo", href: "/demo" }}
         secondary={{ label: "See the live storefront", href: "/categories" }}
         image="/platform/hero-golden.png"
       />
@@ -184,7 +142,7 @@ export default function PlatformHome() {
             <span className="pl-eyebrow">FAQ</span>
             <h2 id="pl-faq-title">Questions,{" "}<br />answered.</h2>
             <p>Everything you need to know about launching and running a storefront on ScriptRx.</p>
-            <a className="pl-qa-link" href={sitePath("/#demo")}>Still have questions? Request a demo <Arrow /></a>
+            <a className="pl-qa-link" href={sitePath("/demo")}>Still have questions? Request a demo <Arrow /></a>
           </header>
           <FaqList />
         </div>
@@ -201,37 +159,13 @@ export default function PlatformHome() {
               {["Prescriber-guided care", "Your brand, your domain", "100% online"].map(item => <li key={item}><Check />{item}</li>)}
             </ul>
             <div className="pl-closing-btns">
-              <a className="pl-btn is-light" href={sitePath("/#demo")}>Request a demo</a>
+              <a className="pl-btn is-light" href={sitePath("/demo")}>Request a demo</a>
               <a className="pl-btn is-frost" href={sitePath("/categories")}>See the live storefront</a>
             </div>
           </div>
         </section>
 
-        <footer className="pl-foot" aria-label="ScriptRx footer">
-          <div className="pl-foot-top">
-            <div className="pl-foot-brand">
-              <a className="pl-foot-logo" href={sitePath("/")} aria-label="ScriptRx home">scriptrx</a>
-              <p><b>Not sure where to start?</b> Tell us about your clinic or pharmacy and we’ll show you the storefront, ScriptRx Pharmacy and ScriptRx Office with your brand on them.</p>
-              <div className="pl-foot-actions">
-                <a className="pl-btn" href={sitePath("/#demo")}>Request a demo</a>
-                <a className="pl-btn is-outline-dark" href={sitePath("/categories")}>See the live storefront</a>
-              </div>
-            </div>
-            <div className="pl-foot-cols">
-              {footerColumns.map(column => (
-                <nav key={column.title} aria-label={column.title}>
-                  <span>{column.title}</span>
-                  {column.links.map(([label, href]) => <a key={label} href={sitePath(href)}>{label}</a>)}
-                </nav>
-              ))}
-            </div>
-          </div>
-          <div className="pl-foot-bottom">
-            <span>© {new Date().getFullYear()} ScriptRx. All rights reserved.</span>
-            <p>ScriptRx provides the technology platform. Prescribing decisions are made by independent licensed prescribers.</p>
-            <a href="#top">Back to top ↑</a>
-          </div>
-        </footer>
+        <PlatformFooter />
       </div>
       </div>
     </main>

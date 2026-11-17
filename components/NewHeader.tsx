@@ -53,7 +53,7 @@ const platformContent: HeaderContent = {
     { label: "Pharmacy", href: "/#pharmacy" },
     { label: "Provider app", href: "/#provider-app" },
   ],
-  cta: { label: "Request a demo", href: "/#demo" },
+  cta: { label: "Request a demo", href: "/demo" },
   exploreLabel: "Platform",
   explore: [
     { label: "Storefronts", href: "/#storefronts" },
@@ -64,7 +64,7 @@ const platformContent: HeaderContent = {
   columns: [
     { label: "Company", links: [
       { label: "FAQs", href: "/#faq" },
-      { label: "Request a demo", href: "/#demo" },
+      { label: "Request a demo", href: "/demo" },
     ] },
     { label: "Templates", links: [
       { label: "Template 1", href: "/templates/template-1" },
